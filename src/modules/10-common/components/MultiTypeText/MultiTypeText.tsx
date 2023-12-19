@@ -23,6 +23,7 @@ import {
   ConfigureOptions,
   ConfigureOptionsProps
 } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 
 // TODO: Need to import from uikit but right now it is not being exported from there
 // Also, we need to make field label to be a type of string | ReactElement because sometimes we need to pass an element
@@ -68,6 +69,7 @@ export function MultiTypeText(props: MultiTypeTextProps): React.ReactElement {
   const value = get(formik?.values, name, '')
 
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <div className={className} style={style}>
@@ -78,6 +80,10 @@ export function MultiTypeText(props: MultiTypeTextProps): React.ReactElement {
           label=""
           style={{ marginBottom: 0, flexGrow: 1 }}
           {...multiTextInputProps}
+          multiTextInputProps={{
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+            ...multiTextInputProps?.multiTextInputProps
+          }}
         />
         {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions

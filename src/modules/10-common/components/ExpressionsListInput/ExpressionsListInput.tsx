@@ -12,6 +12,7 @@ import { FormGroup } from '@blueprintjs/core'
 import { ExpressionInput, EXPRESSION_INPUT_PLACEHOLDER } from '@harness/uicore'
 import { ListInput } from '@common/components/ListInput/ListInput'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './ExpressionsListInput.module.scss'
 
 export interface ExpressionsListInputProps {
@@ -32,6 +33,7 @@ function ExpressionsListInputInternal(props: ExpressionsListInputProps) {
       formik?.setFieldValue(name, [''])
     }
   }, [])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <ListInput
@@ -52,6 +54,7 @@ function ExpressionsListInputInternal(props: ExpressionsListInputProps) {
                 /* istanbul ignore next */
                 formik?.setFieldValue(fieldName, val)
               }
+              newExpressionComponent={NG_EXPRESSIONS_NEW_INPUT_ELEMENT}
             />
           </FormGroup>
         )

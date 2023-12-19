@@ -31,6 +31,7 @@ import {
   DelegateSelectorsV2ContainerProps
 } from '@common/components/DelegateSelectors/DelegateSelectorsV2Container'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './MultiTypeDelegateSelector.module.scss'
 
 export interface MultiTypeDelegateSelectorProps extends IFormGroupProps {
@@ -68,6 +69,7 @@ const ExpressionField = (props: ExpressionFieldProps): JSX.Element => {
   const [expressionView, setExpressionView] = React.useState<ExpressionView>(
     !isArray(value) ? ExpressionView.List : ExpressionView.Single
   )
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <>
@@ -106,6 +108,7 @@ const ExpressionField = (props: ExpressionFieldProps): JSX.Element => {
           name={name}
           value={value as string}
           disabled={disabled}
+          newExpressionComponent={NG_EXPRESSIONS_NEW_INPUT_ELEMENT}
           inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
           items={expressions}
           onChange={val =>

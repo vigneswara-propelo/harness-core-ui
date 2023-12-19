@@ -17,6 +17,7 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector, {
   MultiTypeFieldSelectorProps
 } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './MultiTypeList.module.scss'
 
 export type ListValue = { id: string; value: string }[]
@@ -76,6 +77,7 @@ const MultiTypeList = (props: MultiTypeListProps & ConnectorReferenceProps): Rea
   }
 
   const value = get(formik?.values, name, getDefaultResetValue()) as MultiTypeListType
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <div className={cx(css.group, css.withoutSpacing)} {...restProps}>
@@ -84,7 +86,8 @@ const MultiTypeList = (props: MultiTypeListProps & ConnectorReferenceProps): Rea
           style={{ flexGrow: 1, marginBottom: 0 }}
           name={name}
           multiTextInputProps={{
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           {...multiTypeFieldSelectorProps}
         />
@@ -115,6 +118,7 @@ const MultiTypeList = (props: MultiTypeListProps & ConnectorReferenceProps): Rea
                           placeholder={placeholder}
                           multiTextInputProps={{
                             allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                             ...multiTextInputProps
                           }}
                           style={{ flexGrow: 1 }}

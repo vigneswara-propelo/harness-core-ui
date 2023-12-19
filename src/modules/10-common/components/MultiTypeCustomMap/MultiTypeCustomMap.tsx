@@ -24,6 +24,7 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector, {
   MultiTypeFieldSelectorProps
 } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './MultiTypeCustomMap.module.scss'
 
 export type MapValue = { id?: string; key: string; value: string }[]
@@ -79,6 +80,7 @@ export const MultiTypeCustomMap = (props: MultiTypeCustomMapProps): React.ReactE
 
   const value = get(formik?.values, name, ...getDefaultResetValue()) as MultiTypeMapValue
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <div className={cx(css.group, css.withoutSpacing, appearance === 'minimal' ? css.minimalCard : '')} {...restProps}>
       {typeof value === 'string' && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME ? (
@@ -86,7 +88,8 @@ export const MultiTypeCustomMap = (props: MultiTypeCustomMapProps): React.ReactE
           style={{ flexGrow: 1, marginBottom: 0 }}
           name={name}
           multiTextInputProps={{
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           {...multiTypeFieldSelectorProps}
         />
@@ -118,6 +121,8 @@ export const MultiTypeCustomMap = (props: MultiTypeCustomMapProps): React.ReactE
                               name={`${name}[${index}][${keyValue}]`}
                               multiTextInputProps={{
                                 allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                                width: 150,
                                 ...valueMultiTextInputProps
                               }}
                               disabled={disabled}

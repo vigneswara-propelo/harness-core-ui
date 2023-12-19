@@ -26,6 +26,7 @@ import { get, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from '../MultiTypeTagSelector/MultiTypeTagSelector.module.scss'
 
 interface SelectedTagsType {
@@ -101,6 +102,7 @@ const TagSelector = ({
 }: MultiTypeTagSelectorProps) => {
   const formik = useFormikContext()
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const usedTagKeys = useMemo(
     () =>
@@ -136,6 +138,7 @@ const TagSelector = ({
             onChange={express => formik.setFieldValue(name, express)}
             inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
             items={expressions}
+            newExpressionComponent={NG_EXPRESSIONS_NEW_INPUT_ELEMENT}
           />
         )
       }

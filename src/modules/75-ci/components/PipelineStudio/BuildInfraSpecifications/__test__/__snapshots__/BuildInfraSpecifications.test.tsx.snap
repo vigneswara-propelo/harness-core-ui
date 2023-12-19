@@ -4144,6 +4144,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                             >
                                               <div
                                                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                                style="width: 150px;"
                                               >
                                                 <div
                                                   class="bp3-input-group MultiTypeInput--input"
@@ -4204,6 +4205,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                             >
                                               <div
                                                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                                style="width: 150px;"
                                               >
                                                 <div
                                                   class="bp3-input-group MultiTypeInput--input"
@@ -4264,6 +4266,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                             >
                                               <div
                                                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                                style="width: 150px;"
                                               >
                                                 <div
                                                   class="bp3-input-group MultiTypeInput--input"
@@ -4324,6 +4327,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                             >
                                               <div
                                                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                                style="width: 150px;"
                                               >
                                                 <div
                                                   class="bp3-input-group MultiTypeInput--input"

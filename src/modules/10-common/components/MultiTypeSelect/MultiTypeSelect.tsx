@@ -18,6 +18,7 @@ import {
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 
 interface FormMultiTypeInputProps extends Omit<IFormGroupProps, 'labelFor'> {
   name: string
@@ -62,6 +63,7 @@ export function MultiTypeSelect(props: MultiTypeSelectProps): React.ReactElement
   const value = get(formik?.values, name, '')
 
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <div className={className} style={style}>
@@ -72,6 +74,10 @@ export function MultiTypeSelect(props: MultiTypeSelectProps): React.ReactElement
           label=""
           style={{ marginBottom: 0, flexGrow: 1 }}
           {...multiTypeInputProps}
+          multiTypeInputProps={{
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+            ...multiTypeInputProps.multiTypeInputProps
+          }}
           {...(useValue && { useValue: true })}
         />
         {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (

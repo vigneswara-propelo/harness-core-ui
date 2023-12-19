@@ -24,6 +24,7 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector, {
   MultiTypeFieldSelectorProps
 } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ConnectorReferenceProps } from '../MultiTypeList/MultiTypeList'
 import css from './MultiTypeListInputSet.module.scss'
 
@@ -80,6 +81,7 @@ export const MultiTypeListInputSet = (props: MultiTypeListProps & ConnectorRefer
   } = props
 
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const getStageFormikValues = React.useCallback(() => {
     return get(formik?.values, name, '')
@@ -213,6 +215,7 @@ export const MultiTypeListInputSet = (props: MultiTypeListProps & ConnectorRefer
                       intent={(touched || hasSubmitted) && error ? Intent.DANGER : Intent.NONE}
                       disabled={disabled}
                       allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                      newExpressionComponent={NG_EXPRESSIONS_NEW_INPUT_ELEMENT}
                       {...multiTextInputProps}
                     />
                   </div>

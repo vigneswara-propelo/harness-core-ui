@@ -28,6 +28,7 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector, {
   MultiTypeFieldSelectorProps
 } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './MultiTypeMap.module.scss'
 
 export type MapValue = { id: string; key: string; value: string }[]
@@ -82,6 +83,8 @@ const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
 
   const value = get(formik?.values, name, getDefaultResetValue()) as MultiTypeMapValue
 
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   const isRuntime = typeof value === 'string' && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME
 
   return (
@@ -97,7 +100,8 @@ const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
             className={css.marginZero}
             name={name}
             multiTextInputProps={{
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             {...multiTypeFieldSelectorProps}
           />
@@ -168,6 +172,7 @@ const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
                                   name={`${name}[${index}].value`}
                                   multiTextInputProps={{
                                     allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                     ...valueMultiTextInputProps
                                   }}
                                   disabled={disabled}

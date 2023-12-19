@@ -154,6 +154,7 @@ export const InstanceDropdownField: React.FC<InstanceDropdownFieldProps> = ({
       isPercentageType = false
     }
   }
+
   const selectedText = isPercentageType
     ? getString('instanceFieldOptions.percentageText')
     : getString('instanceFieldOptions.instanceText')
