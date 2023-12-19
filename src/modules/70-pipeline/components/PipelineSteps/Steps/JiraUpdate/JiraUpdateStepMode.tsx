@@ -127,9 +127,7 @@ function FormContent({
 
   const issueKeyType = useRef<MultiTypeInputType>(getMultiTypeFromValue(formik.values.spec.issueKey))
 
-  const issueKeyValue = isMultiTypeFixed(getMultiTypeFromValue(formik.values.spec.issueKey))
-    ? formik.values.spec.issueKey
-    : ''
+  const issueKeyValue = formik.values.spec.issueKey
   const issueTypeValue = isMultiTypeFixed(getMultiTypeFromValue(formik.values.spec.issueType))
     ? formik.values.spec.issueType
     : ''
@@ -630,7 +628,6 @@ function FormContent({
                         e?.target?.type !== 'text' ||
                         (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
                         !connectorRefFixedValue ||
-                        getMultiTypeFromValue(formik.values.spec.issueKey) !== MultiTypeInputType.FIXED ||
                         !CDS_JIRA_TRANSITION_LIST
                       ) {
                         return
@@ -750,7 +747,6 @@ function FormContent({
                         e?.target?.type !== 'text' ||
                         (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
                         !connectorRefFixedValue ||
-                        getMultiTypeFromValue(formik.values.spec.issueKey) !== MultiTypeInputType.FIXED ||
                         !CDS_JIRA_TRANSITION_LIST
                       ) {
                         return
