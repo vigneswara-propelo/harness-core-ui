@@ -31,11 +31,14 @@ import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import AsgSelectInstance from './AsgSelectInstance/AsgSelectInstance'
 import AsgBGStageSetupLoadBalancer from './AsgBGLoadBalancers/AsgBlueGreenDeployLoadBalancers'
+
 import type {
   AsgBlueGreenDeployStepInitialValues,
   AsgBlueGreenDeployCustomStepProps,
@@ -82,12 +85,17 @@ const AsgBlueGreenDeployStepEdit = (
   } = props
   const { selectedStage } = customStepProps
 
+  const { getStageFromPipeline } = usePipelineContext()
+
+  const propagatedStageId = get(selectedStage, 'stage.spec.environment.useFromStage.stage')
+  const propagatedStage = getStageFromPipeline(propagatedStageId)
+
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { CDS_ASG_SHIFT_TRAFFIC_STEP_NG } = useFeatureFlags()
-  const selectedStageSpec = selectedStage?.stage?.spec
-  const selectedStageSpecEnv = selectedStageSpec?.environment
-  const selectedStageSpecInfra = selectedStageSpec?.infrastructure
+  const selectedStageSpec = propagatedStageId ? propagatedStage?.stage?.stage?.spec : selectedStage?.stage?.spec
+  const selectedStageSpecEnv = defaultTo(get(selectedStageSpec, 'environment'), '')
+  const selectedStageSpecInfra = defaultTo(get(selectedStageSpec, 'infrastructure'), '')
   const defaultTrafficShift = CDS_ASG_SHIFT_TRAFFIC_STEP_NG ? false : undefined
   const environmentRef = defaultTo(selectedStageSpecEnv?.environmentRef, selectedStageSpecInfra?.environmentRef)
   const infrastructureRef = selectedStageSpecEnv?.infrastructureDefinitions?.[0].identifier

@@ -25,6 +25,8 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+
 import type { AsgBlueGreenDeployStepInitialValues, AsgBlueGreenDeployCustomStepProps } from './AsgBlueGreenDeployStep'
 import AsgBGStageSetupLoadBalancer from './AsgBGLoadBalancers/AsgBlueGreenDeployLoadBalancers'
 import { AsgLoadBalancer } from './AsgBlueGreenDeployStepEdit'
@@ -54,33 +56,44 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
+  const { originalPipeline } = usePipelineVariables()
+
   const pathFirstPart = path?.split('stages')[0]
   // Find out initial values of the fields which are fixed and required to fetch options of other fields
   const pathPrefix = !isEmpty(pathFirstPart) ? pathFirstPart : undefined
   // Used get from lodash and finding stages conditionally because formik.values has different strcuture
   // when coming from Input Set view and Run Pipeline Form. Ideally, it should be consistent.
+
+  const propagatedStageId = defaultTo(get(selectedStage, 'stage.spec.environment.useFromStage.stage'), '')
+
+  const propagatedStage = originalPipeline?.stages?.find(stage => get(stage, 'stage.identifier') === propagatedStageId)
   const currentStageFormik = get(formik?.values, pathPrefix ? `${pathPrefix}stages` : 'stages')?.find(
-    (currStage: StageElementWrapperConfig) => currStage.stage?.identifier === stageIdentifier
+    (currStage: StageElementWrapperConfig) => {
+      return currStage.stage?.identifier === stageIdentifier
+    }
   )
 
   // These are to be passed in API calls after Service/Env V2 redesign
-  const environmentRef = defaultTo(
+  const environmentRef =
     defaultTo(
-      currentStageFormik?.stage?.spec?.environment?.environmentRef,
       defaultTo(
-        selectedStage?.stage?.spec?.environment?.environmentRef,
-        selectedStage?.stage?.spec?.infrastructure?.environmentRef
-      )
-    ),
-    ''
-  )
-  const infrastructureRef = defaultTo(
+        currentStageFormik?.stage?.spec?.environment?.environmentRef,
+        defaultTo(
+          selectedStage?.stage?.spec?.environment?.environmentRef,
+          selectedStage?.stage?.spec?.infrastructure?.environmentRef
+        )
+      ),
+      ''
+    ) || defaultTo(get(propagatedStage, 'stage.spec.environment.environmentRef'), '')
+
+  const infrastructureRef =
     defaultTo(
-      currentStageFormik?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier,
-      selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier
-    ),
-    ''
-  )
+      defaultTo(
+        currentStageFormik?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier,
+        selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier
+      ),
+      ''
+    ) || defaultTo(get(propagatedStage, 'stage.spec.environment.infrastructureDefinitions.[0].identifier'), '')
 
   React.useEffect(() => {
     if (getMultiTypeFromValue(get(inputSetData.template, 'spec.loadBalancers')) === MultiTypeInputType.RUNTIME) {
