@@ -36,6 +36,7 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { getSanitizedflatObjectForVariablesView } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -71,6 +72,7 @@ function AsgCanaryDeployWidget(
   const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <Formik<AsgCanaryDeployData>
       onSubmit={(values: AsgCanaryDeployData) => {
@@ -130,7 +132,8 @@ function AsgCanaryDeployWidget(
                 multiTextInputProps={{
                   expressions,
                   disabled: readonly,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
               {getMultiTypeFromValue(formik.values.spec?.asgName) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -194,6 +197,7 @@ const AsgCanaryDeployInputStep: React.FC<AsgCanaryDeployProps> = ({
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -223,7 +227,8 @@ const AsgCanaryDeployInputStep: React.FC<AsgCanaryDeployProps> = ({
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.asgName`}
             template={template}

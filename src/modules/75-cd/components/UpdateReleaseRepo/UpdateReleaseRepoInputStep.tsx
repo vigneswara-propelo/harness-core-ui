@@ -21,6 +21,7 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { UpdateReleaseRepoFormData, UpdateReleaseRepoStepData } from './UpdateReleaseRepo'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -47,6 +48,7 @@ export default function UpdateReleaseRepoInputStep(props: UpdateReleaseRepoInput
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = defaultTo(path, '')
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <FormikForm>
       {getMultiTypeFromValue(get(template, 'timeout', '')) === MultiTypeInputType.RUNTIME && (
@@ -57,7 +59,8 @@ export default function UpdateReleaseRepoInputStep(props: UpdateReleaseRepoInput
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={getString('pipelineSteps.timeoutLabel')}
           name={`${prefix}.timeout`}
@@ -76,7 +79,8 @@ export default function UpdateReleaseRepoInputStep(props: UpdateReleaseRepoInput
             placeholder: getString('pipeline.prTitle'),
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
           fieldPath={'spec.prTitle'}
@@ -122,7 +126,8 @@ export default function UpdateReleaseRepoInputStep(props: UpdateReleaseRepoInput
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             label=""
                             disabled={readonly}

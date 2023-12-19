@@ -10,6 +10,7 @@ import { FormikProps } from 'formik'
 import { AllowedTypes, FormikForm, FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { RevertPRStepData } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -21,6 +22,8 @@ export default function OptionalConfiguration(props: {
   const { readonly, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   return (
     <FormikForm>
       <div className={stepCss.stepPanel}>
@@ -32,7 +35,12 @@ export default function OptionalConfiguration(props: {
             isOptional
             optionalLabel={getString('common.optionalLabel')}
             disabled={readonly}
-            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
         </div>
       </div>

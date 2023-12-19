@@ -24,6 +24,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ReleaseRepoVariable, UpdateReleaseRepoFormData } from './UpdateReleaseRepo'
 import css from './OptionalConfig.module.scss'
 
@@ -44,6 +45,7 @@ export default function OptionalConfiguration(props: {
   const { values: formValues, setFieldValue } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <FormikForm>
       <div className={stepCss.stepPanel}>
@@ -55,7 +57,12 @@ export default function OptionalConfiguration(props: {
             isOptional
             optionalLabel={getString('common.optionalLabel')}
             disabled={readonly}
-            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
           {getMultiTypeFromValue(formValues.spec.prTitle) === MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
@@ -109,7 +116,8 @@ export default function OptionalConfiguration(props: {
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             label=""
                             disabled={readonly}

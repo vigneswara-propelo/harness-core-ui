@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { FormEvent, useState } from 'react'
 import { FormInput, getMultiTypeFromValue, MultiTypeInputType, Text, AllowedTypes } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -11,6 +18,7 @@ import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ALLOWED_VALUES_TYPE } from '@common/components/ConfigureOptions/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { InstancesType } from '../../ElastigroupSetupStep/ElastigroupSetupTypes'
 import type { AsgBlueGreenDeployStepInitialValues } from '../AsgBlueGreenDeployStep'
 import type { AsgRollingDeployData } from '../../AsgRollingDeployStep/AsgRollingDeployStep'
@@ -26,6 +34,7 @@ const AsgSelectInstance = (props: AsgSelectInstanceProps): React.ReactElement =>
   const { formik, readonly, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { values: formValues, setFieldValue } = formik
   const [instancesType, setInstancesType] = useState<InstancesType>(
     formik.values?.spec?.instances?.type as InstancesType
@@ -71,7 +80,13 @@ const AsgSelectInstance = (props: AsgSelectInstanceProps): React.ReactElement =>
               placeholder={getString('cd.ElastigroupStep.minInstances')}
               label={getString('cd.ElastigroupStep.minInstances')}
               disabled={readonly}
-              multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes,
+                textProps: { type: 'number' },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
             {getMultiTypeFromValue(formSpec?.min) === MultiTypeInputType.RUNTIME && (
               <ConfigureOptions
@@ -92,7 +107,13 @@ const AsgSelectInstance = (props: AsgSelectInstanceProps): React.ReactElement =>
               placeholder={getString('cd.ElastigroupStep.maxInstances')}
               label={getString('cd.ElastigroupStep.maxInstances')}
               disabled={readonly}
-              multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes,
+                textProps: { type: 'number' },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
             {getMultiTypeFromValue(formSpec?.max) === MultiTypeInputType.RUNTIME && (
               <ConfigureOptions
@@ -113,7 +134,13 @@ const AsgSelectInstance = (props: AsgSelectInstanceProps): React.ReactElement =>
               placeholder={getString('cd.ElastigroupStep.desiredInstances')}
               label={getString('cd.ElastigroupStep.desiredInstances')}
               disabled={readonly}
-              multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes,
+                textProps: { type: 'number' },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
             {getMultiTypeFromValue(formSpec?.desired) === MultiTypeInputType.RUNTIME && (
               <ConfigureOptions

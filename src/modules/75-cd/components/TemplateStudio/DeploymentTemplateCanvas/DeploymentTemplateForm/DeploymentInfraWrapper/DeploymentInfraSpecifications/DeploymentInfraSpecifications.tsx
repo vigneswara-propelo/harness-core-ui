@@ -44,6 +44,7 @@ import {
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
 import { useTemplateVariables } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import { YamlProperties } from 'services/template-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { getDTInfraVariablesValidationField, InstanceScriptTypes } from '../DeploymentInfraUtils'
 import css from './DeploymentInfraSpecifications.module.scss'
 
@@ -62,6 +63,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
   const { expressions } = useVariablesExpression()
   const { metadataMap, variablesTemplate } = useTemplateVariables()
   const infraAllowableTypes: AllowedTypesWithRunTime[] = [MultiTypeInputType.FIXED]
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const scriptType: ScriptType = 'Bash'
   const instanceScriptTypes = React.useMemo(
@@ -236,7 +238,12 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
             className={css.halfWidth}
             placeholder={getString('cd.specifyTargetHost')}
             label=""
-            multiTextInputProps={{ expressions, disabled: isReadOnly, allowableTypes: infraAllowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              disabled: isReadOnly,
+              allowableTypes: infraAllowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             disabled={isReadOnly}
           />
         </Layout.Vertical>
@@ -286,7 +293,8 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                           multiTextInputProps={{
                             allowableTypes: infraAllowableTypes,
                             expressions,
-                            disabled: isReadOnly
+                            disabled: isReadOnly,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                           label=""
                         />

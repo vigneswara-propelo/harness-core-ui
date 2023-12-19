@@ -92,7 +92,7 @@ const AsgBlueGreenDeployStepEdit = (
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_ASG_SHIFT_TRAFFIC_STEP_NG } = useFeatureFlags()
+  const { CDS_ASG_SHIFT_TRAFFIC_STEP_NG, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const selectedStageSpec = propagatedStageId ? propagatedStage?.stage?.stage?.spec : selectedStage?.stage?.spec
   const selectedStageSpecEnv = defaultTo(get(selectedStageSpec, 'environment'), '')
   const selectedStageSpecInfra = defaultTo(get(selectedStageSpec, 'infrastructure'), '')
@@ -371,7 +371,8 @@ const AsgBlueGreenDeployStepEdit = (
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.spec?.asgName) === MultiTypeInputType.RUNTIME && !readonly && (

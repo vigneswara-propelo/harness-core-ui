@@ -30,6 +30,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { NGServiceConfig, ServiceResponse, ServiceResponseDTO } from 'services/cd-ng'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { getVariableTypeOptions, VariableType } from './ServiceOverridesUtils'
 import type { VariableOverride } from './ServiceOverridesInterface'
 import ServiceVariablesOverridesList from './ServiceVariablesOverrides/ServiceVariablesOverridesList'
@@ -69,6 +70,9 @@ function ServiceVariableOverride({
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     PipelinePathProps & EnvironmentPathProps
   >()
+
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   const getVariableOptions = (): VariableOptionsProps[] => {
     if (!isEmpty(selectedService)) {
       const serviceSelected = serviceList.find(
@@ -180,7 +184,8 @@ function ServiceVariableOverride({
                       textProps: {
                         type: formik.values?.type === VariableType.Number ? 'number' : 'text'
                       },
-                      multitypeInputValue: getMultiTypeFromValue(formik.values?.value)
+                      multitypeInputValue: getMultiTypeFromValue(formik.values?.value),
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                 )}

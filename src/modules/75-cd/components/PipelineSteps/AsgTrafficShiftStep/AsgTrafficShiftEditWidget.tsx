@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
@@ -16,6 +23,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AsgTrafficShiftData, AsgTrafficShiftProps } from './AsgTrafficShiftStep'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -26,6 +34,7 @@ export const AsgTrafficShiftWidget = (
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <>
       <Formik<AsgTrafficShiftData>
@@ -96,7 +105,8 @@ export const AsgTrafficShiftWidget = (
                     expressions,
                     disabled: readonly,
                     allowableTypes,
-                    textProps: { type: 'number' }
+                    textProps: { type: 'number' },
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(get(formik.values, 'spec.weight')) === MultiTypeInputType.RUNTIME && (

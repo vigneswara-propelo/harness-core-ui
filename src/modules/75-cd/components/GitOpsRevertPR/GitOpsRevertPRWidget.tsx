@@ -18,6 +18,7 @@ import {
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import OptionalConfiguration from './OptionalConfiguration'
 import type { GitOpsRevertPRProps, RevertPRStepData } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -29,6 +30,7 @@ function GitOpsRevertPRWidget(
   const { initialValues, onUpdate, isNewStep = true, onChange, stepViewType, allowableTypes, readonly } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <>
@@ -64,7 +66,8 @@ function GitOpsRevertPRWidget(
                   multiTypeDurationProps={{
                     enableConfigureOptions: true,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
               </div>
@@ -75,7 +78,12 @@ function GitOpsRevertPRWidget(
                   placeholder={getString('common.commitId')}
                   label={getString('common.commitId')}
                   disabled={readonly}
-                  multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    disabled: readonly,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                 />
               </div>
 

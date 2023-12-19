@@ -19,6 +19,7 @@ import type { ECSUpgradeContainerStepElementConfig } from '@pipeline/utils/types
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface ECSUpgradeContainerStepInputSetProps {
@@ -37,6 +38,7 @@ const ECSUpgradeContainerStepInputSet = (props: ECSUpgradeContainerStepInputSetP
   const { template, path, readonly } = inputSetData
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const pathPrefix = isEmpty(path) ? '' : `${path}.`
 
@@ -69,7 +71,8 @@ const ECSUpgradeContainerStepInputSet = (props: ECSUpgradeContainerStepInputSetP
               },
               disabled: readonly,
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
             configureOptionsProps={{
@@ -93,7 +96,8 @@ const ECSUpgradeContainerStepInputSet = (props: ECSUpgradeContainerStepInputSetP
               },
               disabled: readonly,
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
             configureOptionsProps={{

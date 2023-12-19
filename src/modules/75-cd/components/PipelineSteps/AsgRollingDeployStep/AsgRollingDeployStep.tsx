@@ -41,6 +41,7 @@ import type { StringsMap } from 'stringTypes'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { instanceWarmupSchema, minimumHealthyPercentageSchema } from './utils'
 import AsgSelectInstance from '../AsgBlueGreenDeployStep/AsgSelectInstance/AsgSelectInstance'
 import { InstancesType } from '../ElastigroupSetupStep/ElastigroupSetupTypes'
@@ -80,6 +81,7 @@ function AsgRollingDeployWidget(
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   function commonValidation(this: Yup.TestContext, value: any, valueString: string): boolean | Yup.ValidationError {
     if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED && typeof value !== 'number') {
@@ -293,7 +295,8 @@ function AsgRollingDeployWidget(
                             expressions,
                             disabled: readonly,
                             allowableTypes,
-                            textProps: { type: 'number' }
+                            textProps: { type: 'number' },
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                         />
                         {getMultiTypeFromValue(values.spec.minimumHealthyPercentage) === MultiTypeInputType.RUNTIME && (
@@ -325,7 +328,8 @@ function AsgRollingDeployWidget(
                             expressions,
                             disabled: readonly,
                             allowableTypes,
-                            textProps: { type: 'number' }
+                            textProps: { type: 'number' },
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                         />
                         {getMultiTypeFromValue(values.spec.instanceWarmup) === MultiTypeInputType.RUNTIME && (
@@ -371,6 +375,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
   return (
     <>
@@ -400,7 +405,8 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.asgName`}
             template={template}
@@ -414,7 +420,13 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
             placeholder={getString('cd.ElastigroupStep.minInstances')}
             label={getString('cd.ElastigroupStep.minInstances')}
             disabled={readonly}
-            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes,
+              textProps: { type: 'number' },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
         </div>
       ) : null}
@@ -425,7 +437,13 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
             placeholder={getString('cd.ElastigroupStep.maxInstances')}
             label={getString('cd.ElastigroupStep.maxInstances')}
             disabled={readonly}
-            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes,
+              textProps: { type: 'number' },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
         </div>
       ) : null}
@@ -436,7 +454,13 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
             placeholder={getString('cd.ElastigroupStep.desiredInstances')}
             label={getString('cd.ElastigroupStep.desiredInstances')}
             disabled={readonly}
-            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes,
+              textProps: { type: 'number' },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
         </div>
       ) : null}
@@ -462,7 +486,8 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
               textProps: { type: 'number' },
               allowableTypes,
               expressions,
-              defaultValueToReset: 0
+              defaultValueToReset: 0,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             label="Minimum Healthy Percentage"
             disabled={readonly}
@@ -480,7 +505,8 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
               textProps: { type: 'number' },
               allowableTypes,
               expressions,
-              defaultValueToReset: 0
+              defaultValueToReset: 0,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             label="Instance Warmup"
             disabled={readonly}
@@ -495,7 +521,8 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             name={`${prefix}spec.skipMatching`}
             label={'skip Matching'}

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { isEmpty, get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
@@ -7,6 +14,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeCheckboxField } from '@common/components'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isRuntime } from '../CloudFormation/CloudFormationHelper'
 import type { AsgTrafficShiftProps } from './AsgTrafficShiftStep'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -21,6 +29,8 @@ export const AsgTrafficShiftInputStep: React.FC<AsgTrafficShiftProps> = ({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   return (
     <>
       {isRuntime(defaultTo(get(template, 'timeout'), '')) && (
@@ -51,7 +61,8 @@ export const AsgTrafficShiftInputStep: React.FC<AsgTrafficShiftProps> = ({
               expressions,
               disabled: readonly,
               allowableTypes,
-              textProps: { type: 'number' }
+              textProps: { type: 'number' },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
         </div>

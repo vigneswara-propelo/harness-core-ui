@@ -19,6 +19,7 @@ import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/compo
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { ECSUpgradeContainerStepElementConfig, InstanceUnit } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -39,6 +40,7 @@ const ECSUpgradeContainerStepEdit = (
   const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const getInstanceUnitList = React.useCallback(() => {
     return [
@@ -131,7 +133,8 @@ const ECSUpgradeContainerStepEdit = (
                         textProps: { type: 'number', min: 0 },
                         expressions,
                         disabled: readonly,
-                        allowableTypes
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                     />
                     {isValueRuntimeInput(formik.values.spec.newServiceInstanceCount) && !readonly && (
@@ -175,7 +178,8 @@ const ECSUpgradeContainerStepEdit = (
                         textProps: { type: 'number', min: 0 },
                         expressions,
                         disabled: readonly,
-                        allowableTypes
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                     />
                     {isValueRuntimeInput(formik.values.spec?.downsizeOldServiceInstanceCount) && !readonly && (

@@ -27,6 +27,7 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AsgBlueGreenDeployStepInitialValues, AsgBlueGreenDeployCustomStepProps } from './AsgBlueGreenDeployStep'
 import AsgBGStageSetupLoadBalancer from './AsgBGLoadBalancers/AsgBlueGreenDeployLoadBalancers'
 import { AsgLoadBalancer } from './AsgBlueGreenDeployStepEdit'
@@ -53,6 +54,7 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -120,7 +122,8 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
               enableConfigureOptions: false,
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -135,7 +138,8 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.asgName`}
             template={template}
@@ -147,7 +151,8 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             name={`${prefix}spec.useAlreadyRunningInstances`}
             label={getString('cd.useAlreadyRunningInstance')}
@@ -164,7 +169,13 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
               placeholder={getString('cd.ElastigroupStep.minInstances')}
               label={getString('cd.ElastigroupStep.minInstances')}
               disabled={readonly}
-              multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes,
+                textProps: { type: 'number' },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
           </div>
         ) : null}
@@ -175,7 +186,13 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
               placeholder={getString('cd.ElastigroupStep.maxInstances')}
               label={getString('cd.ElastigroupStep.maxInstances')}
               disabled={readonly}
-              multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes,
+                textProps: { type: 'number' },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
           </div>
         ) : null}
@@ -186,7 +203,13 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
               placeholder={getString('cd.ElastigroupStep.desiredInstances')}
               label={getString('cd.ElastigroupStep.desiredInstances')}
               disabled={readonly}
-              multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes,
+                textProps: { type: 'number' },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
           </div>
         ) : null}

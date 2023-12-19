@@ -282,7 +282,8 @@ export default function SelectDeploymentType({
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { NG_SVC_ENV_REDESIGN, CDP_AWS_SAM, CDS_NG_K8S_SERVICE_RELEASE_NAME } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, CDP_AWS_SAM, CDS_NG_K8S_SERVICE_RELEASE_NAME, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } =
+    useFeatureFlags()
   const { expressions } = useVariablesExpression()
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes = React.useMemo(() => {
@@ -414,7 +415,8 @@ export default function SelectDeploymentType({
           multiTextInputProps={{
             expressions,
             allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
-            defaultValue: 'release-<+INFRA_KEY_SHORT_ID>'
+            defaultValue: 'release-<+INFRA_KEY_SHORT_ID>',
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           onChange={value => {
             kubernetesReleaseNameProps?.handleKubernetesReleaseName?.(value as string)
