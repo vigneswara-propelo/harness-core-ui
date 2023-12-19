@@ -13,6 +13,7 @@ import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { MergePRStepData, Variable } from './MergePrStep'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -32,6 +33,7 @@ export default function OptionalConfiguration(props: {
   const { values: formValues } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <FormikForm>
       <div className={stepCss.stepPanel}>
@@ -75,7 +77,8 @@ export default function OptionalConfiguration(props: {
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             label=""
                             disabled={readonly}

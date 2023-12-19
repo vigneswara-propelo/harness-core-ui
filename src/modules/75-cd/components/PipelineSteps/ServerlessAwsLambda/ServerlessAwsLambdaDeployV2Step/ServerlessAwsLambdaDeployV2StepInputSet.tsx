@@ -24,6 +24,7 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ServerlessAwsLambdaDeployV2StepInitialValues } from '@pipeline/utils/types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
 import { AwsSamServerlessStepCommonOptionalFieldsInputSet } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -49,6 +50,7 @@ function ServerlessAwsLambdaDeployV2StepInputSet(props: ServerlessPackageStepInp
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -97,7 +99,8 @@ function ServerlessAwsLambdaDeployV2StepInputSet(props: ServerlessPackageStepInp
         name={fieldName}
         multiTextInputProps={{
           expressions,
-          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         formik={formik}
         multiTypeFieldSelectorProps={{
@@ -121,7 +124,8 @@ function ServerlessAwsLambdaDeployV2StepInputSet(props: ServerlessPackageStepInp
               allowableTypes,
               expressions,
               disabled: readonly,
-              width: 416.5
+              width: 416.5,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -140,7 +144,8 @@ function ServerlessAwsLambdaDeployV2StepInputSet(props: ServerlessPackageStepInp
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.image`}
             template={template}
@@ -157,7 +162,8 @@ function ServerlessAwsLambdaDeployV2StepInputSet(props: ServerlessPackageStepInp
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.serverlessVersion`}
             template={template}

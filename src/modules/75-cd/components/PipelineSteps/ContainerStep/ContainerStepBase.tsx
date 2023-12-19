@@ -36,6 +36,7 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 import { useQueryParams } from '@common/hooks'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import { serverlessStepAllowedConnectorTypes } from '../Common/utils/utils'
 import type { ContainerStepData, ContainerStepProps } from './types'
@@ -53,6 +54,7 @@ export const ContainerStepBase = (
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
   return (
     <Formik<ContainerStepData>
@@ -85,7 +87,12 @@ export const ContainerStepBase = (
                 placeholder={getString('select')}
                 disabled={readonly}
                 accountIdentifier={accountId}
-                multiTypeProps={{ expressions, allowableTypes, disabled: readonly }}
+                multiTypeProps={{
+                  expressions,
+                  allowableTypes,
+                  disabled: readonly,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 projectIdentifier={projectIdentifier}
                 orgIdentifier={orgIdentifier}
                 enableConfigureOptions={false}
@@ -121,7 +128,11 @@ export const ContainerStepBase = (
                 label={getString('imageLabel')}
                 disabled={readonly}
                 name="spec.image"
-                multiTextInputProps={{ expressions, allowableTypes }}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 placeholder={getString('imagePlaceholder')}
               />
               {getMultiTypeFromValue(formik.values.spec.image) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -151,7 +162,8 @@ export const ContainerStepBase = (
                     items: getShellOptions(getString)
                   },
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 selectItems={getShellOptions(getString)}
               />
@@ -222,7 +234,12 @@ export const ContainerStepBase = (
                   placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
-                  multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
+                  multiTypeProps={{
+                    expressions,
+                    disabled: readonly,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   width={372}
@@ -270,7 +287,12 @@ export const ContainerStepBase = (
                   disabled={readonly}
                   label={getString('common.namespace')}
                   placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
-                  multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    textProps: { disabled: readonly },
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                 />
                 {getMultiTypeFromValue(formik.values.spec.infrastructure.spec.namespace) ===
                   MultiTypeInputType.RUNTIME &&
@@ -300,7 +322,8 @@ export const ContainerStepBase = (
                     multiTextInputProps={{
                       expressions,
                       textProps: { disabled: readonly },
-                      allowableTypes
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                     className={css.limitsInput}
                   />
@@ -326,7 +349,8 @@ export const ContainerStepBase = (
                     multiTextInputProps={{
                       expressions,
                       allowableTypes,
-                      disabled: readonly
+                      disabled: readonly,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                     className={css.limitsInput}
                   />

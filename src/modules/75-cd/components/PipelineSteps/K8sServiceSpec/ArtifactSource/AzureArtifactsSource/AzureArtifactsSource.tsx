@@ -31,6 +31,7 @@ import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
@@ -85,6 +86,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
@@ -361,7 +363,8 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
               className={css.connectorMargin}
@@ -390,6 +393,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   itemRenderer: itemRenderer,
                   items: getItems(fetchingProjects, 'Projects', projectItems),
@@ -420,6 +424,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <NoTagResults
@@ -457,6 +462,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <NoTagResults
@@ -494,6 +500,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <NoTagResults
@@ -526,7 +533,8 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
               disabled={readonly}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           )}

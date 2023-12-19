@@ -28,6 +28,7 @@ import MultiTypeSecretInput, {
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { HostScope, parseAttributes, parseHosts, PdcInfraTemplate } from './PDCInfrastructureInterface'
 import css from './PDCInfrastructureSpec.module.scss'
 
@@ -121,6 +122,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const formik = useFormikContext()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const updateData = (newData: Partial<PdcInfrastructure>) => {
     const prevData = get(formik.values, path, {})
@@ -149,7 +151,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           type={Connectors.PDC}
-          multiTypeProps={{ allowableTypes, expressions }}
+          multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
           setRefValue
           onChange={(connector: any) => {
@@ -171,6 +173,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
           multiTypeTextArea={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             configureOptionsProps: {
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
@@ -194,6 +197,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
           multiTextInputProps={{
             allowableTypes: [MultiTypeInputType.EXPRESSION],
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             multitypeInputValue: MultiTypeInputType.EXPRESSION
           }}
           label={getString('cd.steps.pdcStep.hostArrayPath')}
@@ -205,6 +209,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
           enableConfigureOptions={false}
           valueMultiTextInputProps={{
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
               item => !isMultiTypeRuntime(item)
             ) as AllowedTypes
@@ -230,6 +235,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
             multiTypeTextArea={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               configureOptionsProps: {
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               },
@@ -259,6 +265,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
             multiTypeTextArea={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               configureOptionsProps: {
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               },

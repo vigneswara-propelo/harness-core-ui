@@ -130,7 +130,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { CD_NG_DYNAMIC_PROVISIONING_ENV_V2 } = useFeatureFlags()
+  const { CD_NG_DYNAMIC_PROVISIONING_ENV_V2, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { getString } = useStrings()
   const { showError } = useToaster()
   const [formikInitialValues, setFormikInitialValues] = useState<PDCInfrastructureUI>()
@@ -585,7 +585,8 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                         label={getString('platform.connectors.pdc.hosts')}
                         multiTypeTextArea={{
                           expressions,
-                          allowableTypes
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                       />
                     )}
@@ -605,7 +606,11 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                           width={433}
                           selected={formik.values.connectorRef}
                           setRefValue
-                          multiTypeProps={{ allowableTypes, expressions }}
+                          multiTypeProps={{
+                            allowableTypes,
+                            expressions,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                          }}
                           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                           onChange={(value, _valueType, connectorRefType) => {
                             if (isMultiTypeRuntime(connectorRefType)) {
@@ -645,7 +650,8 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                             }}
                             multiTypeTextArea={{
                               expressions,
-                              allowableTypes
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                           />
                         ) : hostsScope === HostScope.HOST_ATTRIBUTES ? (
@@ -661,7 +667,8 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                               }}
                               multiTypeTextArea={{
                                 expressions,
-                                allowableTypes
+                                allowableTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                             />
                           </Layout.Vertical>
@@ -674,7 +681,8 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                           <div className={css.inputWrapper}>
                             <FormInput.MultiTextInput
                               multiTextInputProps={{
-                                allowableTypes: [MultiTypeInputType.RUNTIME]
+                                allowableTypes: [MultiTypeInputType.RUNTIME],
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                               data-testid="provisioner-field"
                               label={getString('common.provisioner')}
@@ -690,6 +698,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                             multiTextInputProps={{
                               allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
                               expressions,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                               multitypeInputValue:
                                 formik.values.hostArrayPath !== RUNTIME_INPUT_VALUE
                                   ? MultiTypeInputType.EXPRESSION
@@ -704,6 +713,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                             enableConfigureOptions={false}
                             valueMultiTextInputProps={{
                               expressions,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                               allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                 item => !isMultiTypeRuntime(item)
                               ) as AllowedTypes
@@ -749,7 +759,8 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                               }}
                               multiTypeTextArea={{
                                 expressions,
-                                allowableTypes
+                                allowableTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                             />
                           </Layout.Vertical>

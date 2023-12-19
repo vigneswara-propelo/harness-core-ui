@@ -37,7 +37,8 @@ export default function OptionalConfiguration(props: {
 }): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_HTTP_STEP_NG_CERTIFICATE } = useFeatureFlags()
+  const { CDS_HTTP_STEP_NG_CERTIFICATE, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   const {
     formik: { values: formValues, setFieldValue },
     readonly,
@@ -54,7 +55,12 @@ export default function OptionalConfiguration(props: {
           isOptional
           optionalLabel={getString('common.optionalLabel')}
           disabled={readonly}
-          multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
         />
         {getMultiTypeFromValue(formValues.spec.assertion) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -127,7 +133,8 @@ export default function OptionalConfiguration(props: {
                         multiTextInputProps={{
                           allowableTypes: allowableTypes,
                           expressions,
-                          disabled: readonly
+                          disabled: readonly,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                         label=""
                       />

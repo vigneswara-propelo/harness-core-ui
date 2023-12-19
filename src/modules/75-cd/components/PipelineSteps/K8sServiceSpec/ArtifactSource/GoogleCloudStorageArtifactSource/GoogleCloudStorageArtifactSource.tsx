@@ -64,7 +64,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const fixedConnectorValue: string | undefined = defaultTo(
@@ -307,7 +307,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={(selected, _typeValue) => {
                 const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
@@ -350,6 +351,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               multiTypeInputProps={{
                 allowableTypes,
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   items: projectOptions,
                   noResults: (
@@ -392,6 +394,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <Text lineClamp={1} width={400} height={32} padding="small">
@@ -429,7 +432,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactPath`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           )}

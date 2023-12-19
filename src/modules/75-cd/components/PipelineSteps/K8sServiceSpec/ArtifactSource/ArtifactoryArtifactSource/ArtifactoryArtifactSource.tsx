@@ -120,6 +120,7 @@ const TagFields = (props: TagFieldsProps & { isGenericArtifactory?: boolean }): 
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const getTagsFieldName = (): string => {
     if (isGenericArtifactory) {
@@ -143,7 +144,8 @@ const TagFields = (props: TagFieldsProps & { isGenericArtifactory?: boolean }): 
           multiTextInputProps={{
             expressions,
             value: TriggerDefaultFieldList.build,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={true}
           tooltipProps={{
@@ -173,7 +175,8 @@ const TagFields = (props: TagFieldsProps & { isGenericArtifactory?: boolean }): 
           disabled={isFieldDisabled(getTagRegexFieldName())}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={isGenericArtifactory ? getString('pipeline.artifactPathFilterLabel') : getString('tagRegex')}
           name={
@@ -217,6 +220,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
   const [isTagRegex, setIsTagRegex] = useState<boolean>(false)
@@ -713,7 +717,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
               className={css.connectorMargin}
@@ -735,7 +740,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryUrl`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               name={`${path}.artifacts.${artifactPath}.spec.repositoryUrl`}
               fieldPath={`artifacts.${artifactPath}.spec.repositoryUrl`}
@@ -782,7 +788,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactDirectory`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               name={`${path}.artifacts.${artifactPath}.spec.artifactDirectory`}
               onChange={() => debouncedResetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)} // debounced reset because changing form values multiple times on single change
@@ -796,7 +803,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactFilter`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               name={`${path}.artifacts.${artifactPath}.spec.artifactFilter`}
               onChange={() => debouncedResetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)} // debounced reset because changing form values multiple times on single change
@@ -825,6 +833,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 multiTypeInputProps={{
                   expressions,
                   allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     noResults: <NoTagResults tagError={imagePathError} isServerlessDeploymentTypeSelected={false} />,
                     itemRenderer: artifactPathItemRenderer,
@@ -896,7 +905,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipeline.digest')}
               name={`${path}.artifacts.${artifactPath}.spec.digest`}

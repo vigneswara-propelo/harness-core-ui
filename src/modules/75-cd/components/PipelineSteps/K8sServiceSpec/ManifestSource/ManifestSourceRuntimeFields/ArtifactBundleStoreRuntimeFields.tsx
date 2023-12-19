@@ -14,6 +14,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
@@ -33,6 +34,7 @@ export const ArtifactBundleStoreRuntimeFields = ({
 }: ManifestSourceRenderProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isFieldDisabled = (fieldName: string): boolean => {
     if (readonly) {
@@ -59,7 +61,8 @@ export const ArtifactBundleStoreRuntimeFields = ({
           disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.deployableUnitPath`)}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`${manifestPath}.spec.store.spec.repoName`}
           template={template}
@@ -77,7 +80,8 @@ export const ArtifactBundleStoreRuntimeFields = ({
           disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.manifestPath`)}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`${manifestPath}.spec.store.spec.repoName`}
           template={template}

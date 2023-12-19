@@ -14,6 +14,7 @@ import List from '@pipeline/components/List/List'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { K8sApplyProps } from './K8sInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -26,6 +27,7 @@ export function K8sOverrideValuesRuntimeFields(
   const { overrideValue, index, allowableTypes, initialValues, inputSetData, readonly } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -48,7 +50,7 @@ export function K8sOverrideValuesRuntimeFields(
             `${inputSetData?.path}.spec.overrides[${index}].manifest.spec.store.spec.connectorRef`,
             ''
           )}
-          multiTypeProps={{ allowableTypes, expressions }}
+          multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           width={400}
@@ -67,7 +69,8 @@ export function K8sOverrideValuesRuntimeFields(
             label={getString('pipelineSteps.deploy.inputSet.branch')}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
         </div>
@@ -90,7 +93,8 @@ export function K8sOverrideValuesRuntimeFields(
             label={getString('pipeline.manifestType.commitId')}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
         </div>
@@ -103,7 +107,8 @@ export function K8sOverrideValuesRuntimeFields(
             label={getString('pipelineSteps.content')}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
         </div>

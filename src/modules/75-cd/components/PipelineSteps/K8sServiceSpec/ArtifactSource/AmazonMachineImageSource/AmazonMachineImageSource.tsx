@@ -28,6 +28,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { useListTagsForAmiArtifactMutation } from 'services/cd-ng-rq'
 import MultiTypeArrayTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeArrayTagSelector'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
@@ -70,6 +71,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const [regions, setRegions] = useState<SelectOption[]>([])
   const [tags, setTags] = useState<SelectOption[]>([])
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
@@ -260,7 +262,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               disabled={readonly}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}
               gitScope={{
@@ -291,7 +294,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   addClearBtn: !readonly,
                   items: defaultTo(regions, [])
                 },
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               selectItems={regions}
             />
@@ -329,7 +333,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               disabled={readonly}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           )}
@@ -346,6 +351,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <NoTagResults

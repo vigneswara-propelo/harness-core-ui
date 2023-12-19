@@ -22,6 +22,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ServerlessAwsLambdaRollbackV2StepInitialValues } from '@pipeline/utils/types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
 import { AwsSamServerlessStepCommonOptionalFieldsInputSet } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -47,6 +48,7 @@ function ServerlessAwsLambdaRollbackV2StepInputSet(props: ServerlessPackageStepI
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -62,7 +64,8 @@ function ServerlessAwsLambdaRollbackV2StepInputSet(props: ServerlessPackageStepI
           setRefValue
           multiTypeProps={{
             allowableTypes,
-            expressions
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           width={416.5}
           accountIdentifier={accountId}
@@ -95,7 +98,8 @@ function ServerlessAwsLambdaRollbackV2StepInputSet(props: ServerlessPackageStepI
               allowableTypes,
               expressions,
               disabled: readonly,
-              width: 416.5
+              width: 416.5,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -114,7 +118,8 @@ function ServerlessAwsLambdaRollbackV2StepInputSet(props: ServerlessPackageStepI
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.image`}
             template={template}
@@ -131,7 +136,8 @@ function ServerlessAwsLambdaRollbackV2StepInputSet(props: ServerlessPackageStepI
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.serverlessVersion`}
             template={template}

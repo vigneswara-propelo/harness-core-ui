@@ -46,6 +46,7 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ConnectorRefType, getScopedConnectorValue } from '@pipeline/utils/stepUtils'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -92,6 +93,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [jobDetails, setJobDetails] = useState<SubmenuSelectOption[]>([])
   const [showChildJobField, setShowChildJobField] = useState<boolean>(false)
   const [lastOpenedJob, setLastOpenedJob] = useState<string | undefined>()
@@ -484,7 +486,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={value => {
                 if (value) {
@@ -564,6 +567,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   onTypeChange: (type: MultiTypeInputType) => setJobDetailsType(type),
 
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     allowCreatingNewItems: true,
                     items: jobDetails,
@@ -592,6 +596,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   }
                   multiTypeInputProps={{
                     width: 400,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onChange: (primaryValue: any) => {
                       if (primaryValue?.hasSubmenuItems) {
                         setLastOpenedJob(primaryValue?.label)
@@ -645,6 +650,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactPath`, type),
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 onChange: (newFilePath: any) => {
                   const artifacthPath = typeof newFilePath === 'string' ? newFilePath : newFilePath?.value
                   setArtifactPathValue(artifacthPath)
@@ -690,6 +696,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.build`, type),
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   allowCreatingNewItems: true,
                   addClearBtn: !readonly,
@@ -705,6 +712,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               label={getString('pipeline.jenkinsBuild')}
               multiTextInputProps={{
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 value: TriggerDefaultFieldList.build,
                 allowableTypes,
                 onClick: () => {

@@ -30,6 +30,7 @@ import { Connectors } from '@platform/connectors/constants'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ContainerStepData } from './types'
 
 import { getOsTypes } from './helper'
@@ -44,6 +45,7 @@ export default function OptionalConfiguration(props: {
   const { formik, readonly, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const tolerationsValue = get(formik.values.spec.infrastructure.spec, 'tolerations')
   const showContainerSecurityContext = get(formik.values.spec.infrastructure.spec, 'os') !== OsTypes.Windows
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -67,7 +69,8 @@ export default function OptionalConfiguration(props: {
               multiTypeTextbox={{
                 expressions,
                 allowableTypes,
-                disabled: readonly
+                disabled: readonly,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               tooltipProps={{ dataTooltipId: tooltipId }}
               disabled={readonly}
@@ -89,7 +92,11 @@ export default function OptionalConfiguration(props: {
     <div className={cx(stepCss.xlg, css.bottomMargin)}>
       <MultiTypeMap
         name={name}
-        valueMultiTextInputProps={{ expressions, allowableTypes }}
+        valueMultiTextInputProps={{
+          expressions,
+          allowableTypes,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+        }}
         multiTypeFieldSelectorProps={{
           label: (
             <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
@@ -124,7 +131,8 @@ export default function OptionalConfiguration(props: {
                 expressions,
                 allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                   item => !isMultiTypeRuntime(item)
-                ) as AllowedTypes
+                ) as AllowedTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               formik={formik}
               name={name}
@@ -188,7 +196,11 @@ export default function OptionalConfiguration(props: {
             label={getString('pipeline.stepCommonFields.runAsUser')}
             disabled={readonly}
             name="spec.infrastructure.spec.containerSecurityContext.runAsUser"
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             placeholder="1000"
           />
           {getMultiTypeFromValue(formik.values.spec.infrastructure?.spec?.containerSecurityContext?.runAsUser) ===
@@ -228,7 +240,8 @@ export default function OptionalConfiguration(props: {
               addClearBtn: true
             },
             expressions,
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           selectItems={getImagePullPolicyOptions(getString)}
         />
@@ -262,7 +275,8 @@ export default function OptionalConfiguration(props: {
             },
             expressions,
             disabled: readonly,
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           selectItems={getOsTypes(getString)}
         />
@@ -285,7 +299,8 @@ export default function OptionalConfiguration(props: {
           name="spec.infrastructure.spec.serviceAccountName"
           placeholder={getString('pipeline.infraSpecifications.serviceAccountNamePlaceholder')}
           multiTextInputProps={{
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formik.values.spec.infrastructure?.spec?.serviceAccountName) ===
@@ -325,7 +340,8 @@ export default function OptionalConfiguration(props: {
           label={getString('pipeline.buildInfra.priorityClassName')}
           name="spec.infrastructure.spec.priorityClassName"
           multiTextInputProps={{
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formik.values.spec.infrastructure?.spec?.priorityClassName) ===
@@ -362,7 +378,8 @@ export default function OptionalConfiguration(props: {
             name="spec.infrastructure.spec.tolerations"
             valueMultiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             formik={formik}
             multiTypeFieldSelectorProps={{
@@ -390,7 +407,11 @@ export default function OptionalConfiguration(props: {
       <div className={css.bottomMargin}>
         <FormMultiTypeDurationField
           name="spec.infrastructure.spec.initTimeout"
-          multiTypeDurationProps={{ expressions, allowableTypes }}
+          multiTypeDurationProps={{
+            expressions,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           label={
             <Text
               font={{ variation: FontVariation.FORM_LABEL }}
@@ -414,7 +435,10 @@ export default function OptionalConfiguration(props: {
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           style={{ marginBottom: 10 }}
-          multiTypeProps={{ allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME] }}
+          multiTypeProps={{
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           disabled={readonly}
           width={300}
           setRefValue

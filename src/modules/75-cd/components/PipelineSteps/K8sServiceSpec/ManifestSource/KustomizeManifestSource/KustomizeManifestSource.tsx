@@ -18,6 +18,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
@@ -41,6 +42,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isFieldDisabled = (fieldName: string): boolean => {
     // /* instanbul ignore else */
@@ -76,7 +78,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               name={`${path}.${manifestPath}.spec.store.spec.folderPath`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={
                 hasKustomizeYamlFolderPath
@@ -97,6 +100,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               name={`${path}.${manifestPath}.spec.pluginPath`}
               multiTextInputProps={{
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes
               }}
               label={getString('pluginPath')}
@@ -114,7 +118,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               name={`${path}.${manifestPath}.spec.overlayConfiguration`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
             />
@@ -166,7 +171,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               name={`${path}.${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
             />
@@ -184,7 +190,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               setToFalseWhenEmpty={true}
               multiTypeTextbox={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           </div>
@@ -218,7 +225,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               setToFalseWhenEmpty={true}
               multiTypeTextbox={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           </div>

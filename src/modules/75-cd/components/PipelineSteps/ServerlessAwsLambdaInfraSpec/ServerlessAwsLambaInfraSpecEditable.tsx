@@ -36,6 +36,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ServerlessInfraTypes } from '@pipeline/utils/stageHelpers'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { connectorTypes } from '@pipeline/utils/constants'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { getServerlessAwsLambdaValidationSchema } from '../PipelineStepsUtil'
 import css from './ServerlessInfraSpec.module.scss'
 
@@ -67,6 +68,7 @@ export const ServerlessAwsLambaInfraSpecEditable: React.FC<ServerlessAwsLambaInf
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
 
@@ -118,7 +120,11 @@ export const ServerlessAwsLambaInfraSpecEditable: React.FC<ServerlessAwsLambaInf
                   tooltipProps={{
                     dataTooltipId: 'awsInfraConnector'
                   }}
-                  multiTypeProps={{ expressions, allowableTypes }}
+                  multiTypeProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   width={450}
@@ -170,7 +176,8 @@ export const ServerlessAwsLambaInfraSpecEditable: React.FC<ServerlessAwsLambaInf
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   label={getString('regionLabel')}
                 />
@@ -199,7 +206,12 @@ export const ServerlessAwsLambaInfraSpecEditable: React.FC<ServerlessAwsLambaInf
                   className={css.inputWidth}
                   label={getString('common.stage')}
                   placeholder={getString('cd.steps.serverless.stagePlaceholder')}
-                  multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    textProps: { disabled: readonly },
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
                 {getMultiTypeFromValue(formik.values.stage) === MultiTypeInputType.RUNTIME && !readonly && (

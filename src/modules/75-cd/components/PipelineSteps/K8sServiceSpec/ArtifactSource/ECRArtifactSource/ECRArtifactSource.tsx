@@ -106,7 +106,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { isTagRegex, isServiceLoading } = useIsTagRegex({
     serviceIdentifier: serviceIdentifier!,
@@ -450,7 +450,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={(selected, _typeValue) => {
                 const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
@@ -493,7 +494,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
                   items: regions
                 },
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               useValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.region`)}
@@ -514,7 +516,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.registryId`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               fieldPath={`artifacts.${artifactPath}.spec.registryId`}
               template={template}
@@ -540,6 +543,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 onChange: selected => {
                   if (imagePathValue !== (selected as any)?.value) {
                     resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
@@ -577,7 +581,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               multiTextInputProps={{
                 expressions,
                 value: TriggerDefaultFieldList.build,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={true}
               name={`${path}.artifacts.${artifactPath}.spec.tag`}
@@ -604,7 +609,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('tagRegex')}
               name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
@@ -636,7 +642,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipeline.digest')}
               name={`${path}.artifacts.${artifactPath}.spec.digest`}

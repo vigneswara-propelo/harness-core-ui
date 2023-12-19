@@ -16,6 +16,7 @@ import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/M
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
@@ -41,6 +42,7 @@ const ManifestGitStoreRuntimeFields = ({
 }: ManifestSourceRenderProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const isFieldDisabled = (fieldName: string): boolean => {
     // /* instanbul ignore else */
     if (readonly) {
@@ -67,7 +69,8 @@ const ManifestGitStoreRuntimeFields = ({
             setRefValue
             multiTypeProps={{
               allowableTypes,
-              expressions
+              expressions,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             width={400}
             accountIdentifier={accountId}
@@ -95,7 +98,8 @@ const ManifestGitStoreRuntimeFields = ({
           disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.repoName`)}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`${manifestPath}.spec.store.spec.repoName`}
           template={template}
@@ -113,7 +117,8 @@ const ManifestGitStoreRuntimeFields = ({
           disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`${manifestPath}.spec.store.spec.branch`}
           template={template}
@@ -131,7 +136,8 @@ const ManifestGitStoreRuntimeFields = ({
           disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.commitId`)}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`${manifestPath}.spec.store.spec.commitId`}
           template={template}

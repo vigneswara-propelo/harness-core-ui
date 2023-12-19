@@ -55,6 +55,7 @@ import { isMultiTypeRuntime } from '@common/utils/utils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import MultiTypeListInputSet from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { SupportedInputTypesForListItems, SupportedInputTypesForListTypeField } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './K8sDelete.module.scss'
@@ -199,6 +200,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
   }
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <>
@@ -278,7 +280,8 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                       enableConfigureOptions: true,
                       expressions,
                       disabled: isDisabled,
-                      allowableTypes
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                 </Layout.Horizontal>
@@ -328,7 +331,8 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                                   textProps: { disabled: isDisabled },
                                   allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                     item => !isMultiTypeRuntime(item)
-                                  ) as AllowedTypes
+                                  ) as AllowedTypes,
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                 }}
                               />
                               {/* istanbul ignore next */}
@@ -370,7 +374,12 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                     name="spec.deleteResources.spec.deleteNamespace"
                     label={getString('pipelineSteps.deleteNamespace')}
                     style={{ paddingLeft: 'var(--spacing-small)', fontSize: 'var(--font-size-small)' }}
-                    multiTypeTextbox={{ expressions, disabled: isDisabled, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      disabled: isDisabled,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={isDisabled}
                   />
                 </div>
@@ -405,7 +414,8 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                                   allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                     item => !isMultiTypeRuntime(item)
                                   ) as AllowedTypes,
-                                  disabled: isDisabled
+                                  disabled: isDisabled,
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                 }}
                               />
 
@@ -465,6 +475,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
 const K8sDeleteInputStep: React.FC<K8sDeleteProps> = ({ inputSetData, readonly, allowableTypes, stepViewType }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const isTemplateUsageView = [StepViewType.TemplateUsage, StepViewType.Template].includes(stepViewType as StepViewType)
   return (
     <>
@@ -476,7 +487,8 @@ const K8sDeleteInputStep: React.FC<K8sDeleteProps> = ({ inputSetData, readonly, 
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={'timeout'}
           template={inputSetData?.template}
@@ -495,7 +507,8 @@ const K8sDeleteInputStep: React.FC<K8sDeleteProps> = ({ inputSetData, readonly, 
             }spec.deleteResources.spec.manifestPaths`}
             multiTextInputProps={{
               expressions,
-              allowableTypes: SupportedInputTypesForListItems
+              allowableTypes: SupportedInputTypesForListItems,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: getString('pipelineSteps.manifestPathLabel'),
@@ -515,7 +528,8 @@ const K8sDeleteInputStep: React.FC<K8sDeleteProps> = ({ inputSetData, readonly, 
             }spec.deleteResources.spec.resourceNames`}
             multiTextInputProps={{
               expressions,
-              allowableTypes: SupportedInputTypesForListItems
+              allowableTypes: SupportedInputTypesForListItems,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: getString('auditTrail.resourceNameLabel'),

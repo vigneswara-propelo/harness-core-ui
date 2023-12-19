@@ -26,6 +26,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -81,6 +82,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '' })
 
   const { isTagRegex, isServiceLoading } = useIsTagRegex({
@@ -279,7 +281,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
               className={css.connectorMargin}
@@ -301,7 +304,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
@@ -316,7 +320,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               multiTextInputProps={{
                 expressions,
                 value: TriggerDefaultFieldList.build,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={true}
               name={`${path}.artifacts.${artifactPath}.spec.tag`}
@@ -344,7 +349,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('tagRegex')}
               name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
@@ -374,7 +380,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipeline.digest')}
               name={`${path}.artifacts.${artifactPath}.spec.digest`}

@@ -26,6 +26,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { shouldDisplayRepositoryName } from '../K8sServiceSpec/ManifestSource/ManifestSourceUtils'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import { shouldFetchTagsSource } from '../K8sServiceSpec/ArtifactSource/artifactSourceUtils'
@@ -61,6 +62,7 @@ const TaskDefinitionFields = (props: TaskDefinitionFieldsProps) => {
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
@@ -189,7 +191,8 @@ const TaskDefinitionFields = (props: TaskDefinitionFieldsProps) => {
             setRefValue
             multiTypeProps={{
               allowableTypes,
-              expressions
+              expressions,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             width={391}
             accountIdentifier={accountId}
@@ -236,7 +239,8 @@ const TaskDefinitionFields = (props: TaskDefinitionFieldsProps) => {
             name={`${path}.repoName`}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             label={getString('common.repositoryName')}
           />
@@ -250,7 +254,8 @@ const TaskDefinitionFields = (props: TaskDefinitionFieldsProps) => {
             name={`${path}.branch`}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             label={getString('pipelineSteps.deploy.inputSet.branch')}
             fieldPath={`spec.taskDefinition.spec.branch`}
@@ -266,7 +271,8 @@ const TaskDefinitionFields = (props: TaskDefinitionFieldsProps) => {
             name={`${path}.commitId`}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             label={getString('pipelineSteps.commitIdValue')}
           />
@@ -335,6 +341,7 @@ const ECSRunTaskStepInputSetModeFormikForm = (props: ECSRunTaskStepInputSetProps
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -349,7 +356,8 @@ const ECSRunTaskStepInputSetModeFormikForm = (props: ECSRunTaskStepInputSetProps
               enableConfigureOptions: false,
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -365,7 +373,8 @@ const ECSRunTaskStepInputSetModeFormikForm = (props: ECSRunTaskStepInputSetProps
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
         </div>

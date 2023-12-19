@@ -32,6 +32,7 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   getFqnPath,
   getValidInitialValuePath,
@@ -73,6 +74,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const scriptType: ScriptType = get(template, `artifacts.${artifactPath}.spec.source.spec.script`) || 'Bash'
   const { orgIdentifier, projectIdentifier } = useGetChildPipelineMetadata(childPipelineMetadata)
 
@@ -216,7 +218,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
               multiTypeDurationProps={{
                 expressions,
                 enableConfigureOptions: false,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               fieldPath={`artifacts.${artifactPath}.spec.timeout`}
               template={template}
@@ -265,7 +268,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               fieldPath={`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`}
               template={template}
@@ -279,7 +283,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               fieldPath={`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`}
               template={template}
@@ -299,6 +304,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <NoTagResults
@@ -330,7 +336,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
               multiTextInputProps={{
                 expressions,
                 value: TriggerDefaultFieldList.build,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={true}
               name={`${path}.artifacts.${artifactPath}.spec.version`}
@@ -378,7 +385,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                                 multiTextInputProps={{
                                   allowableTypes,
                                   expressions,
-                                  disabled: readonly
+                                  disabled: readonly,
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                 }}
                                 label=""
                                 disabled={readonly}
@@ -435,7 +443,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                                   multiTextInputProps={{
                                     allowableTypes,
                                     expressions,
-                                    disabled: readonly
+                                    disabled: readonly,
+                                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                   }}
                                   label=""
                                   disabled={readonly}

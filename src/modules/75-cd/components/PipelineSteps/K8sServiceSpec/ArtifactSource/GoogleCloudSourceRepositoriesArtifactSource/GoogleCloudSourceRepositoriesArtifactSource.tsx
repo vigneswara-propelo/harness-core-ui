@@ -64,7 +64,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const fixedConnectorValue: string | undefined = defaultTo(
@@ -206,7 +206,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={(selected, _typeValue) => {
                 const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
@@ -244,6 +245,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               multiTypeInputProps={{
                 allowableTypes,
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   items: projectOptions,
                   noResults: (
@@ -281,7 +283,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               fieldPath={`artifacts.${artifactPath}.spec.repository`}
               template={template}
@@ -296,7 +299,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={isFieldDisabled(`${path}.artifacts.${artifactPath}.spec.branch`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               fieldPath={`artifacts.${artifactPath}.spec.branch`}
               template={template}
@@ -311,7 +315,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={isFieldDisabled(`${path}.artifacts.${artifactPath}.spec.commitId`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               fieldPath={`artifacts.${artifactPath}.spec.commitId`}
               template={template}
@@ -326,7 +331,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={isFieldDisabled(`${path}.artifacts.${artifactPath}.spec.tag`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               fieldPath={`artifacts.${artifactPath}.spec.tag`}
               template={template}
@@ -341,7 +347,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.sourceDirectory`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               fieldPath={`artifacts.${artifactPath}.spec.sourceDirectory`}
               template={template}

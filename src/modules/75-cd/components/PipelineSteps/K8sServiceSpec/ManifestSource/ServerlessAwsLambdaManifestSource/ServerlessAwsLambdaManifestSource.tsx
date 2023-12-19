@@ -16,6 +16,7 @@ import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/Manifes
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { S3ManifestStoreRuntimeView } from '@cd/components/PipelineSteps/ECSServiceSpec/ManifestSource/S3ManifestStoreRuntimeView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
@@ -37,6 +38,7 @@ const ServerlessLambdaGitStoreRuntimeView = (props: ManifestSourceRenderProps): 
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isFieldDisabled = (fieldName: string): boolean => {
     // /* instanbul ignore else */
@@ -84,7 +86,11 @@ const ServerlessLambdaGitStoreRuntimeView = (props: ManifestSourceRenderProps): 
             template={template}
             fieldPath={`${manifestPath}.spec.configOverridePath`}
             disabled={isFieldDisabled(`${manifestPath}.spec.configOverridePath`)}
-            multiTextInputProps={{ expressions, allowableTypes: props.allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes: props.allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             label={getString('pipeline.manifestType.serverlessConfigFilePath')}
             placeholder={getString('pipeline.manifestType.serverlessConfigFilePathPlaceholder')}
             name={`${path}.${manifestPath}.spec.configOverridePath`}

@@ -32,6 +32,7 @@ import type { StringsMap } from 'stringTypes'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import MultiTypeCustomMap from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ContainerStepProps } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ContainerStep.module.scss'
@@ -45,6 +46,7 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
   const infrastructureSpec = template?.spec?.infrastructure?.spec
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const infrastructureFields = ['infrastructure']
   const hasInfrastructureFields = infrastructureFields.some(field => Object.keys(template?.spec || {}).includes(field))
@@ -72,7 +74,8 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
         template={template}
         multiTextInputProps={{
           expressions,
-          allowableTypes
+          allowableTypes,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         configureOptionsProps={{
           isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -103,7 +106,11 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
       appearance={'minimal'}
       cardStyle={{ width: '50%' }}
       name={name}
-      valueMultiTextInputProps={{ expressions, allowableTypes }}
+      valueMultiTextInputProps={{
+        expressions,
+        allowableTypes,
+        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+      }}
       multiTypeFieldSelectorProps={{
         label: (
           <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
@@ -141,7 +148,8 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
           multiTypeTextbox={{
             expressions,
             allowableTypes,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           tooltipProps={{ dataTooltipId: tooltipId }}
           setToFalseWhenEmpty={true}
@@ -167,7 +175,8 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
           name={name}
           multiTextInputProps={{
             expressions,
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           formik={formik}
           multiTypeFieldSelectorProps={{
@@ -198,7 +207,8 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={'timeout'}
           template={template}
@@ -217,7 +227,7 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
             enableConfigureOptions={false}
             placeholder={getString('select')}
             disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
+            multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER, Connectors.AZURE]}
             setRefValue
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
@@ -247,7 +257,8 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
               items: getShellOptions(getString)
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -305,7 +316,7 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
             label={getString('connector')}
             placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
+            multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             type={Connectors.K8sCluster}
             setRefValue
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
@@ -355,7 +366,8 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
             }}
             multiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
             style={{ marginBottom: 'var(--spacing-small)' }}
@@ -486,7 +498,8 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
             cardStyle={{ width: '50%' }}
             valueMultiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             formik={formik}
             multiTypeFieldSelectorProps={{
@@ -519,7 +532,8 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={'spec.infrastructure.spec.initTimeout'}
           template={template}

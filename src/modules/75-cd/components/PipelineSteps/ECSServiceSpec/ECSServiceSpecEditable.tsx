@@ -34,7 +34,7 @@ import type {
   StageElementConfig,
   ManifestConfig
 } from 'services/cd-ng'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { CardInterface } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
 import { FeatureFlag } from '@common/featureFlags'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -121,6 +121,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
   const { isServiceEntityPage } = useServiceContext()
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
@@ -483,7 +484,11 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
                             onChange={value => {
                               updateTaskDefinitionARNValue(value as string)
                             }}
-                            multiTextInputProps={{ expressions, allowableTypes }}
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                           />
                           {getMultiTypeFromValue(formik.values.ecsTaskDefinitionArn) === MultiTypeInputType.RUNTIME && (
                             <div className={css.configureOptions}>

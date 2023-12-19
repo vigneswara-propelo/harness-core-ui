@@ -42,6 +42,7 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/MultiTypeKVTagInput'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -82,6 +83,7 @@ function RouteMappingStepWidget(
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, onChange, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <>
       <Formik<RouteMappingStepData>
@@ -143,7 +145,8 @@ function RouteMappingStepWidget(
                     expressions,
                     enableConfigureOptions: true,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
               </div>
@@ -173,7 +176,12 @@ function RouteMappingStepWidget(
                   placeholder={getString('cd.ElastigroupStep.appName')}
                   label={getString('cd.ElastigroupStep.appName')}
                   disabled={readonly}
-                  multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    disabled: readonly,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                 />
                 {getMultiTypeFromValue(values.spec.appName) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
@@ -195,7 +203,8 @@ function RouteMappingStepWidget(
                   tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
                   multiTypeProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   label={getString('cd.steps.tas.routes')}
                   enableConfigureOptions
@@ -219,6 +228,7 @@ const RouteMappingStepInputStep: React.FC<RouteMappingStepProps> = ({
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   /* istanbul ignore next */
   const getNameEntity = (fieldName: string): string => `${isEmpty(path) ? '' : `${path}.`}${fieldName}`
 
@@ -250,7 +260,8 @@ const RouteMappingStepInputStep: React.FC<RouteMappingStepProps> = ({
           label={getString('cd.ElastigroupStep.appName')}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           template={template}
           fieldPath={'spec.appName'}
@@ -264,7 +275,8 @@ const RouteMappingStepInputStep: React.FC<RouteMappingStepProps> = ({
             tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
             multiTypeProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             label={getString('cd.steps.tas.routes')}
             enableConfigureOptions

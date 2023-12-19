@@ -56,7 +56,7 @@ import { getServiceDefinitionType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { FeatureFlag } from '@common/featureFlags'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -109,6 +109,7 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const isK8sWithoutService = useFeatureFlag(FeatureFlag.CDS_K8S_APPLY_MANIFEST_WITHOUT_SERVICE_NG)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const selectedDeploymentType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
     return getServiceDefinitionType(
@@ -210,7 +211,12 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   name="timeout"
                   disabled={isDisabled}
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: true, disabled: isDisabled, allowableTypes }}
+                  multiTypeDurationProps={{
+                    enableConfigureOptions: true,
+                    disabled: isDisabled,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                 />
               </div>
 
@@ -281,7 +287,8 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                                     item => !isMultiTypeRuntime(item)
                                   ) as AllowedTypes,
                                   expressions,
-                                  textProps: { disabled: isDisabled }
+                                  textProps: { disabled: isDisabled },
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                 }}
                                 disabled={isDisabled}
                                 style={{ width: '430px' }}
@@ -317,7 +324,11 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   name="spec.skipDryRun"
                   label={getString('pipelineSteps.skipDryRun')}
                   disabled={isDisabled}
-                  multiTypeTextbox={{ expressions, allowableTypes }}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                 />
               </div>
               <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -325,7 +336,11 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   name="spec.skipSteadyStateCheck"
                   disabled={isDisabled}
                   label={getString('pipelineSteps.skipSteadyStateCheck')}
-                  multiTypeTextbox={{ expressions, allowableTypes }}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                 />
               </div>
               <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -333,7 +348,11 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   name="spec.skipRendering"
                   label={getString('cd.skipRendering')}
                   disabled={isDisabled}
-                  multiTypeTextbox={{ expressions, allowableTypes }}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                 />
               </div>
               <div className={stepCss.divider} />
@@ -357,6 +376,7 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const isTemplateUsageView = [StepViewType.TemplateUsage, StepViewType.Template].includes(stepViewType as StepViewType)
 
   return (
@@ -369,7 +389,8 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={getString('pipelineSteps.timeoutLabel')}
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
@@ -387,7 +408,8 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -405,7 +427,8 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -424,7 +447,8 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
             }spec.manifestSource.spec.store.spec.paths`}
             multiTextInputProps={{
               expressions,
-              allowableTypes: SupportedInputTypesForListItems
+              allowableTypes: SupportedInputTypesForListItems,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: getString('common.git.filePath'),
@@ -443,7 +467,8 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.manifestSource.spec.valuesPaths`}
             multiTextInputProps={{
               expressions,
-              allowableTypes: SupportedInputTypesForListItems
+              allowableTypes: SupportedInputTypesForListItems,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: getString('pipeline.manifestType.valuesYamlPath'),
@@ -461,7 +486,8 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.filePaths`}
             multiTextInputProps={{
               expressions,
-              allowableTypes: SupportedInputTypesForListItems
+              allowableTypes: SupportedInputTypesForListItems,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: getString('filePaths'),
@@ -478,7 +504,8 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
             multiTypeTextbox={{
               expressions,
               allowableTypes,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             enableConfigureOptions={true}
             configureOptionsProps={{
@@ -497,7 +524,8 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
             multiTypeTextbox={{
               expressions,
               allowableTypes,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             enableConfigureOptions={true}
             configureOptionsProps={{
@@ -516,7 +544,8 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
             multiTypeTextbox={{
               expressions,
               allowableTypes,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             enableConfigureOptions={true}
             configureOptionsProps={{

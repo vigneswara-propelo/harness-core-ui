@@ -21,6 +21,7 @@ import type { ServerlessInfraTypes } from '@pipeline/utils/stageHelpers'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { connectorTypes } from '@pipeline/utils/constants'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ServerlessInfraSpec.module.scss'
 
@@ -47,6 +48,7 @@ export const ServerlessAwsLambdaInfraSpecInputForm: React.FC<ServerlessAwsLambda
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const connectorFieldName = isEmpty(path) ? 'connectorRef' : `${path}.connectorRef`
   const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
@@ -74,7 +76,7 @@ export const ServerlessAwsLambdaInfraSpecInputForm: React.FC<ServerlessAwsLambda
             enableConfigureOptions={false}
             placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
+            multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             type={connectorTypes.Aws}
             setRefValue
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
@@ -93,7 +95,8 @@ export const ServerlessAwsLambdaInfraSpecInputForm: React.FC<ServerlessAwsLambda
           label={getString('regionLabel')}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           template={template}
           fieldPath={'region'}
@@ -107,7 +110,8 @@ export const ServerlessAwsLambdaInfraSpecInputForm: React.FC<ServerlessAwsLambda
           disabled={readonly}
           multiTextInputProps={{
             allowableTypes,
-            expressions
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           placeholder={getString('cd.steps.serverless.stagePlaceholder')}
           template={template}

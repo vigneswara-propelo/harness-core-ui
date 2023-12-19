@@ -41,6 +41,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import {
   getDefaultQueryParam,
@@ -102,6 +103,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     repository: ''
   })
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const commonParams = {
     accountIdentifier: accountId,
@@ -595,6 +597,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         multiTypeInputProps={{
           expressions,
           allowableTypes,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
           selectProps: {
             usePortal: true,
 
@@ -654,6 +657,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         multiTypeInputProps={{
           expressions,
           allowableTypes,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
           selectProps: {
             usePortal: true,
             noResults: (
@@ -710,7 +714,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
               className={css.connectorMargin}
@@ -739,7 +744,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 template={template}
                 multiTypeInputProps={{
                   expressions,
-
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   allowableTypes,
                   selectProps: {
                     usePortal: true,
@@ -789,7 +794,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 fieldPath={`artifacts.${artifactPath}.spec.spec.extension`}
                 template={template}
@@ -804,7 +810,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 placeholder={getString('pipeline.artifactsSelection.classifierPlaceholder')}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 fieldPath={`artifacts.${artifactPath}.spec.spec.classifier`}
                 template={template}
@@ -819,7 +826,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 placeholder={getString('pipeline.manifestType.packagePlaceholder')}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 fieldPath={`artifacts.${artifactPath}.spec.spec.packageName`}
                 template={template}
@@ -834,7 +842,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 placeholder={getString('pipeline.artifactsSelection.groupPlaceholder')}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 fieldPath={`artifacts.${artifactPath}.spec.spec.group`}
                 template={template}
@@ -849,7 +858,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 placeholder={getString('pipeline.artifactsSelection.repositoryPortPlaceholder')}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 name={`${path}.artifacts.${artifactPath}.spec.spec.repositoryPort`}
                 fieldPath={`artifacts.${artifactPath}.spec.spec.repositoryPort`}
@@ -865,7 +875,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.spec.repositoryUrl`)}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 name={`${path}.artifacts.${artifactPath}.spec.spec.repositoryUrl`}
                 fieldPath={`artifacts.${artifactPath}.spec.spec.repositoryUrl`}
@@ -880,7 +891,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.spec.artifactPath`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
               name={`${path}.artifacts.${artifactPath}.spec.spec.artifactPath`}
@@ -895,7 +907,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               multiTextInputProps={{
                 expressions,
                 value: TriggerDefaultFieldList.build,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={true}
               name={`${path}.artifacts.${artifactPath}.spec.tag`}
@@ -921,7 +934,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('tagRegex')}
               name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
@@ -951,7 +965,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipeline.digest')}
               name={`${path}.artifacts.${artifactPath}.spec.digest`}

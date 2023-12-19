@@ -34,6 +34,7 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import type { ECSRunTaskStepInitialValues } from './ECSRunTaskStep'
 import { TaskDefinitionModal } from './TaskDefinitionModal'
@@ -77,6 +78,7 @@ const ECSRunTaskStepEdit = (
   const [isRunTaskRequestDefinition, setIsRunTaskRequestDefinition] = useState<boolean>(false)
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { getString } = useStrings()
 
   const onAddTaskDefinitionClick = (): void => {
@@ -277,7 +279,11 @@ const ECSRunTaskStepEdit = (
                     label={getString('cd.steps.ecsRunTaskStep.ecsRunTaskDefinitionArn')}
                     name="spec.taskDefinitionArn"
                     placeholder={getString('cd.steps.ecsRunTaskStep.ecsRunTaskDefinitionArnPlaceholder')}
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                 </Container>
               )}

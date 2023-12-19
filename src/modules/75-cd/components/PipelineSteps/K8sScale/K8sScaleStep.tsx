@@ -46,6 +46,7 @@ import type { StringsMap } from 'stringTypes'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -81,6 +82,7 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
   const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <>
       <Formik<K8sScaleData>
@@ -131,7 +133,8 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
                       expressions,
                       enableConfigureOptions: true,
                       disabled: readonly,
-                      allowableTypes
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                 </div>
@@ -176,7 +179,12 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
                     placeholder={getString('pipeline.kubernetesStep.workload')}
                     name={'spec.workload'}
                     disabled={readonly}
-                    multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      disabled: readonly,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                   {getMultiTypeFromValue(values.spec.workload) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
@@ -198,7 +206,12 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
                   <FormMultiTypeCheckboxField
                     name="spec.skipSteadyStateCheck"
                     label={getString('pipelineSteps.skipSteadyStateCheck')}
-                    multiTypeTextbox={{ expressions, disabled: readonly, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      disabled: readonly,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={readonly}
                   />
                 </div>
@@ -215,6 +228,7 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
   return (
     <>
@@ -229,7 +243,8 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -247,7 +262,8 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={getString('pipelineSteps.timeoutLabel')}
           name={`${prefix}timeout`}
@@ -282,7 +298,8 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
             multiTypeTextbox={{
               expressions,
               allowableTypes,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             enableConfigureOptions={true}
             configureOptionsProps={{

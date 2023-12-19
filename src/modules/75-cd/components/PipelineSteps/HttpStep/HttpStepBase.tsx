@@ -18,6 +18,7 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { HttpStepFormData } from './types'
 import css from './HttpStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -40,6 +41,7 @@ export default function HttpStepBase(props: {
   allowableTypes?: AllowedTypes
 }): React.ReactElement {
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const {
     formik: { values: formValues, setFieldValue },
@@ -85,7 +87,12 @@ export default function HttpStepBase(props: {
           placeholder={getString('pipeline.utilitiesStep.url')}
           label={getString('UrlLabel')}
           disabled={readonly}
-          multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
         />
         {getMultiTypeFromValue(formValues.spec.url) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -104,7 +111,12 @@ export default function HttpStepBase(props: {
         <FormInput.MultiTypeInput
           selectItems={httpStepType}
           disabled={readonly}
-          multiTypeInputProps={{ expressions, disabled: readonly, allowableTypes }}
+          multiTypeInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           label={getString('methodLabel')}
           name="spec.method"
         />
@@ -128,7 +140,13 @@ export default function HttpStepBase(props: {
           name="spec.requestBody"
           label={getString('requestBodyLabel')}
           className={css.requestBody}
-          multiTypeTextArea={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+          multiTypeTextArea={{
+            enableConfigureOptions: false,
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
         />
         {getMultiTypeFromValue(formValues.spec.requestBody) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions

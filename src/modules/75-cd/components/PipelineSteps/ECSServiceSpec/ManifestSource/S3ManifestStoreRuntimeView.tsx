@@ -31,6 +31,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   getManifestFieldFqnPath,
   isFieldfromTriggerTabDisabled
@@ -78,6 +79,7 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [lastQueryData, setLastQueryData] = React.useState({
     connectorRef: '',
@@ -234,7 +236,8 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
               )
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           useValue
           selectItems={buckets}
@@ -262,7 +265,8 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
             setRefValue
             multiTypeProps={{
               allowableTypes,
-              expressions
+              expressions,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             onChange={(selected, _typeValue) => {
               const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
@@ -313,7 +317,8 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
                 }
               },
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             useValue
             selectItems={regions}
@@ -348,7 +353,11 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
             template={template}
             fieldPath={`${manifestPath}.spec.configOverridePath`}
             disabled={isFieldDisabled(`${manifestPath}.spec.configOverridePath`)}
-            multiTextInputProps={{ expressions, allowableTypes: props.allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes: props.allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             label={getString('pipeline.manifestType.serverlessConfigFilePath')}
             placeholder={getString('pipeline.manifestType.serverlessConfigFilePathPlaceholder')}
             name={`${path}.${manifestPath}.spec.configOverridePath`}

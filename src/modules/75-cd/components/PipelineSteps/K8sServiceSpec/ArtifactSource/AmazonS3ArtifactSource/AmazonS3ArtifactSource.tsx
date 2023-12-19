@@ -80,7 +80,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const fixedConnectorValue: string = getDefaultQueryParam(
@@ -503,7 +503,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={(selected, _typeValue) => {
                 const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
@@ -553,7 +554,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                     </Text>
                   ),
                   allowCreatingNewItems: true
-                }
+                },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('optionalField', { name: getString('regionLabel') })}
               placeholder={loadingRegions ? getString('loading') : getString('select')}
@@ -574,6 +576,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 onChange: selected => {
                   if (fixedBucketValue !== (selected as any)?.value) {
                     resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.filePath`)
@@ -613,7 +616,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               placeholder={getString('pipeline.artifactsSelection.fileFilterPlaceholder')}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={(value, _valueType, type) => {
                 formik.setValues(
@@ -645,6 +649,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <Text lineClamp={1} width={332} margin="small">
@@ -680,7 +685,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.filePathRegex`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           )}
@@ -691,7 +697,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               multiTextInputProps={{
                 expressions,
                 value: fixedFilePathRegexValue,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={true}
               name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
@@ -703,7 +710,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
             />

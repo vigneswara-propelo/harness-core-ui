@@ -26,6 +26,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   gcrUrlList,
@@ -81,6 +82,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
   const { getString } = useStrings()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '', registryHostname: '' })
   const imagePathValue = getImagePath(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.imagePath`, ''), artifact?.spec?.imagePath),
@@ -281,7 +283,8 @@ const Content = (props: GCRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
               className={css.connectorMargin}
@@ -310,6 +313,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
                 onChange: () => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`),
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: { allowCreatingNewItems: true, addClearBtn: true, items: gcrUrlList }
               }}
             />
@@ -321,7 +325,8 @@ const Content = (props: GCRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
@@ -336,7 +341,8 @@ const Content = (props: GCRRenderContent): JSX.Element => {
               multiTextInputProps={{
                 expressions,
                 value: TriggerDefaultFieldList.build,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={true}
               name={`${path}.artifacts.${artifactPath}.spec.tag`}
@@ -361,7 +367,8 @@ const Content = (props: GCRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('tagRegex')}
               name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
@@ -390,7 +397,8 @@ const Content = (props: GCRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipeline.digest')}
               name={`${path}.artifacts.${artifactPath}.spec.digest`}

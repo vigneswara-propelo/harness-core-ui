@@ -89,7 +89,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
-  const { CDS_HELM_FETCH_CHART_METADATA_NG } = useFeatureFlags()
+  const { CDS_HELM_FETCH_CHART_METADATA_NG, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
   const [chartVersions, setChartVersions] = React.useState<SelectOption[]>([])
   const isOciHelmChart = React.useMemo(() => {
@@ -355,7 +355,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               name={`${path}.${manifestPath}.spec.commandFlags[${helmFlagIdx}].flag`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={`${helmCommandFlag.commandType}: ${getString('flag')}`}
             />
@@ -384,7 +385,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             setRefValue
             multiTypeProps={{
               allowableTypes,
-              expressions
+              expressions,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             width={400}
             accountIdentifier={accountId}
@@ -417,7 +419,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               name={`${path}.${manifestPath}.spec.store.spec.repoName`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('common.repositoryName')}
             />
@@ -430,7 +433,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           name={`${path}.${manifestPath}.spec.store.spec.branch`}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={getString('pipelineSteps.deploy.inputSet.branch')}
           fieldPath={`${manifestPath}.spec.store.spec.branch`}
@@ -448,7 +452,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               name={`${path}.${manifestPath}.spec.store.spec.commitId`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipelineSteps.commitIdValue')}
             />
@@ -505,7 +510,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                   name={`${path}.${manifestPath}.spec.store.spec.bucketName`}
                   multiTextInputProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   label={getString('pipeline.manifestType.bucketName')}
                   placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
@@ -538,7 +544,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               name={`${path}.${manifestPath}.spec.store.spec.basePath`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipeline.manifestType.basePath')}
             />
@@ -572,7 +579,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               name={`${path}.${manifestPath}.spec.chartName`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipeline.manifestType.http.chartName')}
             />
@@ -589,7 +597,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               name={`${path}.${manifestPath}.spec.store.spec.folderPath`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('chartPath')}
             />
@@ -659,7 +668,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                 multiTextInputProps={{
                   ...(fromTrigger && { value: TriggerDefaultFieldList.chartVersion }),
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 label={getString('pipeline.manifestType.http.chartVersion')}
                 placeholder={getString('pipeline.manifestType.http.chartVersionPlaceHolder')}
@@ -693,7 +703,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           name={`${path}.${manifestPath}.spec.subChartPath`}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           className={css.inputFieldLayout}
           label={getString('pipeline.manifestType.subChart')}
@@ -708,7 +719,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           name={`${path}.${registryIdPath}`}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           className={css.inputFieldLayout}
           label={getString('pipeline.artifactsSelection.registryId')}
@@ -746,7 +758,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               setToFalseWhenEmpty={true}
               multiTypeTextbox={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           </div>
@@ -779,7 +792,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               setToFalseWhenEmpty={true}
               multiTypeTextbox={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           </div>
@@ -813,7 +827,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                 setToFalseWhenEmpty={true}
                 multiTypeTextbox={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
             </div>

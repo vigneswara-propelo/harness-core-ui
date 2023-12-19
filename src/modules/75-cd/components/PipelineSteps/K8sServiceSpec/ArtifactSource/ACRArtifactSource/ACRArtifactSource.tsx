@@ -46,6 +46,7 @@ import { getValue } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -103,6 +104,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
   const [subscriptions, setSubscriptions] = React.useState<SelectOption[]>([])
   const [registries, setRegistries] = React.useState<SelectOption[]>([])
   const [repositories, setRepositories] = React.useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [lastQueryData, setLastQueryData] = React.useState<{
     connectorRef: string
@@ -459,7 +461,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes,
-                expressions
+                expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={
                 /* istanbul ignore next */ (value, _valueType, type) => {
@@ -544,6 +547,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                     setRepositories([])
                   }
                 },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   allowCreatingNewItems: true,
                   addClearBtn: !(loadingSubscriptions || readonly),
@@ -612,6 +616,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                     setRepositories([])
                   }
                 },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   allowCreatingNewItems: true,
                   items: registries,
@@ -661,7 +666,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                   )
                 },
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               useValue
               selectItems={repositories}
@@ -680,7 +686,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
               multiTextInputProps={{
                 expressions,
                 value: TriggerDefaultFieldList.build,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={true}
               name={`${path}.artifacts.${artifactPath}.spec.tag`}
@@ -705,7 +712,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('tagRegex')}
               name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
@@ -736,7 +744,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('pipeline.digest')}
               name={`${path}.artifacts.${artifactPath}.spec.digest`}

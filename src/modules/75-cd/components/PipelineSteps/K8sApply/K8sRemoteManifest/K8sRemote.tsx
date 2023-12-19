@@ -32,6 +32,7 @@ import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { GitFetchTypes, GitRepoName, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface K8sRemoteManifestStepTwoProps {
@@ -62,6 +63,7 @@ const getAccountUrl = (prevStepData?: ConnectorConfigDTO): string => {
 
 export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemoteManifestStepTwoProps> = props => {
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { previousStep, prevStepData, onSubmitCallBack, isReadonly, allowableTypes, name, fieldPath, expressions } =
     props
@@ -246,7 +248,11 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                         label={getString('pipelineSteps.deploy.inputSet.branch')}
                         placeholder={getString('pipeline.manifestType.branchPlaceholder')}
                         name={formInputNames(fieldPath).branch}
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                       />
                       {getMultiTypeFromValue(branch) === MultiTypeInputType.RUNTIME && (
                         <ConfigureOptions
@@ -270,7 +276,11 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                       <>
                         <div className={cx(stepCss.formGroup, stepCss.md)}>
                           <FormInput.MultiTextInput
-                            multiTextInputProps={{ expressions, allowableTypes }}
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                             placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
                             label={getString('common.repositoryName')}
                             name={formInputNames(fieldPath).repoName}
@@ -305,7 +315,11 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                         label={getString('pipeline.manifestType.commitId')}
                         placeholder={getString('pipeline.manifestType.commitPlaceholder')}
                         name={formInputNames(fieldPath).commitId}
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                       />
                       {getMultiTypeFromValue(commitId) === MultiTypeInputType.RUNTIME && (
                         <ConfigureOptions
@@ -347,7 +361,8 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                                   multiTextInputProps={{
                                     allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
                                     expressions,
-                                    textProps: { disabled: isReadonly }
+                                    textProps: { disabled: isReadonly },
+                                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                   }}
                                   disabled={isReadonly}
                                   style={{ width: '430px' }}
@@ -426,7 +441,8 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                                     multiTextInputProps={{
                                       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
                                       expressions,
-                                      textProps: { disabled: isReadonly }
+                                      textProps: { disabled: isReadonly },
+                                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                     }}
                                     disabled={isReadonly}
                                     style={{ width: '430px' }}

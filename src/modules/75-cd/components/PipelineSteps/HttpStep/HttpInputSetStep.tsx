@@ -22,6 +22,7 @@ import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { ALLOWED_VALUES_TYPE } from '@common/components/ConfigureOptions/constants'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type {
   HttpStepFormData,
   HttpStepData,
@@ -49,6 +50,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
 
   return (
@@ -63,7 +65,8 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             },
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
           fieldPath={'timeout'}
@@ -79,7 +82,8 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep,
@@ -101,7 +105,8 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
           multiTypeInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep }}
           disabled={readonly}
@@ -120,7 +125,8 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
               },
               expressions,
               disabled: readonly,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -135,7 +141,8 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             placeholder: getString('pipeline.utilitiesStep.url'),
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep }}
           fieldPath={'spec.assertion'}
@@ -206,7 +213,8 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
                           multiTextInputProps={{
                             allowableTypes: allowableTypes,
                             expressions,
-                            disabled: readonly
+                            disabled: readonly,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                           label=""
                         />
@@ -251,7 +259,8 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
                               allowableTypes,
                               expressions,
                               disabled: readonly,
-                              defaultValueToReset: ''
+                              defaultValueToReset: '',
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             label=""
                             placeholder={getString('valueLabel')}
@@ -304,7 +313,8 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
                               allowableTypes,
                               expressions,
                               disabled: readonly,
-                              defaultValueToReset: ''
+                              defaultValueToReset: '',
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             label=""
                             placeholder={getString('valueLabel')}

@@ -19,6 +19,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { MergePRStepData } from './MergePrStep'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -43,6 +44,7 @@ const scriptOutputType: SelectOption[] = [
 export default function MergePRInputStep(props: MergePrInputStepProps): React.ReactElement {
   const { template, path, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const prefix = defaultTo(path, '')
   const variables = get(template, 'spec.variables', [])
@@ -57,7 +59,8 @@ export default function MergePRInputStep(props: MergePrInputStepProps): React.Re
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={'timeout'}
           template={template}
@@ -104,7 +107,8 @@ export default function MergePRInputStep(props: MergePrInputStepProps): React.Re
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             label=""
                             disabled={readonly}
