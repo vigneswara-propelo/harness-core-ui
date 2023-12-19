@@ -18,6 +18,7 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CloudFunctionExecutionStepInitialValues } from '@pipeline/utils/types'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface NoTrafficShiftExecutionStepInputSetProps {
@@ -38,6 +39,7 @@ export const NoTrafficShiftExecutionStepInputSet: React.FC<NoTrafficShiftExecuti
   const { template, path, readonly } = inputSetData
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const pathPrefix = isEmpty(path) ? '' : `${path}.`
   return (
@@ -52,7 +54,8 @@ export const NoTrafficShiftExecutionStepInputSet: React.FC<NoTrafficShiftExecuti
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
           fieldPath={'timeout'}
@@ -70,7 +73,8 @@ export const NoTrafficShiftExecutionStepInputSet: React.FC<NoTrafficShiftExecuti
             multiTextInputProps={{
               disabled: readonly,
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
             configureOptionsProps={{

@@ -31,6 +31,7 @@ import type { AwsCDKRollBackStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import { getEnvirontmentVariableValidationSchema } from '../../Common/utils/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -60,6 +61,7 @@ const AwsCDKRollBackStepEdit = (
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const validationSchema = Yup.object().shape({
     ...getNameAndIdentifierSchema(getString, stepViewType),
@@ -122,7 +124,8 @@ const AwsCDKRollBackStepEdit = (
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.spec.provisionerIdentifier) === MultiTypeInputType.RUNTIME &&

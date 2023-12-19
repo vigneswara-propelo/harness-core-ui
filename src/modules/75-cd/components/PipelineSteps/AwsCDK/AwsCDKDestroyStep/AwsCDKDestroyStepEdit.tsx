@@ -34,6 +34,7 @@ import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/compo
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AwsCDKDestroyStepInitialValues } from './AwsCDKDestroyStep'
 
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
@@ -65,6 +66,7 @@ const AwsCDKDestroyStepEdit = (
   const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const validationSchema = Yup.object().shape({
     ...getNameAndIdentifierSchema(getString, stepViewType),
@@ -197,7 +199,8 @@ const AwsCDKDestroyStepEdit = (
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.spec?.image) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -223,7 +226,8 @@ const AwsCDKDestroyStepEdit = (
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.spec?.appPath) === MultiTypeInputType.RUNTIME && !readonly && (

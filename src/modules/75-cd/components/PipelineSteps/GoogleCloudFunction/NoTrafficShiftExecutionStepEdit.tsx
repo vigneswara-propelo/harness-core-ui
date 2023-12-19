@@ -18,6 +18,7 @@ import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/compo
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { CloudFunctionExecutionStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -49,6 +50,7 @@ const NoTrafficShiftExecutionStepEdit = (
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <>
@@ -88,7 +90,8 @@ const NoTrafficShiftExecutionStepEdit = (
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.spec?.updateFieldMask) === MultiTypeInputType.RUNTIME &&

@@ -24,6 +24,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AwsCDKSynthStepInitialValues } from './AwsCDKSynthStep'
 import { awsCdkStepAllowedConnectorTypes } from '../AwsCDKCommonFields'
 import { AwsCdkStepCommonOptionalFieldsInputSet } from '../AwsCDKCommonFieldsInputSet'
@@ -51,6 +52,7 @@ function AwsCDKSynthStepInputSet(props: AwsCDKSynthStepInputSetProps): React.Rea
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -66,7 +68,8 @@ function AwsCDKSynthStepInputSet(props: AwsCDKSynthStepInputSetProps): React.Rea
           setRefValue
           multiTypeProps={{
             allowableTypes,
-            expressions
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           width={416.5}
           accountIdentifier={accountId}
@@ -99,7 +102,8 @@ function AwsCDKSynthStepInputSet(props: AwsCDKSynthStepInputSetProps): React.Rea
               allowableTypes,
               expressions,
               disabled: readonly,
-              width: 416.5
+              width: 416.5,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -118,7 +122,8 @@ function AwsCDKSynthStepInputSet(props: AwsCDKSynthStepInputSetProps): React.Rea
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.image`}
             template={template}
@@ -140,7 +145,8 @@ function AwsCDKSynthStepInputSet(props: AwsCDKSynthStepInputSetProps): React.Rea
               expressions,
               allowableTypes,
               disabled: readonly,
-              width: 416.5
+              width: 416.5,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             tooltipProps={{ dataTooltipId: 'exportTemplate' }}
             disabled={readonly}

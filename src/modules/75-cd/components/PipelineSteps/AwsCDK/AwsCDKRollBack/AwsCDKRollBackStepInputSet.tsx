@@ -22,6 +22,7 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import type { AwsCDKRollBackStepInitialValues } from '@pipeline/utils/types'
 import { getHasValuesAsRuntimeInputFromTemplate } from '@pipeline/utils/CIUtils'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface AwsCDKRollBackStepInputSetProps {
@@ -42,6 +43,7 @@ function AwsCDKRollBackStepInputSet(props: AwsCDKRollBackStepInputSetProps): Rea
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -65,7 +67,8 @@ function AwsCDKRollBackStepInputSet(props: AwsCDKRollBackStepInputSetProps): Rea
         name={fieldName}
         valueMultiTextInputProps={{
           allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
-          expressions
+          expressions,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         multiTypeFieldSelectorProps={{
           label: getString('optionalField', { name: getString(fieldLabel) }),
@@ -94,7 +97,8 @@ function AwsCDKRollBackStepInputSet(props: AwsCDKRollBackStepInputSetProps): Rea
               allowableTypes,
               expressions,
               disabled: readonly,
-              width: 416.5
+              width: 416.5,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -109,7 +113,8 @@ function AwsCDKRollBackStepInputSet(props: AwsCDKRollBackStepInputSetProps): Rea
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.provisionerIdentifier`}
             template={template}

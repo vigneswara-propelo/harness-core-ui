@@ -24,6 +24,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { AwsCDKDiffStepInitialValues } from '@pipeline/utils/types'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { awsCdkStepAllowedConnectorTypes } from '../AwsCDKCommonFields'
 import { AwsCdkStepCommonOptionalFieldsInputSet } from '../AwsCDKCommonFieldsInputSet'
 
@@ -50,6 +51,7 @@ function AwsCDKBootstrapStepInputSet(props: AwsCDKDiffStepInputSetProps): React.
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -65,7 +67,8 @@ function AwsCDKBootstrapStepInputSet(props: AwsCDKDiffStepInputSetProps): React.
           setRefValue
           multiTypeProps={{
             allowableTypes,
-            expressions
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           width={416.5}
           accountIdentifier={accountId}
@@ -98,7 +101,8 @@ function AwsCDKBootstrapStepInputSet(props: AwsCDKDiffStepInputSetProps): React.
               allowableTypes,
               expressions,
               disabled: readonly,
-              width: 416.5
+              width: 416.5,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -115,7 +119,8 @@ function AwsCDKBootstrapStepInputSet(props: AwsCDKDiffStepInputSetProps): React.
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.image`}
             template={template}
@@ -131,7 +136,8 @@ function AwsCDKBootstrapStepInputSet(props: AwsCDKDiffStepInputSetProps): React.
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.appPath`}
             template={template}

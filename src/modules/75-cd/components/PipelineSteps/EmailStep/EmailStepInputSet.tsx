@@ -15,6 +15,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { EmailStepData } from './emailStepTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './EmailStep.module.scss'
@@ -32,6 +33,7 @@ export default function EmailStepInputSet(props: EmailStepInputSetProps): React.
   const { template, path, readonly, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
 
   return (
@@ -44,7 +46,8 @@ export default function EmailStepInputSet(props: EmailStepInputSetProps): React.
             enableConfigureOptions: false,
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
           fieldPath={'timeout'}
@@ -60,7 +63,8 @@ export default function EmailStepInputSet(props: EmailStepInputSetProps): React.
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
           template={template}
@@ -76,7 +80,8 @@ export default function EmailStepInputSet(props: EmailStepInputSetProps): React.
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
           template={template}
@@ -96,7 +101,8 @@ export default function EmailStepInputSet(props: EmailStepInputSetProps): React.
               expressions,
               disabled: readonly,
               allowableTypes,
-              textAreaProps: { growVertically: true }
+              textAreaProps: { growVertically: true },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -114,7 +120,8 @@ export default function EmailStepInputSet(props: EmailStepInputSetProps): React.
               expressions,
               disabled: readonly,
               allowableTypes,
-              textAreaProps: { growVertically: true }
+              textAreaProps: { growVertically: true },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />

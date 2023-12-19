@@ -17,6 +17,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ElastigroupSetupData, InstancesType } from './ElastigroupSetupTypes'
 import type { ElastigroupBGStageSetupData } from '../ElastigroupBGStageSetupStep/ElastigroupBGStageSetupStepTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -39,6 +40,7 @@ export default function ElastigroupSetupSource(props: {
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [instancesType, setInstancesType] = useState<InstancesType>(
     (formik.values as ElastigroupSetupData).spec.instances.type as InstancesType
@@ -67,7 +69,13 @@ export default function ElastigroupSetupSource(props: {
         <FormMultiTypeDurationField
           name="timeout"
           label={getString('pipelineSteps.timeoutLabel')}
-          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
+          multiTypeDurationProps={{
+            enableConfigureOptions: true,
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           className={stepCss.duration}
           disabled={readonly}
         />
@@ -81,7 +89,12 @@ export default function ElastigroupSetupSource(props: {
           placeholder={getString('cd.ElastigroupStep.appName')}
           label={getString('cd.ElastigroupStep.appName')}
           disabled={readonly}
-          multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
         />
         {getMultiTypeFromValue(formValues.spec.name) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -125,7 +138,13 @@ export default function ElastigroupSetupSource(props: {
               placeholder={getString('cd.ElastigroupStep.minInstances')}
               label={getString('cd.ElastigroupStep.minInstances')}
               disabled={readonly}
-              multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes,
+                textProps: { type: 'number' },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
             {getMultiTypeFromValue(formValues.spec.instances.spec.min) === MultiTypeInputType.RUNTIME && (
               <ConfigureOptions
@@ -146,7 +165,13 @@ export default function ElastigroupSetupSource(props: {
               placeholder={getString('cd.ElastigroupStep.maxInstances')}
               label={getString('cd.ElastigroupStep.maxInstances')}
               disabled={readonly}
-              multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes,
+                textProps: { type: 'number' },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
             {getMultiTypeFromValue(formValues.spec.instances.spec.max) === MultiTypeInputType.RUNTIME && (
               <ConfigureOptions
@@ -167,7 +192,13 @@ export default function ElastigroupSetupSource(props: {
               placeholder={getString('cd.ElastigroupStep.desiredInstances')}
               label={getString('cd.ElastigroupStep.desiredInstances')}
               disabled={readonly}
-              multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes,
+                textProps: { type: 'number' },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
             {getMultiTypeFromValue(formValues.spec.instances.spec.desired) === MultiTypeInputType.RUNTIME && (
               <ConfigureOptions

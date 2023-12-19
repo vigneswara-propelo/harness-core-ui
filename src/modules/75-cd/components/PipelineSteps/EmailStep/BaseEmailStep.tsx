@@ -17,6 +17,7 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { EmailStepData } from './emailStepTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './EmailStep.module.scss'
@@ -32,6 +33,7 @@ interface BaseEmailStepProps {
 const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const {
     formik: { values: formValues, setFieldValue },
     isNewStep = true,
@@ -62,7 +64,8 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
             enableConfigureOptions: true,
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
         />
@@ -76,7 +79,12 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
           placeholder={getString('pipeline.utilitiesStep.to')}
           label={getString('common.smtp.labelTo')}
           disabled={readonly}
-          multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
         />
         {getMultiTypeFromValue(formValues.spec.to) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -95,7 +103,12 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
         <FormInput.MultiTextInput
           placeholder={getString('pipeline.utilitiesStep.cc')}
           disabled={readonly}
-          multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           label={getString('cd.steps.emailStep.ccOptionalLabel')}
           name="spec.cc"
         />
@@ -123,7 +136,8 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
             expressions,
             disabled: readonly,
             allowableTypes,
-            textAreaProps: { growVertically: true }
+            textAreaProps: { growVertically: true },
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formValues.spec.subject) === MultiTypeInputType.RUNTIME && (
@@ -149,7 +163,8 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
             expressions,
             disabled: readonly,
             allowableTypes,
-            textAreaProps: { growVertically: true }
+            textAreaProps: { growVertically: true },
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formValues.spec.body) === MultiTypeInputType.RUNTIME && (

@@ -36,6 +36,7 @@ import type { AwsCDKDiffStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import {
   AwsCdkCommonOptionalFieldsEdit,
@@ -65,6 +66,7 @@ const AwsCDKDiffStepEdit = (
   const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const validationSchema = Yup.object().shape({
     ...getNameAndIdentifierSchema(getString, stepViewType),
@@ -197,7 +199,8 @@ const AwsCDKDiffStepEdit = (
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.spec?.image) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -223,7 +226,8 @@ const AwsCDKDiffStepEdit = (
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.spec?.appPath) === MultiTypeInputType.RUNTIME && !readonly && (

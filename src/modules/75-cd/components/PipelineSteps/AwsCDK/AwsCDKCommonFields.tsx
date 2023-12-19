@@ -26,6 +26,7 @@ import { Connectors } from '@platform/connectors/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const awsCdkStepAllowedConnectorTypes = [Connectors.GCP, Connectors.AWS, Connectors.DOCKER]
@@ -69,6 +70,7 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <>
@@ -78,7 +80,8 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
             name={commandOptionsFieldName}
             multiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: defaultTo(commandOptionsFieldLabel, ''),
@@ -96,7 +99,8 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
             name={'spec.stackNames'}
             multiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: defaultTo(getString('pipeline.buildInfra.stackNames'), ''),
@@ -115,7 +119,8 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
           multiTypeTextbox={{
             expressions,
             allowableTypes,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
           configureOptionsProps={{ hideExecutionTimeField: true }}
@@ -133,7 +138,8 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
           multiTypeInputProps={{
             expressions,
             allowableTypes,
-            selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) }
+            selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) },
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formik.values.spec.imagePullPolicy) === MultiTypeInputType.RUNTIME && (
@@ -159,7 +165,8 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formik.values.spec?.runAsUser) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -186,7 +193,8 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formik.values.spec?.resources?.limits?.memory) === MultiTypeInputType.RUNTIME &&
@@ -214,7 +222,8 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formik.values.spec?.resources?.limits?.cpu) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -235,7 +244,11 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
       <Container className={stepCss.bottomSpacing}>
         <MultiTypeMap
           name={'spec.envVariables'}
-          valueMultiTextInputProps={{ expressions, allowableTypes }}
+          valueMultiTextInputProps={{
+            expressions,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           multiTypeFieldSelectorProps={{
             label: getString('environmentVariables'),
             disableTypeSelection: true
@@ -250,7 +263,11 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
         <Container className={stepCss.bottomSpacing}>
           <MultiTypeMap
             name={'spec.parameters'}
-            valueMultiTextInputProps={{ expressions, allowableTypes }}
+            valueMultiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             multiTypeFieldSelectorProps={{
               label: getString('platform.connectors.parameters'),
               disableTypeSelection: true

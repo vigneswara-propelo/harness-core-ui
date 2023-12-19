@@ -18,6 +18,7 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { AwsSamBuildStepInitialValues, AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { AwsSamServerlessStepCommonOptionalFieldsInputSet } from '../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -44,6 +45,7 @@ export function AwsSamBuildDeployStepOptionalFieldsInputSet(
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -59,7 +61,8 @@ export function AwsSamBuildDeployStepOptionalFieldsInputSet(
         name={fieldName}
         multiTextInputProps={{
           expressions,
-          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         formik={formik}
         multiTypeFieldSelectorProps={{

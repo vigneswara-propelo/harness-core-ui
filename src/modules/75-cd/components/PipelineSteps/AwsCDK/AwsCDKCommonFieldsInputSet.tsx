@@ -25,6 +25,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { AwsCDKDiffStepInitialValues } from '@pipeline/utils/types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { AwsCDKCommonStepFormikValues } from './AwsCDKCommonFields'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -52,6 +53,7 @@ export function AwsCdkStepCommonOptionalFieldsInputSet(
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -67,7 +69,8 @@ export function AwsCdkStepCommonOptionalFieldsInputSet(
         name={fieldName}
         multiTextInputProps={{
           expressions,
-          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         formik={formik}
         multiTypeFieldSelectorProps={{
@@ -103,7 +106,8 @@ export function AwsCdkStepCommonOptionalFieldsInputSet(
         name={fieldName}
         valueMultiTextInputProps={{
           allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
-          expressions
+          expressions,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         multiTypeFieldSelectorProps={{
           label: getString('optionalField', { name: getString(fieldLabel) }),
@@ -143,7 +147,8 @@ export function AwsCdkStepCommonOptionalFieldsInputSet(
               expressions,
               allowableTypes,
               disabled: readonly,
-              width: 416.5
+              width: 416.5,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             tooltipProps={{ dataTooltipId: 'privileged' }}
             disabled={readonly}
@@ -163,7 +168,8 @@ export function AwsCdkStepCommonOptionalFieldsInputSet(
             multiTypeInputProps={{
               expressions,
               allowableTypes,
-              selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) }
+              selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             template={template}
             fieldPath={`spec.imagePullPolicy`}
@@ -180,7 +186,8 @@ export function AwsCdkStepCommonOptionalFieldsInputSet(
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.runAsUser`}
             template={template}
@@ -197,7 +204,8 @@ export function AwsCdkStepCommonOptionalFieldsInputSet(
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.resources.limits.memory`}
             template={template}
@@ -214,7 +222,8 @@ export function AwsCdkStepCommonOptionalFieldsInputSet(
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.resources.limits.cpu`}
             template={template}

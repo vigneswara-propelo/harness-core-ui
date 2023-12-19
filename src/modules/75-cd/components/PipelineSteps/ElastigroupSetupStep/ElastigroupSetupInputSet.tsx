@@ -14,6 +14,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ElastigroupSetupData } from './ElastigroupSetupTypes'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -33,6 +34,7 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
   const { template, path, readonly, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
 
   return (
@@ -43,7 +45,8 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
             enableConfigureOptions: false,
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={getString('pipelineSteps.timeoutLabel')}
           name={`${prefix}timeout`}
@@ -61,7 +64,8 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
           label={getString('cd.ElastigroupStep.appName')}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           template={template}
           fieldPath={'spec.name'}
@@ -77,7 +81,8 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
           multiTextInputProps={{
             expressions,
             allowableTypes,
-            textProps: { type: 'number' }
+            textProps: { type: 'number' },
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           template={template}
           fieldPath={'spec.instances.spec.min'}
@@ -93,7 +98,8 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
           multiTextInputProps={{
             expressions,
             allowableTypes,
-            textProps: { type: 'number' }
+            textProps: { type: 'number' },
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           template={template}
           fieldPath={'spec.instances.spec.desired'}
@@ -109,7 +115,8 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
           multiTextInputProps={{
             expressions,
             allowableTypes,
-            textProps: { type: 'number' }
+            textProps: { type: 'number' },
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           template={template}
           fieldPath={'spec.instances.spec.max'}

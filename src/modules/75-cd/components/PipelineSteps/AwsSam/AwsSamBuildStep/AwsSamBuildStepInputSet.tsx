@@ -22,6 +22,7 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { AwsSamBuildStepInitialValues } from '@pipeline/utils/types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
 import { AwsSamBuildDeployStepOptionalFieldsInputSet } from '../AwsSamBuildDeployStepOptionalFieldsInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -47,6 +48,7 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -62,7 +64,8 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
           setRefValue
           multiTypeProps={{
             allowableTypes,
-            expressions
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           width={416.5}
           accountIdentifier={accountId}
@@ -95,7 +98,8 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
               allowableTypes,
               expressions,
               disabled: readonly,
-              width: 416.5
+              width: 416.5,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -120,7 +124,8 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.image`}
             template={template}
@@ -137,7 +142,8 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.samVersion`}
             template={template}

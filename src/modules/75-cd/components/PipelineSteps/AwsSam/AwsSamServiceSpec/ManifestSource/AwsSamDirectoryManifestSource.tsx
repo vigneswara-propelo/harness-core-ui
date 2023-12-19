@@ -16,6 +16,7 @@ import { shouldAllowOnlyOneFilePath } from '@pipeline/components/ManifestSelecti
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import MultiTypeListOrFileSelectList from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/MultiTypeListOrFileSelectList'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../../K8sServiceSpec/K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../../../K8sServiceSpec/ManifestSource/ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../../../K8sServiceSpec/ManifestSource/ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
@@ -26,6 +27,7 @@ const AwsSamDirectoryGitStoreRuntimeView = (props: ManifestSourceRenderProps): R
     props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isFieldDisabled = (fieldName: string): boolean => {
     if (readonly) {
@@ -71,7 +73,11 @@ const AwsSamDirectoryGitStoreRuntimeView = (props: ManifestSourceRenderProps): R
             template={template}
             fieldPath={`${manifestPath}.spec.samTemplateFile`}
             disabled={isFieldDisabled(`${manifestPath}.spec.samTemplateFile`)}
-            multiTextInputProps={{ expressions, allowableTypes: props.allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes: props.allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             label={getString('optionalField', {
               name: getString('pipeline.manifestType.awsSamDirectory.samTemplateFile')
             })}

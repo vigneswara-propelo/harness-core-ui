@@ -36,6 +36,7 @@ import type { AwsCDKBootstrapStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import {
   AwsCdkCommonOptionalFieldsEdit,
@@ -65,6 +66,7 @@ const AwsCDKBootstrapStepEdit = (
   const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const validationSchema = Yup.object().shape({
     ...getNameAndIdentifierSchema(getString, stepViewType),
@@ -117,7 +119,7 @@ const AwsCDKBootstrapStepEdit = (
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           type={awsCdkStepAllowedConnectorTypes}
           enableConfigureOptions={false}
           selected={get(formik.values, fieldName) as string}
@@ -190,7 +192,8 @@ const AwsCDKBootstrapStepEdit = (
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.spec?.image) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -216,7 +219,8 @@ const AwsCDKBootstrapStepEdit = (
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.spec?.appPath) === MultiTypeInputType.RUNTIME && !readonly && (
