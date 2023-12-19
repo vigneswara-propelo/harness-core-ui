@@ -385,22 +385,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
     return <PageSpinner />
   }
 
-  const currentPipeline = { pipeline: get(formikRef.current, 'values') }
-
   const showInputSetSelector = (): boolean => {
-    return !!(pipeline && currentPipeline && hasRuntimeInputs && existingProvide === 'existing' && hasInputSets)
-  }
-
-  const showPipelineInputSetForm = (): boolean => {
-    return (
-      !!(
-        (existingProvide === 'provide' || selectedInputSets?.length) &&
-        currentPipeline?.pipeline &&
-        resolvedPipeline
-      ) &&
-      hasRuntimeInputs &&
-      !loadingInputSets
-    )
+    return !!(pipeline && hasRuntimeInputs && existingProvide === 'existing' && hasInputSets)
   }
 
   const showVoidPipelineInputSetForm = (): boolean => {
@@ -432,7 +418,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   }
 
   const noRuntimeInputs =
-    resolvedPipeline && currentPipeline && !hasRuntimeInputs ? getString('runPipelineForm.noRuntimeInput') : undefined
+    resolvedPipeline && !hasRuntimeInputs ? getString('runPipelineForm.noRuntimeInput') : undefined
 
   return (
     <Container>
@@ -450,6 +436,15 @@ function PipelineInputSetFormBasic(): React.ReactElement {
 
           if (hasRuntimeInputs && isEmpty(values)) {
             return <PageSpinner />
+          }
+
+          const showPipelineInputSetForm = (): boolean => {
+            return (
+              !!((existingProvide === 'provide' || selectedInputSets?.length) && resolvedPipeline) &&
+              !isEmpty(values) &&
+              hasRuntimeInputs &&
+              !loadingInputSets
+            )
           }
 
           return (
