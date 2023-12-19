@@ -128,15 +128,18 @@ export const commonActiveInstanceData = (
   instanceData: InstanceDetailsDTO,
   getString: UseStringsReturn['getString']
 ): SectionProps[] => {
-  const instanceInfoDTOProperties = (instanceData?.instanceInfoDTO as CustomDeploymentInstanceInfoDTO)?.properties || {}
+  const instanceInfoDTOProperties = defaultTo(
+    (instanceData?.instanceInfoDTO as CustomDeploymentInstanceInfoDTO)?.properties,
+    {}
+  )
   const defaultInstanceInfoData = [
     {
       label: capitalize(getString('cd.serviceDashboard.pod')),
-      value: instanceData.podName || ''
+      value: defaultTo(instanceData.podName, '')
     },
     {
       label: capitalize(getString('cd.serviceDashboard.artifact')),
-      value: instanceData.artifactName || ''
+      value: defaultTo(instanceData.artifactName, '')
     }
   ]
   const customDeploymentInstanceInfoData = Object.keys(instanceInfoDTOProperties).map(instanceDetailsKey => ({
@@ -150,56 +153,56 @@ export const commonActiveInstanceData = (
         return [
           {
             label: capitalize(getString('cd.serviceDashboard.function')),
-            value: instanceData.podName || ''
+            value: defaultTo(instanceData.podName, '')
           },
           {
             label: capitalize(getString('cd.serviceDashboard.artifact')),
-            value: instanceData.artifactName || ''
+            value: defaultTo(instanceData.artifactName, '')
           }
         ]
       case ServiceDeploymentType.AwsSam:
         return [
           {
             label: capitalize(getString('cd.serviceDashboard.function')),
-            value: instanceData.podName || ''
+            value: defaultTo(instanceData.podName, '')
           }
         ]
       case ServiceDeploymentType.AzureWebApp:
         return [
           {
             label: getString('cd.serviceDashboard.webApp'),
-            value: (instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).appName || ''
+            value: defaultTo((instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).appName, '')
           },
           {
             label: getString('cd.serviceDashboard.host'),
-            value: (instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).hostName || ''
+            value: defaultTo((instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).hostName, '')
           },
           {
             label: getString('common.state'),
-            value: (instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).instanceState || ''
+            value: defaultTo((instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).instanceState, '')
           },
           {
             label: getString('cd.serviceDashboard.artifact'),
-            value: instanceData.artifactName || ''
+            value: defaultTo(instanceData.artifactName, '')
           }
         ]
       case ServiceDeploymentType.ECS:
         return [
           {
             label: getString('cd.serviceName'),
-            value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.serviceName || ''
+            value: defaultTo((instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.serviceName, '')
           },
           {
             label: getString('pipeline.artifactTriggerConfigPanel.artifact'),
-            value: instanceData.artifactName || ''
+            value: defaultTo(instanceData.artifactName, '')
           },
           {
             label: getString('cd.serviceDashboard.taskDefinitionArn'),
-            value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskDefinitionArn || ''
+            value: defaultTo((instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskDefinitionArn, '')
           },
           {
             label: getString('cd.serviceDashboard.taskArn'),
-            value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskArn || ''
+            value: defaultTo((instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskArn, '')
           }
         ]
       case ServiceDeploymentType.GoogleCloudFunctions: {
@@ -238,7 +241,7 @@ export const commonActiveInstanceData = (
           ...defaultInstanceInfoData,
           {
             label: getString('cd.serviceDashboard.ec2InstanceId'),
-            value: (instanceData.instanceInfoDTO as SpotInstanceInfoDTO)?.ec2InstanceId || ''
+            value: defaultTo((instanceData.instanceInfoDTO as SpotInstanceInfoDTO)?.ec2InstanceId, '')
           }
         ]
       case ServiceDeploymentType.CustomDeployment:
@@ -246,22 +249,33 @@ export const commonActiveInstanceData = (
           ...customDeploymentInstanceInfoData,
           {
             label: getString('cd.serviceDashboard.artifact'),
-            value: instanceData.artifactName || ''
+            value: defaultTo(instanceData.artifactName, '')
+          }
+        ]
+      case 'Tas':
+        return [
+          {
+            label: capitalize(getString('cd.serviceDashboard.instanceId')),
+            value: defaultTo(instanceData.podName, '')
+          },
+          {
+            label: capitalize(getString('cd.serviceDashboard.artifact')),
+            value: defaultTo(instanceData.artifactName, '')
           }
         ]
       case ServiceDeploymentType.Asg:
         return [
           {
             label: getString('cd.serviceDashboard.instanceId'),
-            value: (instanceData.instanceInfoDTO as AsgInstanceInfoDTO)?.instanceId || ''
+            value: defaultTo((instanceData.instanceInfoDTO as AsgInstanceInfoDTO)?.instanceId, '')
           },
           {
             label: getString('pipeline.artifactTriggerConfigPanel.artifact'),
-            value: instanceData.artifactName || ''
+            value: defaultTo(instanceData.artifactName, '')
           },
           {
             label: getString('cd.serviceDashboard.strategy'),
-            value: (instanceData.instanceInfoDTO as AsgInstanceInfoDTO)?.executionStrategy || ''
+            value: defaultTo((instanceData.instanceInfoDTO as AsgInstanceInfoDTO)?.executionStrategy, '')
           },
           (instanceData.instanceInfoDTO as AsgInstanceInfoDTO)?.executionStrategy === 'blue-green' && {
             label: getString('cd.serviceDashboard.bgEnv'),
@@ -299,7 +313,7 @@ export const commonActiveInstanceData = (
         return [
           {
             label: getString('cd.serviceDashboard.elastigroupId'),
-            value: (instanceData.infrastructureDetails as SpotInfrastructureDetails)?.elastigroupId || ''
+            value: defaultTo((instanceData.infrastructureDetails as SpotInfrastructureDetails)?.elastigroupId, '')
           }
         ]
       case ServiceDeploymentType.ECS:
@@ -317,15 +331,15 @@ export const commonActiveInstanceData = (
         return [
           {
             label: getString('cd.serviceDashboard.awsRegion'),
-            value: (instanceData.infrastructureDetails as AsgInfrastructureDetails).region || ''
+            value: defaultTo((instanceData.infrastructureDetails as AsgInfrastructureDetails).region, '')
           },
           {
             label: getString('cd.serviceDashboard.asgName'),
-            value: (instanceData.infrastructureDetails as AsgInfrastructureDetails).asgName || ''
+            value: defaultTo((instanceData.infrastructureDetails as AsgInfrastructureDetails).asgName, '')
           }
         ]
       default:
-        return Object.keys(instanceData.infrastructureDetails || {}).map(infrastructureDetailsKey => ({
+        return Object.keys(defaultTo(instanceData.infrastructureDetails, {})).map(infrastructureDetailsKey => ({
           label: capitalize(infrastructureDetailsKey),
           value: instanceData.infrastructureDetails?.[infrastructureDetailsKey]
         }))
@@ -344,7 +358,6 @@ export const commonActiveInstanceData = (
       value: clusterIdentifier
     })
   }
-
   const sectionData: SectionProps[] = [
     {
       header: getString('cd.serviceDashboard.instanceDetails'),
@@ -416,7 +429,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
-    serviceId: serviceId || serviceIdentifier,
+    serviceId: defaultTo(serviceId, serviceIdentifier),
     envId,
     buildIds: [defaultTo(buildId, '')],
     clusterIdentifier: clusterId,
@@ -428,7 +441,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
-    serviceId: serviceId || serviceIdentifier,
+    serviceId: defaultTo(serviceId, serviceIdentifier),
     envId,
     infraIdentifier,
     clusterIdentifier: clusterId,
@@ -455,6 +468,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     },
     lazy: !isEnvDetail
   })
+
   if ((!isEnvDetail && loading) || (isEnvDetail && envLoading)) {
     return (
       <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>

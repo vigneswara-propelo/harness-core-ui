@@ -113,6 +113,40 @@ export const mockserviceInstanceDetails: UseGetMockDataWithMutateAndRefetch<Resp
               deployedById: 'AUTO_SCALED',
               deployedByName: 'AUTO_SCALED',
               pipelineExecutionName: 'AUTO_SCALED'
+            },
+            {
+              podName: 'release-893b57260532de1e28c01603f3ec71620b7eadfb-todolist-tas',
+              artifactName: '',
+              connectorRef: 'account.K8sPlaygroundTest',
+              infrastructureDetails: {
+                region: 'us-east-1'
+              },
+              instanceInfoDTO: {
+                podName: 'release-893b57260532de1e28c01603f3ec71620b7eadfb-tas',
+                type: 'Tas'
+              },
+              terraformInstance: null as unknown as undefined,
+              deployedAt: 1643027218996,
+              deployedById: 'AUTO_SCALED',
+              deployedByName: 'AUTO_SCALED',
+              pipelineExecutionName: 'AUTO_SCALED'
+            },
+            {
+              podName: 'release-893b57260532de1e28c01603f3ec71620b7eadfb-todolist-ecs',
+              artifactName: '',
+              connectorRef: 'account.K8sPlaygroundTest',
+              infrastructureDetails: {
+                region: 'us-east-1'
+              },
+              instanceInfoDTO: {
+                podName: 'release-893b57260532de1e28c01603f3ec71620b7eadfb-ecs',
+                type: 'ECS'
+              },
+              terraformInstance: null as unknown as undefined,
+              deployedAt: 1643027213992,
+              deployedById: 'A1',
+              deployedByName: 'ANAME',
+              pipelineExecutionName: 'A2'
             }
           ]
         }

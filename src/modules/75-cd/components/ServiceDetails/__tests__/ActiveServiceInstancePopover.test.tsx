@@ -174,4 +174,28 @@ describe('ActiveServiceInstancePopover', () => {
     expect(getByText('AWS AMI ssh 7999')!).toBeInTheDocument()
     expect(getByText('canary')!).toBeInTheDocument()
   })
+  test('should render instances info for Tas service deployment type ', () => {
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={5} />
+      </TestWrapper>
+    )
+    expect(getByText('Cd.servicedashboard.instanceid:')).toBeInTheDocument()
+    expect(getByText('release-893b57260532de1e28c01603f3ec71620b7eadfb-todolist-tas')!).toBeInTheDocument()
+    expect(getByText('cd.serviceDashboard.instanceDetails')!).toBeInTheDocument()
+  })
+  test('should render instances info for ECS service deployment type ', () => {
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={6} />
+      </TestWrapper>
+    )
+    expect(getByText('cd.serviceDashboard.instanceDetails')!).toBeInTheDocument()
+  })
 })
