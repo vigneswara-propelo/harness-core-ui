@@ -123,6 +123,8 @@ const GitOpsCluster = (props: {
       accountIdentifier={accountId}
       projectIdentifier={projectIdentifier}
       orgIdentifier={orgIdentifier}
+      linkedClusters={data?.data?.content || []}
+      environmentIdentifier={props.envRef}
     />
   )
 }

@@ -12,7 +12,12 @@ import { Text } from '@harness/uicore'
 // import { defaultTo } from 'lodash-es'
 
 import type { Item, ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
-import { Failure, getClusterListFromSourcePromise, ResponsePageClusterFromGitops } from 'services/cd-ng'
+import {
+  ClusterResponse,
+  Failure,
+  getClusterListFromSourcePromise,
+  ResponsePageClusterFromGitops
+} from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import environmentEmptyStateSvg from '@pipeline/icons/emptyServiceDetail.svg'
 import {
@@ -20,6 +25,7 @@ import {
   getScopeFromDTO
 } from '@modules/10-common/components/EntityReference/EntityReference.types'
 import { UseStringsReturn } from 'framework/strings/String'
+import { getIdentifierFromValue } from '@modules/10-common/components/EntityReference/EntityReference'
 
 import { ClstrRecord } from './FormMultiTypeGitOpsClusterField'
 
@@ -38,6 +44,7 @@ interface EntitySelectorReferenceProps {
   setPagedClusterData: (data: ResponsePageClusterFromGitops) => void
   selectedClusters: (string | Item)[]
   getString: UseStringsReturn['getString']
+  linkedClusters: ClusterResponse[]
 }
 
 export const DELIMITER = '__'
@@ -65,11 +72,17 @@ export function getReferenceFieldProps({
   accountIdentifier,
   setPagedClusterData,
   selectedClusters,
+  linkedClusters,
   getString
 }: EntitySelectorReferenceProps): Omit<
   ReferenceSelectProps<ClstrRecord>,
   'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination'
 > {
+  const linkedClustersIdentifiers = (linkedClusters || [])?.map(item => ({
+    identifier: getIdentifierFromValue(item.clusterRef || ''),
+    agentIdentifier: item.agentIdentifier
+  }))
+
   return {
     name,
     width,
@@ -103,15 +116,23 @@ export function getReferenceFieldProps({
         }
       })
         .then(responseData => {
-          if (responseData?.data?.content) {
-            const content = responseData?.data?.content?.map(item => ({
-              ...item,
-              identifier: `${item.identifier}${DELIMITER}${item.agentIdentifier}`,
-              record: {
-                ...item,
-                ...orgAndProj
+          if (responseData?.data?.content && responseData?.data?.content.length) {
+            const content = []
+            for (const item of responseData.data.content) {
+              const clstrRecord = linkedClustersIdentifiers.find(
+                cls => cls.identifier === item.identifier && cls.agentIdentifier === item.agentIdentifier
+              )
+              if (clstrRecord) {
+                content.push({
+                  ...item,
+                  identifier: `${item.identifier}${DELIMITER}${item.agentIdentifier}`,
+                  record: {
+                    ...item,
+                    ...orgAndProj
+                  }
+                })
               }
-            }))
+            }
             setPagedClusterData(responseData)
             done(content as EntityReferenceResponse<ClstrRecord>[])
           } // istanbul ignore else

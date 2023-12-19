@@ -18,7 +18,7 @@ import {
 } from '@harness/uicore'
 import { get, isArray } from 'lodash-es'
 
-import type { EnvironmentGroupResponseDTO, ResponsePageClusterFromGitops } from 'services/cd-ng'
+import type { ClusterResponse, EnvironmentGroupResponseDTO, ResponsePageClusterFromGitops } from 'services/cd-ng'
 import {
   EntityReferenceResponse,
   getIdentifierFromValue,
@@ -57,6 +57,8 @@ export interface EntityGroupProps extends Omit<IFormGroupProps, 'label'> {
   accountIdentifier: string
   projectIdentifier: string
   orgIdentifier: string
+  linkedClusters: ClusterResponse[]
+  environmentIdentifier: string
 }
 
 interface GitOpsCluster {
@@ -109,6 +111,8 @@ export function FormMultiTypeGitOpsClusterField(props: EntityGroupProps): React.
     onMultiSelectChange,
     isNewClusterLabelVisible,
     placeholder,
+    linkedClusters,
+    environmentIdentifier,
     ...restProps
   } = props
 
@@ -167,7 +171,8 @@ export function FormMultiTypeGitOpsClusterField(props: EntityGroupProps): React.
     isMultiSelect,
     setPagedClusterData,
     selectedClusters: Array.isArray(selected) ? selected : [],
-    getString
+    getString,
+    linkedClusters
   })
 
   const handleMultiSelectChange = (clstrOptions: ScopeAndIdentifier[]): void => {

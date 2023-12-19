@@ -11,8 +11,10 @@ import * as Formik from 'formik'
 import { fireEvent, getByTestId, render, waitFor, screen } from '@testing-library/react'
 import { MultiTypeInputType } from '@harness/uicore'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import { ClusterResponse } from 'services/cd-ng'
+
 import { FormMultiTypeGitOpsClusterField } from '../FormMultiTypeGitOpsClusterField'
-import { clusters } from './mocks'
+import { clusters, linkedClusters } from './mocks'
 
 const addApi = jest.fn().mockImplementation(() => Promise.resolve())
 jest.mock('services/cd-ng', () => ({
@@ -53,6 +55,8 @@ describe('FormMultiTypeConnectorField tests', () => {
           accountIdentifier={'accountId'}
           projectIdentifier={'test'}
           orgIdentifier={'default'}
+          linkedClusters={linkedClusters as ClusterResponse[]}
+          environmentIdentifier={'Prod'}
         />
       </TestWrapper>
     )
@@ -64,7 +68,7 @@ describe('FormMultiTypeConnectorField tests', () => {
     fireEvent.click(getByText('account'))
 
     await waitFor(() => {
-      expect(getByTestId(dialog, 'cluster16')).toBeInTheDocument()
+      expect(getByTestId(dialog, 'incluster')).toBeInTheDocument()
     })
   })
 
@@ -87,6 +91,8 @@ describe('FormMultiTypeConnectorField tests', () => {
           accountIdentifier={'accountId'}
           projectIdentifier={'test'}
           orgIdentifier={'default'}
+          linkedClusters={linkedClusters as ClusterResponse[]}
+          environmentIdentifier={'Prod'}
         />
       </TestWrapper>
     )

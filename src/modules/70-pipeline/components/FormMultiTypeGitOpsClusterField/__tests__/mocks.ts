@@ -49,3 +49,16 @@ export const clusters = [
     scopeLevel: 'ACCOUNT'
   }
 ]
+
+export const linkedClusters = [
+  {
+    clusterRef: 'account.incluster',
+    agentIdentifier: 'A1',
+    accountIdentifier: '1bvyLackQK-Hapk25-Ry4w',
+    envRef: 'Prod',
+    linkedAt: 1699304001158,
+    scope: 'ACCOUNT',
+    name: 'in-cluster',
+    tags: {}
+  }
+]
