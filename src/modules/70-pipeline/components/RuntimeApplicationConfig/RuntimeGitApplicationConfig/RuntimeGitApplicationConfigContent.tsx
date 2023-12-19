@@ -13,6 +13,7 @@ import { defaultTo, get } from 'lodash-es'
 import type { ApplicationConfigRenderProps } from '@cd/factory/ApplicationConfigFactory/ApplicationConfigBase'
 import { useStrings } from 'framework/strings'
 import type { GitConfigDTO, Scope } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -40,6 +41,7 @@ function RuntimeGitApplicationConfigContent({
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
   const [connector, setConnector] = useState(undefined)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const pathFieldName =
     isFieldRuntime(`${applicationConfigPath}.store.spec.paths`, initialValues) ||
@@ -69,6 +71,7 @@ function RuntimeGitApplicationConfigContent({
               setRefValue
               multiTypeProps={{
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 expressions
               }}
               width={391}
@@ -105,7 +108,8 @@ function RuntimeGitApplicationConfigContent({
               name={`${path}.${applicationConfigPath}.store.spec.repoName`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               label={getString('common.repositoryName')}
             />
@@ -119,6 +123,7 @@ function RuntimeGitApplicationConfigContent({
               name={`${path}.${applicationConfigPath}.store.spec.branch`}
               multiTextInputProps={{
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes
               }}
               label={getString('pipelineSteps.deploy.inputSet.branch')}
@@ -132,6 +137,7 @@ function RuntimeGitApplicationConfigContent({
               name={`${path}.${applicationConfigPath}.store.spec.commitId`}
               multiTextInputProps={{
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes
               }}
               label={getString('pipelineSteps.commitIdValue')}
@@ -145,6 +151,7 @@ function RuntimeGitApplicationConfigContent({
               name={`${path}.${applicationConfigPath}.store.spec.${pathFieldName}`}
               multiTextInputProps={{
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes
               }}
               label={pathLabel}

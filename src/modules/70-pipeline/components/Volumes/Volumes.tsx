@@ -21,6 +21,7 @@ import { get } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { FieldArray, FormikProps } from 'formik'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { useStrings, UseStringsReturn } from 'framework/strings'
@@ -147,7 +148,8 @@ const renderFields = ({
   type,
   index,
   expressions,
-  disabled
+  disabled,
+  newExpressionComponent
 }: {
   formik: FormikProps<any>
   name: string
@@ -157,6 +159,7 @@ const renderFields = ({
   expressions?: string[]
   allowableTypes?: AllowedTypes
   disabled?: boolean
+  newExpressionComponent?: boolean
 }): JSX.Element | null => {
   const additionalFields = getAdditionalTextFields(type, getString) || []
   const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION] as AllowedTypesWithRunTime[]
@@ -170,7 +173,12 @@ const renderFields = ({
               name={`${name}.${[index]}.${field.name}`}
               disabled={disabled}
               className={css.textContainer}
-              multiTextInputProps={{ expressions, allowableTypes, disabled }}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes,
+                disabled,
+                newExpressionComponent: newExpressionComponent
+              }}
               label={
                 <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
                   <Text
@@ -197,7 +205,8 @@ const renderFields = ({
               multiTypeTextbox={{
                 expressions,
                 allowableTypes,
-                disabled
+                disabled,
+                newExpressionComponent: newExpressionComponent
               }}
               tooltipProps={{ dataTooltipId: field.tooltipId }}
               disabled={disabled}
@@ -228,6 +237,7 @@ function VolumeRow({
   disabled?: boolean
 }): JSX.Element {
   const { values = {} } = formik
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const type = get(values, name)?.[index]?.type
   return (
     <>
@@ -235,7 +245,12 @@ function VolumeRow({
         name={`${name}.${[index]}.mountPath`}
         className={css.textContainer}
         disabled={disabled}
-        multiTextInputProps={{ expressions, allowableTypes, disabled }}
+        multiTextInputProps={{
+          expressions,
+          allowableTypes,
+          disabled,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+        }}
         label={
           <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
             <Text
@@ -261,7 +276,17 @@ function VolumeRow({
           }
         }}
       />
-      {type && renderFields({ formik, name, getString, index, type, expressions, disabled })}
+      {type &&
+        renderFields({
+          formik,
+          name,
+          getString,
+          index,
+          type,
+          expressions,
+          disabled,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+        })}
     </>
   )
 }
@@ -275,6 +300,7 @@ export default function Volumes({
   dataTooltipId
 }: VolumesPropsInterface): JSX.Element {
   const { setFieldValue, values = {} } = formik
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { getString } = useStrings()
   const value = get(values, name) || []
 
@@ -295,7 +321,8 @@ export default function Volumes({
             </Text>
           }
           multiTextInputProps={{
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       ) : (

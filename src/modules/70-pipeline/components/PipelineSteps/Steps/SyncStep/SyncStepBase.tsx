@@ -23,6 +23,7 @@ import * as Yup from 'yup'
 import { defaultTo, memoize, pick } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
 import type { IItemRendererProps } from '@blueprintjs/select'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
@@ -57,6 +58,7 @@ function FormContent({
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const [data, setData] = useState<MultiSelectOption[]>([])
   const [filters, actions] = useApplicationsFilter()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { mutate: getApplications, loading, cancel: cancelGetApplications } = useApplicationServiceListApps({})
 
@@ -124,7 +126,8 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             enableConfigureOptions: true,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       </div>
@@ -164,7 +167,11 @@ function FormContent({
                       }
                     }}
                     disabled={readonly}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                 </div>
                 <div className={stepCss.flex}>
@@ -180,7 +187,11 @@ function FormContent({
                     }}
                     disabled={readonly}
                     label={getString('pipeline.syncStep.dryRun')}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                 </div>
                 <div className={stepCss.flex}>
@@ -196,7 +207,11 @@ function FormContent({
                     }}
                     label={getString('pipeline.syncStep.applyOnly')}
                     disabled={readonly}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                 </div>
                 <div className={stepCss.flex}>
@@ -212,7 +227,11 @@ function FormContent({
                     }}
                     label={getString('pipeline.syncStep.forceApply')}
                     disabled={readonly}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                 </div>
               </div>
@@ -231,7 +250,11 @@ function FormContent({
                     }}
                     label={getString('pipeline.syncStep.skipSchemaValidation')}
                     disabled={readonly}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                 </div>
                 <div className={stepCss.flex}>
@@ -247,7 +270,11 @@ function FormContent({
                     }}
                     style={{ flex: 1 }}
                     disabled={readonly}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                 </div>
                 <div className={stepCss.flex}>
@@ -263,7 +290,11 @@ function FormContent({
                     }}
                     style={{ flex: 1 }}
                     disabled={readonly}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                 </div>
                 <div className={stepCss.flex}>
@@ -279,7 +310,11 @@ function FormContent({
                     }}
                     style={{ flex: 1 }}
                     disabled={readonly}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                 </div>
               </div>
@@ -305,7 +340,11 @@ function FormContent({
                     }}
                     style={{ flex: 1 }}
                     disabled={readonly}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                 </div>
                 <div className={cx(stepCss.formGroup, stepCss.md, stepCss.flex, css.paddingRight40)}>
@@ -328,7 +367,8 @@ function FormContent({
                         style={{ flexGrow: 1, marginBottom: 0 }}
                         name={'spec.retryStrategy.limit'}
                         multiTextInputProps={{
-                          allowableTypes
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                       />
                       {getMultiTypeFromValue(formik.values.spec?.retryStrategy?.limit as string) ===
@@ -351,7 +391,8 @@ function FormContent({
                         style={{ flexGrow: 1, marginBottom: 0 }}
                         name={'spec.retryStrategy.increaseBackoffByFactor'}
                         multiTextInputProps={{
-                          allowableTypes
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                       />
                       {getMultiTypeFromValue(formik.values.spec?.retryStrategy?.increaseBackoffByFactor as string) ===
@@ -377,7 +418,8 @@ function FormContent({
                         multiTypeDurationProps={{
                           expressions,
                           enableConfigureOptions: true,
-                          allowableTypes
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                       />
                     </div>
@@ -390,7 +432,8 @@ function FormContent({
                         multiTypeDurationProps={{
                           expressions,
                           enableConfigureOptions: true,
-                          allowableTypes
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                       />
                     </div>

@@ -30,6 +30,7 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
@@ -76,6 +77,7 @@ function ServiceHooksStore({
   const { getString } = useStrings()
   const [selectedStore, setSelectedStore] = useState(prevStepData?.storeType ?? initialValues.storeType)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   function isValidConnectorStore(): boolean {
     return !!selectedStore && selectedStore !== ServiceHooksMap.InheritFromManifest
@@ -191,7 +193,11 @@ function ServiceHooksStore({
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
                       width={400}
-                      multiTypeProps={{ expressions, allowableTypes }}
+                      multiTypeProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                       isNewConnectorLabelVisible={
                         !(
                           getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME &&

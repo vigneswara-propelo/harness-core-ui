@@ -30,6 +30,7 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { FormMultiTypeCheckboxField, Separator } from '@common/components'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { MultiTypeCustomMap } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import { tolerationsCustomMap } from '@common/utils/ContainerRunStepUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -54,6 +55,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const runAsUserStringKey = 'pipeline.stepCommonFields.runAsUser'
   const priorityClassNameStringKey = 'pipeline.buildInfra.priorityClassName'
@@ -103,6 +105,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           multiTypeTextbox={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             disabled: readonly
           }}
           disabled={readonly}
@@ -152,7 +155,8 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             name="dropCapabilities"
             multiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: getString('pipeline.buildInfra.dropCapabilities'),
@@ -181,7 +185,12 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             label={getString(runAsUserStringKey)}
             placeholder={'1000'}
             disabled={readonly}
-            multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              textProps: { disabled: readonly },
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
           {getMultiTypeFromValue(formikRef.values.runAsUser) === MultiTypeInputType.RUNTIME && !readonly && (
             <ConfigureOptions
@@ -240,7 +249,12 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             label={getString('pipeline.infraSpecifications.serviceAccountName')}
             placeholder={getString('pipeline.infraSpecifications.serviceAccountNamePlaceholder')}
             disabled={readonly}
-            multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              textProps: { disabled: readonly },
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
           {getMultiTypeFromValue(formikRef.values.serviceAccountName) === MultiTypeInputType.RUNTIME && !readonly && (
             <ConfigureOptions
@@ -266,7 +280,8 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             multiTypeTextbox={{
               expressions,
               allowableTypes,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             disabled={readonly}
           />
@@ -283,7 +298,12 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             name="priorityClassName"
             label={getString(priorityClassNameStringKey)}
             disabled={readonly}
-            multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              textProps: { disabled: readonly },
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
           {getMultiTypeFromValue(formikRef.values.priorityClassName) === MultiTypeInputType.RUNTIME && !readonly && (
             <ConfigureOptions
@@ -318,7 +338,8 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             cardStyle={{ width: '50%' }}
             valueMultiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             formik={formikRef}
             multiTypeFieldSelectorProps={{
@@ -355,7 +376,11 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
         <Container className={stepCss.formGroup}>
           <FormMultiTypeDurationField
             name="initTimeout"
-            multiTypeDurationProps={{ expressions, allowableTypes }}
+            multiTypeDurationProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             label={getString('pipeline.infraSpecifications.initTimeout')}
             disabled={readonly}
           />
@@ -411,7 +436,12 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           label={getString('common.namespace')}
           placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
           disabled={readonly}
-          multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            textProps: { disabled: readonly },
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
         />
         {getMultiTypeFromValue(formikRef.values.namespace) === MultiTypeInputType.RUNTIME && !readonly && (
           <ConfigureOptions

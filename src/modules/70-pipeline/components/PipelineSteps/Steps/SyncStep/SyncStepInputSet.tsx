@@ -23,6 +23,7 @@ import { cloneDeep, defaultTo, get, isEmpty, memoize, pick, set } from 'lodash-e
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useDeepCompareEffect } from '@common/hooks'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
@@ -44,6 +45,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
   const prefix = isEmpty(path) ? '' : `${path}.`
   const [data, setData] = useState<MultiSelectOption[]>([])
   const [filters, actions] = useApplicationsFilter()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
@@ -185,6 +187,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               },
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions,
               disabled: readonly
             }}
@@ -239,7 +242,12 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 label={getString('pipeline.syncStep.prune')}
                 disabled={readonly}
                 checkboxStyle={{ flexGrow: 'unset' }}
-                multiTypeTextbox={{ expressions, allowableTypes, width: 400 }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  width: 400
+                }}
               />
             </div>
           </>
@@ -253,7 +261,12 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 label={getString('pipeline.syncStep.dryRun')}
                 checkboxStyle={{ flexGrow: 'unset' }}
                 disabled={readonly}
-                multiTypeTextbox={{ expressions, allowableTypes, width: 400 }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  width: 400
+                }}
               />
             </div>
           </>
@@ -267,7 +280,12 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 label={getString('pipeline.syncStep.applyOnly')}
                 disabled={readonly}
                 checkboxStyle={{ flexGrow: 'unset' }}
-                multiTypeTextbox={{ expressions, allowableTypes, width: 400 }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  width: 400
+                }}
               />
             </div>
           </>
@@ -281,7 +299,12 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 label={getString('pipeline.syncStep.forceApply')}
                 disabled={readonly}
                 checkboxStyle={{ flexGrow: 'unset' }}
-                multiTypeTextbox={{ expressions, allowableTypes, width: 400 }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  width: 400
+                }}
               />
             </div>
           </>
@@ -295,7 +318,12 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 label={getString('pipeline.syncStep.skipSchemaValidation')}
                 disabled={readonly}
                 checkboxStyle={{ flexGrow: 'unset' }}
-                multiTypeTextbox={{ expressions, allowableTypes, width: 400 }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  width: 400
+                }}
               />
             </div>
           </>
@@ -309,7 +337,12 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 label={getString('pipeline.syncStep.autoCreateNamespace')}
                 disabled={readonly}
                 checkboxStyle={{ flexGrow: 'unset' }}
-                multiTypeTextbox={{ expressions, allowableTypes, width: 400 }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  width: 400
+                }}
               />
             </div>
           </>
@@ -323,7 +356,12 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 label={getString('pipeline.syncStep.pruneResourcesAtLast')}
                 disabled={readonly}
                 checkboxStyle={{ flexGrow: 'unset' }}
-                multiTypeTextbox={{ expressions, allowableTypes, width: 400 }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  width: 400
+                }}
               />
             </div>
           </>
@@ -337,7 +375,12 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 label={getString('pipeline.syncStep.applyOutOfSyncOnly')}
                 disabled={readonly}
                 checkboxStyle={{ flexGrow: 'unset' }}
-                multiTypeTextbox={{ expressions, allowableTypes, width: 400 }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  width: 400
+                }}
               />
             </div>
           </>
@@ -351,7 +394,12 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 label={getString('pipeline.syncStep.replaceResources')}
                 disabled={readonly}
                 checkboxStyle={{ flexGrow: 'unset' }}
-                multiTypeTextbox={{ expressions, allowableTypes, width: 400 }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  width: 400
+                }}
               />
             </div>
           </>
@@ -400,6 +448,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 name={`${prefix}spec.retryStrategy.limit`}
                 multiTextInputProps={{
                   allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   width: 400
                 }}
               />
@@ -415,6 +464,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                     isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
                   },
                   allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   expressions,
                   width: 400,
                   disabled: readonly
@@ -439,6 +489,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                     isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
                   },
                   allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   expressions,
                   disabled: readonly
                 }}
@@ -460,6 +511,7 @@ function SyncStepInputSet(formContentProps: any): JSX.Element {
                 name={`${prefix}spec.retryStrategy.increaseBackoffByFactor`}
                 multiTextInputProps={{
                   allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   width: 400
                 }}
               />

@@ -113,7 +113,8 @@ function FormContent({
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { CDS_NG_UPDATE_MULTIPLE_SNOW_CHANGE_REQUEST, CDS_SERVICENOW_FETCH_FIELDS } = useFeatureFlags()
+  const { CDS_NG_UPDATE_MULTIPLE_SNOW_CHANGE_REQUEST, CDS_SERVICENOW_FETCH_FIELDS, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } =
+    useFeatureFlags()
   const { mutate: fetchTicketDetails } = serviceNowTicketDetailsQuery
   const { showError } = useToaster()
 
@@ -419,7 +420,8 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             enableConfigureOptions: true,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       </div>
@@ -437,7 +439,7 @@ function FormContent({
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           setRefValue
           type="ServiceNow"
           enableConfigureOptions={false}
@@ -514,6 +516,7 @@ function FormContent({
                   : serviceNowTicketTypesOptions
               },
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions,
               onChange: (value: unknown, _valueType, type) => {
                 setTicketValueType(type)
@@ -544,7 +547,8 @@ function FormContent({
               disabled={isApprovalStepFieldDisabled(readonly)}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               onChange={debouncedFetchTicketDetails}
             />
@@ -586,7 +590,8 @@ function FormContent({
                     disabled={isApprovalStepFieldDisabled(readonly)}
                     multiTextInputProps={{
                       expressions,
-                      allowableTypes
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
 
@@ -676,7 +681,12 @@ function FormContent({
                     label={getString('description')}
                     name="spec.description"
                     placeholder={getString('pipeline.serviceNowCreateStep.descriptionPlaceholder')}
-                    multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                    multiTypeTextArea={{
+                      enableConfigureOptions: false,
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={isApprovalStepFieldDisabled(readonly)}
                   />
                   {descriptionValueFromServiceNow &&
@@ -707,7 +717,12 @@ function FormContent({
                     label={getString('pipeline.serviceNowCreateStep.shortDescription')}
                     name="spec.shortDescription"
                     placeholder={getString('pipeline.serviceNowCreateStep.shortDescriptionPlaceholder')}
-                    multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                    multiTypeTextArea={{
+                      enableConfigureOptions: false,
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={isApprovalStepFieldDisabled(readonly)}
                   />
                   {shortDescriptionValueFromServiceNow &&
@@ -798,7 +813,8 @@ function FormContent({
                                     allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                       item => !isMultiTypeRuntime(item)
                                     ) as AllowedTypes,
-                                    expressions
+                                    expressions,
+                                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                   }}
                                 />
                                 <Button
@@ -871,7 +887,8 @@ function FormContent({
                           }
                         }
                       },
-                      allowableTypes: allowableTypes
+                      allowableTypes: allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                   {getMultiTypeFromValue(formik.values.spec.templateName) === MultiTypeInputType.RUNTIME && (

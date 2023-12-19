@@ -17,6 +17,7 @@ import {
   getScopeFromDTO,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getReference } from '@common/utils/utils'
 import { useStrings, UseStringsReturn } from 'framework/strings'
@@ -108,6 +109,7 @@ function CICodebaseInputSetFormV1Internal({
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
   const [connectorId, setConnectorId] = useState<string>('')
   const [connectorReference, setConnectorReference] = useState<string>('')
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const inputLabels = getBuildTypeInputLabels(getString)
   const {
@@ -195,6 +197,7 @@ function CICodebaseInputSetFormV1Internal({
           name={codeBaseInputFieldFormName}
           multiTextInputProps={{
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
           }}
           placeholder=""

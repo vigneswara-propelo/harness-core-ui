@@ -29,6 +29,7 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -69,6 +70,7 @@ function StartupScriptWizardStepOne({
     singleAvailableStore ? singleAvailableStore : prevStepData?.selectedStore ?? initialValues.selectedStore
   )
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   if (singleAvailableStore) {
     if (
@@ -227,7 +229,11 @@ function StartupScriptWizardStepOne({
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
                       width={400}
-                      multiTypeProps={{ expressions, allowableTypes }}
+                      multiTypeProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                       isNewConnectorLabelVisible={
                         !(
                           getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME &&

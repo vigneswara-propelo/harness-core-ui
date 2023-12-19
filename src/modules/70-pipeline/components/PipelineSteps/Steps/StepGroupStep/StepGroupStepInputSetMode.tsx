@@ -17,6 +17,7 @@ import type { StringsMap } from 'framework/strings/StringsContext'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { MultiTypeCustomMap } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -51,6 +52,7 @@ function StepGroupStepInputSet(props: StepGroupStepInputSetProps): React.ReactEl
   const { template, path, readonly, allValues } = inputSetData
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -386,7 +388,8 @@ function StepGroupStepInputSet(props: StepGroupStepInputSetProps): React.ReactEl
             cardStyle={{ width: '50%' }}
             valueMultiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             formik={formik}
             multiTypeFieldSelectorProps={{

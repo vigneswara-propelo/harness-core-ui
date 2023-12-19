@@ -29,6 +29,7 @@ import { Connectors } from '@platform/connectors/constants'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 
 import {
   ConnectorTypes,
@@ -53,6 +54,7 @@ function StartupScriptWizardStepTwo({
   isReadonly = false
 }: StepProps<ConnectorConfigDTO> & StartupScriptWizardStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const modifiedPrevStepData =
     !prevStepData && singleAvailableStore
@@ -194,7 +196,11 @@ function StartupScriptWizardStepTwo({
                   {!!(connectionType === GitRepoName.Account) && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         label={getString('common.repositoryName')}
                         placeholder={getString('common.repositoryName')}
                         name="repoName"
@@ -223,7 +229,11 @@ function StartupScriptWizardStepTwo({
                   {formik.values?.gitFetchType === GitFetchTypes.Branch && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         label={getString('pipelineSteps.deploy.inputSet.branch')}
                         placeholder={getString('pipeline.manifestType.branchPlaceholder')}
                         name="branch"
@@ -246,7 +256,11 @@ function StartupScriptWizardStepTwo({
                   {formik.values?.gitFetchType === GitFetchTypes.Commit && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         label={getString('pipeline.manifestType.commitId')}
                         placeholder={getString('pipeline.manifestType.commitPlaceholder')}
                         name="commitId"
@@ -270,7 +284,11 @@ function StartupScriptWizardStepTwo({
                       label={getString('pipeline.startup.scriptFilePath')}
                       placeholder={getString('pipeline.startup.scriptFilePath')}
                       name={'paths'}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values?.paths as string) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
