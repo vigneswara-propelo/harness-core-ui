@@ -59,6 +59,7 @@ import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/template-n
 import { useCheckIfTemplateUsingV1Stage, ResponseEOLBannerResponseDTO, Error } from 'services/cd-ng'
 import { DefaultNewVersionLabel } from 'framework/Templates/templates'
 import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml, isPipelineOrStageType, isNewTemplate } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
@@ -373,7 +374,7 @@ export function TemplateStudioInternal(): React.ReactElement {
       {handleFetchFailure({
         entityType: 'template',
         identifier: template?.identifier,
-        isInline: !isGitSyncEnabled,
+        isInline: !isGitSyncEnabled && storeMetadata?.storeType !== StoreType.REMOTE,
         fetchError: templateYamlError
       })}
     </Container>

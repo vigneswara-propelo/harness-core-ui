@@ -271,11 +271,14 @@ describe('<TemplateStudioInternal /> tests', () => {
               }
             ]
           }
+        },
+        storeMetadata: {
+          storeType: 'REMOTE'
         }
       }
     }
     const { getByText } = render(
-      <TemplateContextTestWrapper {...(newTemplateProps as any)}>
+      <TemplateContextTestWrapper {...(newTemplateProps as any)} isGitSyncEnabled={true}>
         <TemplateStudioInternal />
       </TemplateContextTestWrapper>
     )
@@ -297,11 +300,14 @@ describe('<TemplateStudioInternal /> tests', () => {
             message: 'Template with the given Identifier: d and versionLabel: fc does not exist or has been deleted',
             errors: null
           }
+        },
+        storeMetadata: {
+          storeType: 'INLINE'
         }
       }
     }
     const { getByText } = render(
-      <TemplateContextTestWrapper {...(templateProps as any)}>
+      <TemplateContextTestWrapper {...(templateProps as any)} isGitSyncEnabled={true}>
         <TemplateStudioInternal />
       </TemplateContextTestWrapper>
     )
