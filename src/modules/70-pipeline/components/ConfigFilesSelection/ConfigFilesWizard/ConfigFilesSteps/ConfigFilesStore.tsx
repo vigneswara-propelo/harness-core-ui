@@ -33,6 +33,7 @@ import type { ConnectorConfigDTO } from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -77,6 +78,7 @@ function ConfigFileStore({
   const [isLoadingConnectors, setIsLoadingConnectors] = useState<boolean>(true)
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   function isValidConnectorStore(): boolean {
     return !!selectedStore && selectedStore !== ConfigFilesMap.InheritFromManifest
@@ -212,7 +214,11 @@ function ConfigFileStore({
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
                       width={400}
-                      multiTypeProps={{ expressions, allowableTypes }}
+                      multiTypeProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                       isNewConnectorLabelVisible={
                         !(
                           getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME &&

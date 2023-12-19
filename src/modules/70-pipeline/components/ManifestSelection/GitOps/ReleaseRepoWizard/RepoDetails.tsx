@@ -23,8 +23,9 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
-
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
@@ -102,6 +103,7 @@ function FormField({
   allowableTypes: AllowedTypes
   fieldName: string
 }): React.ReactElement {
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <div
       className={cx(css.halfWidth, {
@@ -113,7 +115,8 @@ function FormField({
         name={fieldName}
         multiTextInputProps={{
           expressions,
-          allowableTypes
+          allowableTypes,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         label={label}
       />

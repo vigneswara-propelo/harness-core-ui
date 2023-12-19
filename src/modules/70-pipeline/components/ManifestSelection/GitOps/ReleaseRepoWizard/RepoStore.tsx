@@ -31,6 +31,7 @@ import type { ConnectorConfigDTO } from 'services/cd-ng'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -76,6 +77,7 @@ function RepoStore({
   const [isLoadingConnectors, setIsLoadingConnectors] = React.useState<boolean>(true)
   const initStore = get(initialValues, 'store', 'Git')
   const [selectedStore, setSelectedStore] = useState(initStore)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [canCreate] = usePermission({
     resource: {
       resourceType: ResourceType.CONNECTOR
@@ -181,7 +183,8 @@ function RepoStore({
                       width={400}
                       multiTypeProps={{
                         expressions,
-                        allowableTypes
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                       isNewConnectorLabelVisible={
                         !(

@@ -27,6 +27,7 @@ import { useChildPipelineExpressions } from '@pipeline/components/PipelineStudio
 import { String, useStrings } from 'framework/strings'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { PipelineStageConfig, PipelineStageOutputs, YamlProperties } from 'services/pipeline-ng'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -65,6 +66,7 @@ export function VariableOutputPanel({ formikRef: formikRefProp }: VariableOutput
   )
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateStageDebounced = useCallback(
@@ -219,6 +221,7 @@ export function VariableOutputPanel({ formikRef: formikRefProp }: VariableOutput
                                 type: 'text'
                               },
                               allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                               expressions,
                               multitypeInputValue: outputTypeRef.current[index]
                             }}

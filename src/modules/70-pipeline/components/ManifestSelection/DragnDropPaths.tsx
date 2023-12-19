@@ -23,6 +23,7 @@ import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails.module.scss'
 
 export interface DragnDropPathsProps<T = unknown> {
@@ -51,6 +52,7 @@ function DragnDropPaths({
   allowSinglePathDeletion
 }: DragnDropPathsProps): React.ReactElement {
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <DragDropContext
@@ -107,6 +109,7 @@ function DragnDropPaths({
                                   style={{ width: defaultTo(dialogWidth, 275) }}
                                   multiTextInputProps={{
                                     expressions,
+                                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                     allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                       allowedType => !isMultiTypeRuntime(allowedType)
                                     ) as AllowedTypes

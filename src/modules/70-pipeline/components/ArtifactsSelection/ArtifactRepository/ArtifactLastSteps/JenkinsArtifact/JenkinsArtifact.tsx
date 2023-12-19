@@ -61,6 +61,7 @@ import {
   getJobName,
   getJobValue
 } from '@pipeline/components/PipelineSteps/Steps/JenkinsStep/helper'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -112,6 +113,7 @@ function FormComponent({
   const [jobDetailsType, setJobDetailsType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(formValues.spec.jobName)
   )
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
@@ -434,7 +436,8 @@ function FormComponent({
                 addClearBtn: true,
                 itemRenderer: jobNameRenderer
               },
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             selectItems={jobDetails || []}
           />
@@ -523,7 +526,8 @@ function FormComponent({
                 ),
                 itemRenderer: artifactPathItemRenderer
               },
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             selectItems={artifactPath || []}
           />
@@ -584,7 +588,8 @@ function FormComponent({
                 }
                 refetchJenkinsBuild()
               },
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             selectItems={build || []}
           />

@@ -18,6 +18,7 @@ import {
 import { isEmpty } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { CustomVariableInputSet } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
@@ -37,6 +38,7 @@ export function DeploymentConfigRuntimeInputs(props: Props) {
   const { template, allowableTypes, path, readonly } = props
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}`
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <>
@@ -67,6 +69,7 @@ export function DeploymentConfigRuntimeInputs(props: Props) {
               name={`${prefix}.infrastructure.instancesListPath`}
               multiTextInputProps={{
                 disabled: readonly,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes
               }}
               disabled={readonly}
@@ -98,6 +101,7 @@ export function DeploymentConfigRuntimeInputs(props: Props) {
                       label={''}
                       multiTextInputProps={{
                         allowableTypes: allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                         disabled: readonly
                       }}
                     />
