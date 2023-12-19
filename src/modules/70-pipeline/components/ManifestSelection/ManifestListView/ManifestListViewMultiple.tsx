@@ -721,7 +721,7 @@ function ManifestListViewMultiple({
                   manifest?.spec,
                   getManifestLocation(manifest?.type as ManifestTypes, storeType)
                 )
-
+                const values = manifest?.spec[ManifestToPathKeyMap[manifestType as PrimaryManifestType]]
                 return (
                   <div className={cx(css.rowItem)} key={`${id}-${index}`}>
                     <section className={cssMulti.multiManifestList}>
@@ -805,8 +805,8 @@ function ManifestListViewMultiple({
                         <ManifestMultiAttach
                           manifestType={manifestType as PrimaryManifestType}
                           manifestStore={storeType}
-                          valuesPaths={manifest?.spec[ManifestToPathKeyMap[manifestType as PrimaryManifestType]]}
-                          paths={isArray(manifestLocation) ? manifestLocation : []}
+                          valuesPaths={isArray(values) ? values : [values]}
+                          paths={isArray(manifestLocation) ? manifestLocation : [manifestLocation]}
                         />
                       )}
                     {manifestType === ManifestDataType.TasManifest &&
@@ -904,6 +904,7 @@ function ManifestListViewMultiple({
                 )
                 const isManifestLocationString = typeof manifestLocation === 'string'
                 const isHarnessStore = storeType === ManifestStoreMap.Harness
+                const valuesPaths = manifest?.spec[ManifestToPathKeyMap[manifestType as PrimaryManifestType]]
                 return (
                   <Container className={cx(css.rowItem, cssMulti.wrapper)} key={`${id}-${index}`}>
                     <section className={cssMulti.multiOverrideWrapper}>
@@ -993,7 +994,7 @@ function ManifestListViewMultiple({
                         <ManifestMultiAttach
                           manifestType={manifestType as PrimaryManifestType}
                           manifestStore={storeType}
-                          valuesPaths={manifest?.spec[ManifestToPathKeyMap[manifestType as PrimaryManifestType]]}
+                          valuesPaths={isArray(valuesPaths) ? valuesPaths : [valuesPaths]}
                           paths={manifestLocation}
                         />
                       )}

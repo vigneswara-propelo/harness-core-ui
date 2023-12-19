@@ -344,6 +344,7 @@ function OpenShiftTemplateWithGit({
                     defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                     dragDropFieldWidth={filePathWidth}
                     allowSinglePathDeletion
+                    isExpressionEnable={true}
                   />
                   {getMultiTypeFromValue(formik.values.paramsPaths) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions

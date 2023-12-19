@@ -306,6 +306,7 @@ function OpenShiftParamWithGit({
                   placeholder={getString('pipeline.manifestType.pathPlaceholder')}
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                   dragDropFieldWidth={filePathWidth}
+                  isExpressionEnable={true}
                 />
                 {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions

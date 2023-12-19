@@ -1034,6 +1034,37 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                     </div>
                   </div>
                 </section>
+                <section>
+                  <div
+                    class="valuesPathList manifestAttachItem"
+                  >
+                    <div
+                      class="pathLine"
+                    />
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="max-width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-small StyledProps--color StyledProps--color-grey300"
+                      >
+                        pipeline.manifestType.associatedValues
+                      </p>
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        data-testid=""
+                        style="flex: 1;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
+                        >
+                          
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
               </section>
             </div>
             <div
@@ -1285,6 +1316,37 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                     </div>
                   </div>
                 </section>
+                <section>
+                  <div
+                    class="valuesPathList manifestAttachItem"
+                  >
+                    <div
+                      class="pathLine"
+                    />
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="max-width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-small StyledProps--color StyledProps--color-grey300"
+                      >
+                        pipeline.manifestType.associatedValues
+                      </p>
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        data-testid=""
+                        style="flex: 1;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
+                        >
+                          
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
               </section>
             </div>
             <div
@@ -1473,7 +1535,70 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
               </section>
               <section
                 class="valuesList"
-              />
+              >
+                <section>
+                  <div
+                    class="valuesPathList manifestAttachItem"
+                  >
+                    <div
+                      class="pathLine"
+                    />
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="max-width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-small StyledProps--color StyledProps--color-grey300"
+                      >
+                        pipelineSteps.manifestPathLabel
+                      </p>
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        data-testid="<+input>"
+                        style="flex: 1;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
+                        >
+                          &lt;+input&gt;
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div
+                    class="valuesPathList manifestAttachItem"
+                  >
+                    <div
+                      class="pathLine"
+                    />
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="max-width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-small StyledProps--color StyledProps--color-grey300"
+                      >
+                        pipeline.manifestType.associatedValues
+                      </p>
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        data-testid=""
+                        style="flex: 1;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
+                        >
+                          
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </section>
             </div>
             <div
               class="rowItem"
@@ -1688,6 +1813,37 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                           style="--text-line-clamp: 1;"
                         >
                           p1
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div
+                    class="valuesPathList manifestAttachItem"
+                  >
+                    <div
+                      class="pathLine"
+                    />
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="max-width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-small StyledProps--color StyledProps--color-grey300"
+                      >
+                        pipeline.manifestType.associatedValues
+                      </p>
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        data-testid=""
+                        style="flex: 1;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
+                        >
+                          
                         </p>
                       </div>
                     </div>
@@ -2051,6 +2207,37 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                     </div>
                   </div>
                 </section>
+                <section>
+                  <div
+                    class="valuesPathList manifestAttachItem"
+                  >
+                    <div
+                      class="pathLine"
+                    />
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="max-width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-small StyledProps--color StyledProps--color-grey300"
+                      >
+                        pipeline.manifestType.associatedValues
+                      </p>
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        data-testid=""
+                        style="flex: 1;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
+                        >
+                          
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
               </section>
             </div>
             <div
@@ -2302,6 +2489,37 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                     </div>
                   </div>
                 </section>
+                <section>
+                  <div
+                    class="valuesPathList manifestAttachItem"
+                  >
+                    <div
+                      class="pathLine"
+                    />
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="max-width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-small StyledProps--color StyledProps--color-grey300"
+                      >
+                        pipeline.manifestType.associatedValues
+                      </p>
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        data-testid=""
+                        style="flex: 1;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
+                        >
+                          
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
               </section>
             </div>
             <div
@@ -2490,7 +2708,70 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
               </section>
               <section
                 class="valuesList"
-              />
+              >
+                <section>
+                  <div
+                    class="valuesPathList manifestAttachItem"
+                  >
+                    <div
+                      class="pathLine"
+                    />
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="max-width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-small StyledProps--color StyledProps--color-grey300"
+                      >
+                        pipelineSteps.manifestPathLabel
+                      </p>
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        data-testid="<+input>"
+                        style="flex: 1;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
+                        >
+                          &lt;+input&gt;
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div
+                    class="valuesPathList manifestAttachItem"
+                  >
+                    <div
+                      class="pathLine"
+                    />
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="max-width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-small StyledProps--color StyledProps--color-grey300"
+                      >
+                        pipeline.manifestType.associatedValues
+                      </p>
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        data-testid=""
+                        style="flex: 1;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
+                        >
+                          
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </section>
             </div>
             <div
               class="rowItem"
@@ -2705,6 +2986,37 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                           style="--text-line-clamp: 1;"
                         >
                           p1
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div
+                    class="valuesPathList manifestAttachItem"
+                  >
+                    <div
+                      class="pathLine"
+                    />
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="max-width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-small StyledProps--color StyledProps--color-grey300"
+                      >
+                        pipeline.manifestType.associatedValues
+                      </p>
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        data-testid=""
+                        style="flex: 1;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
+                        >
+                          
                         </p>
                       </div>
                     </div>

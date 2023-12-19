@@ -9,6 +9,7 @@ import React from 'react'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
+import { defaultTo, get } from 'lodash-es'
 import { Layout, FormInput, getMultiTypeFromValue, MultiTypeInputType, StepProps, AllowedTypes } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
@@ -16,7 +17,14 @@ import type { ConnectorConfigDTO, ServiceDefinition } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { gitFetchTypeList, GitFetchTypes, GitRepoName, ManifestDataType, ManifestStoreMap } from '../../Manifesthelper'
+import {
+  gitFetchTypeList,
+  GitFetchTypes,
+  GitRepoName,
+  ManifestDataType,
+  ManifestStoreMap,
+  isGitTypeManifestStore
+} from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth } from '../ManifestUtils'
@@ -181,6 +189,7 @@ export function ManifestDetailsCoreSection({
           allowOnlyOneFilePath={
             selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest, selectedDeploymentType) : false
           }
+          isExpressionEnable={isGitTypeManifestStore(defaultTo(get(prevStepData, 'store'), ''))}
         />
         {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions

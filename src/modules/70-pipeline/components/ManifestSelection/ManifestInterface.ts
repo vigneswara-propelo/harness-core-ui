@@ -98,7 +98,7 @@ export interface ManifestSelectionProps {
 }
 
 export interface ManifestListViewProps {
-  pipeline: PipelineInfoConfig
+  pipeline?: PipelineInfoConfig
   connectors: PageConnectorResponse | undefined
   listOfManifests: ManifestConfigWrapper[]
   isReadonly: boolean

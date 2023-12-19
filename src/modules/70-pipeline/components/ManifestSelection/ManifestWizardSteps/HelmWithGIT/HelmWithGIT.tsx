@@ -426,6 +426,7 @@ function HelmWithGIT({
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                   dragDropFieldWidth={filePathWidth}
                   allowSinglePathDeletion
+                  isExpressionEnable={true}
                 />
                 {getMultiTypeFromValue(formik.values.valuesPaths) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions

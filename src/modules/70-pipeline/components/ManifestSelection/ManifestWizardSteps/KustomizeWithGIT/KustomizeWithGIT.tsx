@@ -431,6 +431,7 @@ function KustomizeWithGIT({
                     defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                     dragDropFieldWidth={filePathWidth}
                     allowSinglePathDeletion
+                    isExpressionEnable={true}
                   />
                   {getMultiTypeFromValue(formik.values.patchesPaths) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions

@@ -134,6 +134,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               disabled={isFieldDisabled(`${manifestPath}.spec.patchesPaths`)}
               formik={formik}
               isNameOfArrayType
+              isExpressionEnable={true}
             />
           </div>
         )}

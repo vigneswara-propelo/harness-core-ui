@@ -78,6 +78,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               fileUsage={fileUsage}
               allowOnlyOne
               isNameOfArrayType
+              isExpressionEnable={true}
             />
           </div>
         )}
@@ -113,6 +114,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               fileUsage={fileUsage}
               manifestStoreType={ManifestStoreMap.Harness}
               stepViewType={props.stepViewType}
+              isExpressionEnable={true}
             />
           </div>
         )}

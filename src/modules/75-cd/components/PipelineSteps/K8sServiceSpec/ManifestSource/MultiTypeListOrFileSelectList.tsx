@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
+import {
+  AllowedTypes,
+  MultiTypeInputType,
+  ExpressionInput,
+  EXPRESSION_INPUT_PLACEHOLDER,
+  Container
+} from '@harness/uicore'
+import { get, isArray } from 'lodash-es'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -34,6 +41,7 @@ interface MultiTypeListOrFileSelectListProps {
   allowOnlyOne?: boolean
   template?: ServiceSpec
   fieldPath?: string
+  isExpressionEnable?: boolean
 }
 
 export default function MultiTypeListOrFileSelectList(props: MultiTypeListOrFileSelectListProps): React.ReactElement {
@@ -50,7 +58,8 @@ export default function MultiTypeListOrFileSelectList(props: MultiTypeListOrFile
     fileUsage = FileUsage.MANIFEST_FILE,
     allowOnlyOne = false,
     template,
-    fieldPath
+    fieldPath,
+    isExpressionEnable
   } = props
   const { expressions } = useVariablesExpression()
 
@@ -62,9 +71,11 @@ export default function MultiTypeListOrFileSelectList(props: MultiTypeListOrFile
       hideError
       skipRenderValueInExpressionLabel
       allowedTypes={
-        (allowableTypes as MultiTypeInputType[]).filter(
-          allowedType => allowedType !== MultiTypeInputType.EXPRESSION
-        ) as AllowedTypes
+        isExpressionEnable
+          ? allowableTypes
+          : ((allowableTypes as MultiTypeInputType[]).filter(
+              allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+            ) as AllowedTypes)
       }
       supportListOfExpressions={true}
       style={{ flexGrow: 1, marginBottom: 0 }}
@@ -72,6 +83,17 @@ export default function MultiTypeListOrFileSelectList(props: MultiTypeListOrFile
       configureOptionsProps={{
         isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
       }}
+      expressionRender={() => (
+        <Container width={400}>
+          <ExpressionInput
+            name={name}
+            value={isArray(get(formik?.values, `${name}`)) ? '' : get(formik?.values, `${name}`)}
+            inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+            items={expressions}
+            onChange={val => formik?.setFieldValue(name, val)}
+          />
+        </Container>
+      )}
     >
       {manifestStoreType === ManifestStoreMap.Harness ? (
         <FileSelectList

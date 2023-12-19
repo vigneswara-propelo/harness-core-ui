@@ -16,10 +16,13 @@ import {
   Button,
   Icon,
   ButtonSize,
-  AllowedTypes
+  AllowedTypes,
+  ExpressionInput,
+  EXPRESSION_INPUT_PLACEHOLDER,
+  Container
 } from '@harness/uicore'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, isArray } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isMultiTypeRuntime } from '@common/utils/utils'
@@ -37,6 +40,7 @@ export interface DragnDropPathsProps<T = unknown> {
   allowOnlyOneFilePath?: boolean
   allowSinglePathDeletion?: boolean
   dragDropFieldWidth?: number
+  isExpressionEnable?: boolean
 }
 
 function DragnDropPaths({
@@ -49,7 +53,8 @@ function DragnDropPaths({
   defaultValue,
   allowOnlyOneFilePath,
   dragDropFieldWidth: dialogWidth,
-  allowSinglePathDeletion
+  allowSinglePathDeletion,
+  isExpressionEnable
 }: DragnDropPathsProps): React.ReactElement {
   const { getString } = useStrings()
   const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
@@ -73,12 +78,30 @@ function DragnDropPaths({
             <MultiTypeFieldSelector
               defaultValueToReset={[defaultValue]}
               allowedTypes={
-                (allowableTypes as MultiTypeInputType[]).filter(
-                  allowedType => allowedType !== MultiTypeInputType.EXPRESSION
-                ) as AllowedTypes
+                isExpressionEnable
+                  ? allowableTypes
+                  : ((allowableTypes as MultiTypeInputType[]).filter(
+                      allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                    ) as AllowedTypes)
               }
               name={fieldPath}
               label={<Text className={css.pathLabel}>{pathLabel}</Text>}
+              skipRenderValueInExpressionLabel
+              supportListOfExpressions={true}
+              expressionRender={() => (
+                <Container width={400}>
+                  <ExpressionInput
+                    name={fieldPath}
+                    value={isArray(get(formik?.values, `${fieldPath}`)) ? '' : get(formik?.values, `${fieldPath}`)}
+                    inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+                    items={expressions}
+                    onChange={val =>
+                      /* istanbul ignore next */
+                      formik?.setFieldValue(fieldPath, val)
+                    }
+                  />
+                </Container>
+              )}
             >
               <FieldArray
                 name={fieldPath}

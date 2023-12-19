@@ -730,6 +730,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             fileUsage={fileUsage}
             placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
             isNameOfArrayType
+            isExpressionEnable={true}
           />
         </div>
       )}
