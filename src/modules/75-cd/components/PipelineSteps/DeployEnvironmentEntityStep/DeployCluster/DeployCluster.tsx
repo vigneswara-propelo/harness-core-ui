@@ -60,6 +60,7 @@ export function getSelectedClustersFromOptions(items: ClusterOption[] | any): Cl
     const selItems: ClusterOption[] = items.map(item => ({
       value: item.value || item.identifier,
       agentIdentifier: item.agentIdentifier,
+      clusterRef: item.value,
       name: item.identifier
     }))
     return selItems

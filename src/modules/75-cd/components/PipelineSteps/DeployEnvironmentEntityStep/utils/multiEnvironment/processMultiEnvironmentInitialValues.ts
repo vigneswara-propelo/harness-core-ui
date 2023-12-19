@@ -93,7 +93,8 @@ export function getEnvironmentsFormStateFromInitialValues(
             environment.gitOpsClusters.map((gitOpsCluster, clusterIndex) => {
               set(formState, `clusters.['${environment.environmentRef}'].${clusterIndex}`, {
                 label: gitOpsCluster.identifier,
-                value: gitOpsCluster.identifier
+                value: gitOpsCluster.identifier,
+                agentIdentifier: gitOpsCluster.agentIdentifier
               })
             })
           } else {
