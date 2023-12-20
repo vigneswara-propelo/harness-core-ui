@@ -8,5 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly fieldAndOptions: string
+  readonly portalPopover: string
 }
 export default styles

@@ -9,4 +9,11 @@
   display: grid;
   grid-template-columns: 1fr 42px;
   align-items: normal !important;
+  > div {
+    overflow: auto;
+  }
+}
+
+.portalPopover {
+  max-width: 600px;
 }

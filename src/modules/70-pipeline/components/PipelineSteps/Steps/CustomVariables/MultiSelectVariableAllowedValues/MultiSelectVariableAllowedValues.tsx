@@ -101,7 +101,12 @@ function MultiSelectVariableView(props: MultiSelectVariableAllowedValuesProps): 
         expressions={expressions}
         onTypeChange={setMultiType}
         onChange={onChange}
-        multiSelectProps={{ items: selectOption, usePortal, placeholder }}
+        multiSelectProps={{
+          items: selectOption,
+          usePortal,
+          placeholder,
+          popoverClassName: usePortal ? css.portalPopover : undefined
+        }}
         value={value}
         resetExpressionOnFixedTypeChange
         {...restprops}
