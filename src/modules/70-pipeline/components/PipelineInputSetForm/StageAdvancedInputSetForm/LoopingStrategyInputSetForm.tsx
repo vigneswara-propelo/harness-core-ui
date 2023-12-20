@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import {
   AllowedTypes,
@@ -113,11 +120,7 @@ export function RuntimeStrategy(props: LoopingStrategyInputSetFormProps): React.
       isChanged.current = true
       setValue(newValue)
       const parsed = yamlParse(newValue)
-      formik.setValues(
-        produce(formik.values, (draft: any) => {
-          set(draft, path, parsed)
-        })
-      )
+      formik.setFieldValue(path, parsed)
     } catch (e) {
       // empty block
     }
