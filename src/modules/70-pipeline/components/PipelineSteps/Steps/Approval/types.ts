@@ -28,6 +28,7 @@ export interface HarnessApprovalData extends StepElementConfig {
       minimumCount: string | number
       disallowPipelineExecutor: string | boolean
     }
+    callbackId?: string
     approverInputs: string | ApproverInputsSubmitCallInterface[]
     autoApproval?: {
       action: 'APPROVE' | 'REJECT'

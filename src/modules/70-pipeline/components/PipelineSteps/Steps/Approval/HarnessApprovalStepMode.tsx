@@ -202,7 +202,20 @@ function FormContent({
         label={getString('pipeline.approvalStep.isAutoRejectEnabled')}
         disabled={isApprovalStepFieldDisabled(readonly)}
       />
-
+      <div className={cx(stepCss.formGroup, stepCss.lg)}>
+        <FormInput.MultiTextInput
+          name="spec.callbackId"
+          label={getString('pipeline.approvalStep.approvalCallback')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          disabled={isApprovalStepFieldDisabled(readonly)}
+          isOptional={true}
+          tooltipProps={{ dataTooltipId: 'harnessApproval_spec.callbackId' }}
+          placeholder=""
+        />
+      </div>
       <div className={stepCss.stepSubSectionHeading}>Approvers</div>
       <div className={cx(stepCss.formGroup, stepCss.lg)}>
         <FormMultiTypeUserGroupInput

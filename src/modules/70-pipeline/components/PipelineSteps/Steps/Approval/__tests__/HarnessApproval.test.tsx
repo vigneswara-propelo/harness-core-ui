@@ -244,6 +244,7 @@ describe('Harness Approval tests', () => {
         includePipelineExecutionHistory: '',
         isAutoRejectEnabled: false,
         approverInputs: '',
+        callbackId: '<+pipeline.name>',
         approvers: {
           userGroups: '<+abc>',
           minimumCount: '<+minCount>',

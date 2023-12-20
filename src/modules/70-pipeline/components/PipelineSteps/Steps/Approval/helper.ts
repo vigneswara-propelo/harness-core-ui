@@ -57,6 +57,9 @@ export const processFormData = (data: HarnessApprovalData): HarnessApprovalData 
         )
     }
   }
+  if (data.spec.callbackId) {
+    toReturn.spec.callbackId = data.spec.callbackId.trim()
+  }
   return toReturn
 }
 

@@ -1344,6 +1344,73 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
           </div>
         </div>
         <div
+          class="formGroup lg"
+        >
+          <div
+            class="bp3-form-group bp3-disabled"
+            data-id="spec.callbackId-5"
+          >
+            <label
+              class="bp3-label"
+              for="spec.callbackId"
+            >
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="harnessApproval_spec.callbackId"
+              >
+                pipeline.approvalStep.approvalCallback (optional)
+              </span>
+               
+              <span
+                class="bp3-text-muted"
+              />
+            </label>
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+              >
+                <div
+                  class="bp3-input-group bp3-disabled MultiTypeInput--input"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    disabled=""
+                    name="spec.callbackId"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <button
+                  class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
+                  disabled=""
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="fixed-input"
+                  >
+                    <svg
+                      height="12"
+                      viewBox="0 0 9 9"
+                      width="12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
           class="stepSubSectionHeading"
         >
           Approvers
@@ -1353,7 +1420,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.userGroups-5"
+            data-id="spec.approvers.userGroups-6"
             style="flex-grow: 1; margin-bottom: 0px;"
           >
             <label
@@ -1415,7 +1482,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
             >
               <div
                 class="bp3-form-group"
-                data-id="undefined-6"
+                data-id="undefined-7"
               >
                 <div
                   class="bp3-form-content"
@@ -1447,7 +1514,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
         >
           <div
             class="bp3-form-group bp3-disabled"
-            data-id="spec.approvers.minimumCount-7"
+            data-id="spec.approvers.minimumCount-8"
           >
             <label
               class="bp3-label"
@@ -1510,7 +1577,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
         </div>
         <div
           class="bp3-form-group bp3-disabled"
-          data-id="spec.approvers.disallowPipelineExecutor-8"
+          data-id="spec.approvers.disallowPipelineExecutor-9"
         >
           <div
             class="bp3-form-content"
@@ -1975,6 +2042,101 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
           </div>
         </div>
         <div
+          class="formGroup lg"
+        >
+          <div
+            class="bp3-form-group"
+            data-id="spec.callbackId-5"
+          >
+            <label
+              class="bp3-label"
+              for="spec.callbackId"
+            >
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="harnessApproval_spec.callbackId"
+              >
+                pipeline.approvalStep.approvalCallback (optional)
+              </span>
+               
+              <span
+                class="bp3-text-muted"
+              />
+            </label>
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+              >
+                <div
+                  class="bp3-popover-wrapper MultiTypeInput--input"
+                >
+                  <div
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.callbackId"
+                        placeholder="<+expression>"
+                        type="text"
+                        value="<+pipeline.name>"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <span
+                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                >
+                  <span
+                    class="bp3-popover-target"
+                  >
+                    <button
+                      class="MultiTypeInput--btn MultiTypeInput--EXPRESSION"
+                      data-testid="multi-type-button"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="expression-input"
+                      >
+                        <svg
+                          height="16"
+                          viewBox="0 0 16 16"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M4.875 2.588C5.305 2.218 5.889 2 6.647 2a.5.5 0 110 1c-.556 0-.898.155-1.12.346-.228.197-.374.472-.462.784a3.18 3.18 0 00-.106.86h1.449a.5.5 0 010 1H4.992v5.505a.5.5 0 01-1 0V5.99h-.936a.5.5 0 010-1h.903a4.173 4.173 0 01.143-1.13c.123-.435.35-.907.773-1.27zm.111 2.823c0 .001 0 .001 0 0m0 0zm7.059 5.019c-.242.268-.455.59-.553.786-.17.341-.472.705-.766.994-.285.281-.635.565-.932.684a.5.5 0 11-.371-.929c.102-.04.335-.204.6-.467.258-.253.475-.528.575-.729.142-.283.407-.68.704-1.009.15-.165.32-.33.5-.456.168-.118.406-.248.68-.248a.5.5 0 01.013 1c-.004.002-.042.012-.118.066a2.152 2.152 0 00-.332.307z"
+                            fill="#CurrentColor"
+                            fill-rule="evenodd"
+                          />
+                          <path
+                            clip-rule="evenodd"
+                            d="M10.045 10.43c.242.268.455.59.553.786.17.341.473.705.766.994.285.281.635.565.932.684a.5.5 0 10.372-.929c-.103-.04-.335-.204-.602-.467-.257-.253-.473-.528-.574-.729a5.003 5.003 0 00-.704-1.009 3.08 3.08 0 00-.5-.456c-.168-.118-.406-.248-.68-.248a.5.5 0 00-.012 1c.003.002.041.012.118.066a2.1 2.1 0 01.33.307z"
+                            fill="#CurrentColor"
+                            fill-rule="evenodd"
+                          />
+                          <path
+                            clip-rule="evenodd"
+                            d="M8.367 7.805a.5.5 0 01.186.682c-.854 1.494-.652 3.467.013 4.797a.5.5 0 11-.895.447c-.771-1.543-1.049-3.881.013-5.74a.5.5 0 01.683-.186zm5.273 0a.5.5 0 01.683.186c1.062 1.859.784 4.197.013 5.74a.5.5 0 11-.895-.447c.665-1.33.867-3.303.013-4.797a.5.5 0 01.186-.682z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
           class="stepSubSectionHeading"
         >
           Approvers
@@ -1984,7 +2146,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
         >
           <div
             class="bp3-form-group"
-            data-id="userGroupExpression-5"
+            data-id="userGroupExpression-6"
             style="flex-grow: 1; margin-bottom: 0px;"
           >
             <label
@@ -2138,7 +2300,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.minimumCount-6"
+            data-id="spec.approvers.minimumCount-7"
           >
             <label
               class="bp3-label"
@@ -2230,7 +2392,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
         </div>
         <div
           class="bp3-form-group"
-          data-id="spec.approvers.disallowPipelineExecutor-7"
+          data-id="spec.approvers.disallowPipelineExecutor-8"
         >
           <div
             class="bp3-form-content"
@@ -2700,6 +2862,79 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
           </div>
         </div>
         <div
+          class="formGroup lg"
+        >
+          <div
+            class="bp3-form-group"
+            data-id="spec.callbackId-5"
+          >
+            <label
+              class="bp3-label"
+              for="spec.callbackId"
+            >
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="harnessApproval_spec.callbackId"
+              >
+                pipeline.approvalStep.approvalCallback (optional)
+              </span>
+               
+              <span
+                class="bp3-text-muted"
+              />
+            </label>
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+              >
+                <div
+                  class="bp3-input-group MultiTypeInput--input"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="spec.callbackId"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <span
+                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                >
+                  <span
+                    class="bp3-popover-target"
+                  >
+                    <button
+                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="fixed-input"
+                      >
+                        <svg
+                          height="12"
+                          viewBox="0 0 9 9"
+                          width="12"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
           class="stepSubSectionHeading"
         >
           Approvers
@@ -2709,7 +2944,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
         >
           <div
             class="bp3-form-group"
-            data-id="userGroupExpression-5"
+            data-id="userGroupExpression-6"
             style="flex-grow: 1; margin-bottom: 0px;"
           >
             <label
@@ -2863,7 +3098,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.minimumCount-6"
+            data-id="spec.approvers.minimumCount-7"
           >
             <label
               class="bp3-label"
@@ -2932,7 +3167,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
         </div>
         <div
           class="bp3-form-group"
-          data-id="spec.approvers.disallowPipelineExecutor-7"
+          data-id="spec.approvers.disallowPipelineExecutor-8"
         >
           <div
             class="bp3-form-content"
@@ -3397,6 +3632,79 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
           </div>
         </div>
         <div
+          class="formGroup lg"
+        >
+          <div
+            class="bp3-form-group"
+            data-id="spec.callbackId-5"
+          >
+            <label
+              class="bp3-label"
+              for="spec.callbackId"
+            >
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="harnessApproval_spec.callbackId"
+              >
+                pipeline.approvalStep.approvalCallback (optional)
+              </span>
+               
+              <span
+                class="bp3-text-muted"
+              />
+            </label>
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+              >
+                <div
+                  class="bp3-input-group MultiTypeInput--input"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="spec.callbackId"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <span
+                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                >
+                  <span
+                    class="bp3-popover-target"
+                  >
+                    <button
+                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="fixed-input"
+                      >
+                        <svg
+                          height="12"
+                          viewBox="0 0 9 9"
+                          width="12"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
           class="stepSubSectionHeading"
         >
           Approvers
@@ -3406,7 +3714,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.userGroups-5"
+            data-id="spec.approvers.userGroups-6"
             style="flex-grow: 1; margin-bottom: 0px;"
           >
             <label
@@ -3466,7 +3774,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
             >
               <div
                 class="bp3-form-group"
-                data-id="undefined-6"
+                data-id="undefined-7"
               >
                 <div
                   class="bp3-form-content"
@@ -3573,7 +3881,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
         >
           <div
             class="bp3-form-group"
-            data-id="spec.approvers.minimumCount-7"
+            data-id="spec.approvers.minimumCount-8"
           >
             <label
               class="bp3-label"
@@ -3642,7 +3950,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
         </div>
         <div
           class="bp3-form-group"
-          data-id="spec.approvers.disallowPipelineExecutor-8"
+          data-id="spec.approvers.disallowPipelineExecutor-9"
         >
           <div
             class="bp3-form-content"

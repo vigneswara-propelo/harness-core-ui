@@ -76,6 +76,23 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
         />
       ) : null}
 
+      {getMultiTypeFromValue(template?.spec?.callbackId) === MultiTypeInputType.RUNTIME ? (
+        <TextFieldInputSetView
+          name={`${prefix}spec.callbackId`}
+          label={getString('pipeline.approvalStep.approvalCallback')}
+          multiTextInputProps={{
+            disabled: isApprovalStepFieldDisabled(readonly),
+            expressions,
+            allowableTypes
+          }}
+          disabled={isApprovalStepFieldDisabled(readonly)}
+          template={template}
+          fieldPath="spec.callbackId"
+          className={css.deploymentViewMedium}
+          isOptional={true}
+        />
+      ) : null}
+
       {typeof template?.spec?.approvers?.userGroups === 'string' &&
       getMultiTypeFromValue(template?.spec?.approvers?.userGroups) === MultiTypeInputType.RUNTIME ? (
         <div className={css.deploymentViewMedium}>

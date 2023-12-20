@@ -29,6 +29,7 @@ interface TextFieldInputSetView extends FormMultiTextTypeInputProps {
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
   variableNamePath?: string
+  isOptional?: boolean
 }
 
 function TextFieldInputSet(props: TextFieldInputSetView): JSX.Element {

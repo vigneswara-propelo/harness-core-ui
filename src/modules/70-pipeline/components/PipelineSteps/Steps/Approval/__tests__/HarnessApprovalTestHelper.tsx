@@ -40,6 +40,7 @@ export const getHarnessApprovalEditModePropsAsExpressions = (): HarnessApprovalS
       includePipelineExecutionHistory: '',
       isAutoRejectEnabled: false,
       approverInputs: '',
+      callbackId: '<+pipeline.name>',
       approvers: {
         userGroups: '<+abc>',
         minimumCount: '<+minCount>',

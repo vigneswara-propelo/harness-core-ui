@@ -4047,6 +4047,7 @@ export interface StringsMap {
   'pipeline.approvalStage.settingUpStage': string
   'pipeline.approvalStep.addApproverInputs': string
   'pipeline.approvalStep.addUserGroups': string
+  'pipeline.approvalStep.approvalCallback': string
   'pipeline.approvalStep.approverInputs': string
   'pipeline.approvalStep.approverInputsOptional': string
   'pipeline.approvalStep.approvers': string

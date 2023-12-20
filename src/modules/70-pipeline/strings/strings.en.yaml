@@ -158,6 +158,7 @@ approvalStep:
   addApproverInputs: Add Approver Inputs
   autoApproveDeadline: Enter the auto approve deadline
   autoApproveLabel: Auto Approve
+  approvalCallback: Approval Callback Identifier
   execution:
     inputsTitle: Approval inputs
     statusMsg: '{{ count }} of {{ total }} approvals complete'
