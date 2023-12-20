@@ -19554,6 +19554,7 @@ export interface SettingDTO {
     | 'CONNECTORS'
     | 'EULA'
     | 'NOTIFICATIONS'
+    | 'SUPPLY_CHAIN_ASSURANCE'
   defaultValue?: string
   groupIdentifier: string
   identifier: string
@@ -67339,6 +67340,7 @@ export interface GetSettingsListQueryParams {
     | 'CONNECTORS'
     | 'EULA'
     | 'NOTIFICATIONS'
+    | 'SUPPLY_CHAIN_ASSURANCE'
   group?: string
   includeParentScopes?: boolean
 }

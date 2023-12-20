@@ -1476,6 +1476,7 @@ export interface StringsMap {
   'common.updating': string
   'common.upgrade': string
   'common.usage': string
+  'common.useBase64Encoding': string
   'common.useSSL': string
   'common.useTemplate': string
   'common.usedWithinPipeline': string

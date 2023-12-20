@@ -106,6 +106,12 @@ DefaultSettingsFactory.registerCategory('NOTIFICATIONS', {
   ]
 })
 
+DefaultSettingsFactory.registerCategory('SUPPLY_CHAIN_ASSURANCE', {
+  icon: 'ssca-main',
+  label: 'common.ssca',
+  modulesWhereCategoryWillBeDisplayed: ['ssca']
+})
+
 DefaultSettingsFactory.registerGroupHandler(SettingGroups.SLACK_NOTIFICATION_SETTINGS_GROUP, {
   groupName: 'common.slack',
   settingCategory: 'NOTIFICATIONS',
@@ -466,6 +472,13 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.TICKETING_TOOL, {
   yupValidation: Yup.string(),
   settingCategory: 'CE',
   groupId: SettingGroups.TICKETING_PREFERENCES
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.USE_BASE64_ENCODED_SECRETS_FOR_ATTESTATION, {
+  label: 'common.useBase64Encoding',
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'SUPPLY_CHAIN_ASSURANCE'
 })
 
 AuditTrailFactory.registerResourceHandler('SETTING', {

@@ -1759,3 +1759,4 @@ projectsInOrgLabel: Projects in Org
 activeUsers: Active User(s)
 filename: File Name
 toggle: Toggle
+useBase64Encoding: Use Base64 encoded secrets for attestation
