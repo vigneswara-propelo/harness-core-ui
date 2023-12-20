@@ -76,7 +76,7 @@ export default function CreateGitopsAgentModal({
   useEffect(() => {
     const data: V1Agent = {
       metadata: {
-        namespace: 'du0',
+        namespace: 'harness-gitops',
         highAvailability: false,
         existingInstallation: false,
         infraType: 'UNSET'
@@ -107,7 +107,7 @@ export default function CreateGitopsAgentModal({
     projectIdentifier,
     orgIdentifier,
     accountIdentifier: accountId,
-    namespace: 'du0',
+    namespace: 'harness-gitops',
     skipCrds: false
   }
   const { refetch: refetchHelmChart, data } = useAgentServiceForServerGetDeployHelmChart({
