@@ -118,7 +118,7 @@ const SelectRepositoryRef = (
       case Connectors.BITBUCKET:
         return 'bitbucket-blue'
       case Connectors.Harness:
-        return 'service-github'
+        return 'code'
       default:
         return
     }
