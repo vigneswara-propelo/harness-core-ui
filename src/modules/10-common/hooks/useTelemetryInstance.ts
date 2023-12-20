@@ -24,6 +24,5 @@ interface TelemetryStub {
 const telemetry = new Telemetry(window.segmentToken)
 
 export function useTelemetryInstance(): TelemetryStub | Telemetry {
-  const isStub = window.deploymentType === 'ON_PREM' || (__DEV__ && !window.segmentToken)
-  return isStub ? stubTelemetry : telemetry
+  return window.segmentToken ? telemetry : stubTelemetry
 }

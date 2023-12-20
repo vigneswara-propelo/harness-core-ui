@@ -29,7 +29,7 @@ jest.mock('../useTelemetryInstance', () => ({
 describe('useTelemetryInstance', () => {
   test('useTelemetryInstance with stub', () => {
     const userId = 'random'
-    window.deploymentType = 'ON_PREM'
+    window.segmentToken = undefined
     const { result } = renderHook(() => useTelemetryInstance())
     result.current.identify(userId)
     expect(identifyMock).not.toHaveBeenCalledWith(userId)
@@ -37,7 +37,7 @@ describe('useTelemetryInstance', () => {
 
   test('useTelemetryInstance no stub', () => {
     const userId = 'random'
-    window.deploymentType = 'SAAS'
+    window.segmentToken = 'test'
     const { result } = renderHook(() => useTelemetryInstance())
     result.current.identify(userId)
     expect(identifyMock).toHaveBeenCalledWith(userId)
