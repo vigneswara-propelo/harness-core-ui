@@ -17,6 +17,8 @@ import type {
   PMSPipelineSummaryResponse
 } from 'services/pipeline-ng'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { Connectors } from '@modules/27-platform/connectors/constants'
+import { CardSelectInterface } from '@modules/10-common/components/GitProviderSelect/GitProviderSelect'
 
 export type OriginalPipeline = Pick<
   PMSPipelineSummaryResponse,
@@ -26,6 +28,7 @@ export type OriginalPipeline = Pick<
 export interface FormState
   extends Required<ClonePipelineProperties>,
     Omit<OriginalPipeline, 'storeType' | 'gitDetails' | 'connectorRef'> {
+  provider?: CardSelectInterface
   connectorRef?: string | SelectOption
   storeType: StoreType
   repo?: string
@@ -50,8 +53,8 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
       is: StoreType.REMOTE,
       then: Yup.string().trim().required(getString('common.git.validation.repoRequired'))
     }),
-    connectorRef: Yup.mixed().when('storeType', {
-      is: StoreType.REMOTE,
+    connectorRef: Yup.mixed().when(['storeType', 'provider'], {
+      is: (storeType, provider) => storeType === StoreType.REMOTE && provider?.type !== Connectors.Harness,
       then: Yup.string().trim().required(getString('platform.connectors.validation.connectorIsRequired'))
     }),
     branch: Yup.mixed().when('storeType', {

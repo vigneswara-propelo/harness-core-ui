@@ -254,6 +254,7 @@ export default function FormikInputSetFormV1(props: FormikInputSetFormV1Props): 
                               disableFields={
                                 shouldDisableGitDetailsFields(isEdit, allowDifferentRepoSettings?.data?.value)
                                   ? {
+                                      provider: true,
                                       connectorRef: true,
                                       repoName: true,
                                       branch: true,
@@ -261,6 +262,7 @@ export default function FormikInputSetFormV1(props: FormikInputSetFormV1Props): 
                                     }
                                   : {}
                               }
+                              renderRepositoryLocationCard
                             ></GitSyncForm>
                           </Container>
                         )}

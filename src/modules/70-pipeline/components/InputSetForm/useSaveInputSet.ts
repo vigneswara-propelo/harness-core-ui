@@ -106,6 +106,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
       conflictCommitId?: string
     }): CreateUpdateInputSetsReturnType => {
       let response: ResponseInputSetResponse | undefined = undefined
+      const inputSetYaml = yamlStringify({ inputSet: clearNullUndefined(omit(inputSetObj, 'provider')) })
       try {
         const updatedGitDetails = getUpdatedGitDetails(
           isEdit,
@@ -116,7 +117,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
         )
         if (isEdit) {
           if (inputSetObj.identifier) {
-            response = await updateInputSet(yamlStringify({ inputSet: clearNullUndefined(inputSetObj) }), {
+            response = await updateInputSet(inputSetYaml, {
               pathParams: {
                 inputSetIdentifier: defaultTo(inputSetObj.identifier, '')
               },
@@ -139,7 +140,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
             throw new Error(getString('common.validation.identifierIsRequired'))
           }
         } else {
-          response = await createInputSet(yamlStringify({ inputSet: clearNullUndefined(inputSetObj) }), {
+          response = await createInputSet(inputSetYaml, {
             queryParams: {
               accountIdentifier: accountId,
               orgIdentifier,

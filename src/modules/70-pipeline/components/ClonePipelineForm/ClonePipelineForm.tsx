@@ -311,7 +311,12 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
                   ) : null}
                   {storeType === StoreType.REMOTE ? (
                     <React.Fragment>
-                      <GitSyncForm formikProps={formikProps as any} isEdit={false} initialValues={{}} />
+                      <GitSyncForm
+                        formikProps={formikProps as any}
+                        isEdit={false}
+                        initialValues={{}}
+                        renderRepositoryLocationCard
+                      />
                       <div className={css.container}>
                         <FormInput.TextArea label={getString('common.git.commitMessage')} name="commitMsg" />
                       </div>

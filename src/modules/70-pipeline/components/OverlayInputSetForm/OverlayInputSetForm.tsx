@@ -502,7 +502,7 @@ export function OverlayInputSetForm({
   ): CreateUpdateInputSetsReturnType => {
     let response: ResponseOverlayInputSetResponse | null = null
     try {
-      const requestData = yamlStringify({ overlayInputSet: clearNullUndefined(inputSetObj) })
+      const requestData = yamlStringify({ overlayInputSet: clearNullUndefined(omit(inputSetObj, 'provider')) })
       const requestOptions = getCreateUpdateRequestBodyOptions({
         isEdit,
         initialGitDetails,
@@ -890,6 +890,7 @@ export function OverlayInputSetForm({
                                       : {}
                                   }
                                   differentRepoAllowedSettings={allowDifferentRepoSettings?.data?.value === 'true'}
+                                  renderRepositoryLocationCard
                                 ></GitSyncForm>
                               </Container>
                             )}

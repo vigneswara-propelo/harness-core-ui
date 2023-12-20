@@ -81,23 +81,25 @@ const hasToRefetchBranches = (
   gitProvider?: string,
   connectorIdentifierRef?: string,
   repoName?: string
-) => !disabled && (gitProvider === Connectors.Harness || connectorIdentifierRef) && repoName
+): boolean => !disabled && Boolean((gitProvider === Connectors.Harness || connectorIdentifierRef) && repoName)
 
-const triggerOnChange = (disabled: boolean, selectedValue?: string) => !disabled && !selectedValue
+const triggerOnChange = (disabled: boolean, selectedValue?: string): boolean => !disabled && Boolean(!selectedValue)
 
-const showRefetchButon = (
+const showRefetchButton = (
   disabled: boolean,
   error: GetDataError<Failure | Error> | null,
   gitProvider?: string,
   connectorIdentifierRef?: string,
   repoName?: string
-) => {
+): boolean => {
   const responseMessages = (error?.data as Error)?.responseMessages
   return (
     !disabled &&
-    (gitProvider === Connectors.Harness || connectorIdentifierRef) &&
-    repoName &&
-    ((responseMessages?.length && responseMessages?.length > 0) || !!error)
+    Boolean(
+      (gitProvider === Connectors.Harness || connectorIdentifierRef) &&
+        repoName &&
+        ((responseMessages?.length && responseMessages?.length > 0) || !!error)
+    )
   )
 }
 
@@ -226,7 +228,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         >
           <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} />
         </Layout.Horizontal>
-      ) : showRefetchButon(disabled, error, gitProvider, connectorIdentifierRef, repoName) ? (
+      ) : showRefetchButton(disabled, error, gitProvider, connectorIdentifierRef, repoName) ? (
         <Layout.Horizontal
           spacing="small"
           flex={{ alignItems: 'flex-start' }}

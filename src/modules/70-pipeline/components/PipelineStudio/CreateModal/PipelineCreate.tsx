@@ -268,6 +268,7 @@ export default function CreatePipelines({
                   formikProps={formikProps as any}
                   isEdit={isEdit}
                   initialValues={pick(newInitialValues, 'repo', 'branch', 'filePath', 'connectorRef')}
+                  renderRepositoryLocationCard
                 />
               ) : null}
 

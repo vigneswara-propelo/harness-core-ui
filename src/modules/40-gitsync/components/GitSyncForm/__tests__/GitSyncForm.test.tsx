@@ -135,7 +135,7 @@ describe('GitSyncForm test', () => {
         >
           {formikProps => (
             <FormikForm>
-              <GitSyncForm formikProps={formikProps} isEdit={false} />
+              <GitSyncForm formikProps={formikProps} isEdit={false} renderRepositoryLocationCard />
             </FormikForm>
           )}
         </Formik>
@@ -173,7 +173,7 @@ describe('GitSyncForm test', () => {
         >
           {formikProps => (
             <FormikForm>
-              <GitSyncForm formikProps={formikProps} isEdit={false} />
+              <GitSyncForm formikProps={formikProps} isEdit={false} renderRepositoryLocationCard />
             </FormikForm>
           )}
         </Formik>
@@ -243,6 +243,7 @@ describe('GitSyncForm test', () => {
     expect(getByText('repository')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
+
   test('Rendering GitSyncForm while create pre-populated with settings', async () => {
     jest.spyOn(cdNg, 'useGetSettingsList').mockImplementation((): any => {
       return { data: gitXSettingMock, refetch: () => Promise.resolve(gitXSettingMock) }
@@ -281,7 +282,7 @@ describe('GitSyncForm test', () => {
     expect(getByText('ValidGithubRepo')).toBeInTheDocument()
     const repoInput = queryByAttribute('name', container, 'repo')
     await waitFor(() => expect(repoInput).toHaveValue('gitX2'))
-    await waitFor(() => expect(fetchRepos).toBeCalledTimes(2))
+    await waitFor(() => expect(fetchRepos).toBeCalledTimes(1))
     await waitFor(() => expect(fetchBranches).toBeCalledTimes(1))
     const branchInput = queryByAttribute('name', container, 'branch')
     expect(branchInput).toHaveValue('main')
@@ -315,7 +316,7 @@ describe('GitSyncForm test', () => {
         >
           {formikProps => (
             <FormikForm>
-              <GitSyncForm formikProps={formikProps} isEdit={false} />
+              <GitSyncForm formikProps={formikProps} isEdit={false} renderRepositoryLocationCard />
             </FormikForm>
           )}
         </Formik>
@@ -376,7 +377,7 @@ describe('GitSyncForm test', () => {
     // Connector should get auto filled but not repo and branch
     const repoInput = queryByAttribute('name', container, 'repo')
     expect(repoInput).toHaveValue('')
-    await waitFor(() => expect(fetchRepos).toBeCalledTimes(2))
+    await waitFor(() => expect(fetchRepos).toBeCalledTimes(1))
     await waitFor(() => expect(fetchBranches).toBeCalledTimes(0))
     const branchInput = queryByAttribute('name', container, 'branch')
     expect(branchInput).not.toHaveValue('')
@@ -407,7 +408,7 @@ describe('GitSyncForm test', () => {
         >
           {formikProps => (
             <FormikForm>
-              <GitSyncForm formikProps={formikProps} isEdit />
+              <GitSyncForm formikProps={formikProps} isEdit renderRepositoryLocationCard />
             </FormikForm>
           )}
         </Formik>

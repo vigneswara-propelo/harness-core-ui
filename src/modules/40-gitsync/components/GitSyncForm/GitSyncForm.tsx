@@ -77,6 +77,7 @@ interface GitSyncFormProps<T> {
   skipDefaultConnectorSetting?: boolean
   skipBranch?: boolean
   supportNewBranch?: boolean
+  renderRepositoryLocationCard?: boolean
 }
 
 interface NewGitBranchProps<T> {
@@ -152,6 +153,7 @@ function NewGitBranch<T extends GitSyncFormFields = GitSyncFormFields>(
         {!isNewBranch && (
           <RepoBranchSelectV2
             key={formikProps?.values?.repo}
+            gitProvider={formikProps.values.provider?.type}
             connectorIdentifierRef={(formikProps?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value}
             repoName={formikProps?.values?.repo}
             onChange={(selected: SelectOption) => {
@@ -189,6 +191,7 @@ function NewGitBranch<T extends GitSyncFormFields = GitSyncFormFields>(
             <FormInput.Text name="branch" placeholder={getString('common.git.branchName')} />
             <RepoBranchSelectV2
               key={formikProps?.values?.repo}
+              gitProvider={formikProps.values.provider?.type}
               name="baseBranch"
               connectorIdentifierRef={(formikProps?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value}
               repoName={formikProps?.values?.repo}
@@ -223,7 +226,8 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
     skipDefaultConnectorSetting = false,
     differentRepoAllowedSettings,
     skipBranch = false,
-    supportNewBranch = false
+    supportNewBranch = false,
+    renderRepositoryLocationCard = false
   } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { connectorRef, branch, repoName } = useQueryParams<GitQueryParams>()
@@ -319,14 +323,14 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
   }
 
   useEffect(() => {
-    if (!formikProps.values.provider) {
+    if (!formikProps.values.provider && renderRepositoryLocationCard) {
       if (CODE_ENABLED && isEmpty(formikConnectorRef)) {
         formikProps.setFieldValue('provider', getGitProviderCards(getString)[0])
       } else {
         formikProps.setFieldValue('provider', getGitProviderCards(getString)[1])
       }
     }
-  }, [])
+  }, [formikProps?.values?.provider, renderRepositoryLocationCard])
 
   useEffect(() => {
     if (!loadingDefaultConnector && connectorData?.data?.connector) {
@@ -372,7 +376,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
 
   return (
     <Container padding={{ top: 'large' }} className={cx(css.gitSyncForm, className)}>
-      {CODE_ENABLED ? (
+      {CODE_ENABLED && renderRepositoryLocationCard ? (
         <>
           <Divider />
           <Text font={{ variation: FontVariation.H6 }} className={css.gitRepoLocationHeader}>

@@ -449,6 +449,7 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
                                       : {}
                                   }
                                   differentRepoAllowedSettings={allowDifferentRepoSettings?.data?.value === 'true'}
+                                  renderRepositoryLocationCard
                                 ></GitSyncForm>
                               </Container>
                             )}
