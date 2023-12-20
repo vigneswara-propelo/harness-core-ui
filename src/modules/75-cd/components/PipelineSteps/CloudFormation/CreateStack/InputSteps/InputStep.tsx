@@ -55,7 +55,6 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { expressions } = useVariablesExpression()
-  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])

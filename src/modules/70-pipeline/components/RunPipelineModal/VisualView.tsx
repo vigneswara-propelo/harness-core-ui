@@ -22,6 +22,7 @@ import type {
   RetryInfo
 } from 'services/pipeline-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import SelectExistingInputsOrProvideNew from './SelectExistingOrProvide'
 import { InputSetSelector } from '../InputSetSelector/InputSetSelector'
 import type { InputSetValue } from '../InputSetSelector/utils'
@@ -29,9 +30,8 @@ import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetFo
 import { StepViewType } from '../AbstractSteps/Step'
 import type { StageSelectionData } from '../../utils/runPipelineUtils'
 import SelectStageToRetryNew, { SelectStageToRetryState } from './SelectStageToRetryNew'
+import { ExistingProvide } from './type'
 import css from './RunPipelineForm.module.scss'
-
-export type ExistingProvide = 'existing' | 'provide'
 
 export interface VisualViewProps {
   executionView?: boolean
@@ -112,6 +112,10 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     retryStagesLoading
   } = props
   const { getString } = useStrings()
+  const { setPreference: setUseInputSetSelected } = usePreferenceStore<ExistingProvide>(
+    PreferenceScope.USER,
+    'useInputSetsSelected'
+  )
 
   const checkIfRuntimeInputsNotPresent = (): JSX.Element | string | undefined => {
     if (executionView && isEmpty(template)) {
@@ -151,6 +155,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   const onExistingProvideRadioChange = (ev: FormEvent<HTMLInputElement>): void => {
     const existingProvideValue = ev.currentTarget.checked ? 'existing' : 'provide'
     setExistingProvide(existingProvideValue)
+    setUseInputSetSelected(existingProvideValue)
   }
 
   const noRuntimeInputs = checkIfRuntimeInputsNotPresent()

@@ -65,6 +65,8 @@ import {
   BuildCodebaseType,
   DefaultBuildValues as CodebaseDefaultValues
 } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { ExistingProvide } from '@modules/70-pipeline/components/RunPipelineModal/type'
 import { isSimplifiedYAMLEnabledForCI, YAMLVersion } from '@pipeline/utils/CIUtils'
 import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
 import {
@@ -149,6 +151,10 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   )
 
   const setCIGetStartedVisible = (shouldShow: boolean): void => setShowGetStartedTabInMainMenu('ci', shouldShow)
+  const { setPreference: setUseInputSetsSelected } = usePreferenceStore<ExistingProvide>(
+    PreferenceScope.USER,
+    'useInputSetsSelected'
+  )
 
   useEffect(() => {
     setCurrentWizardStepId(lastConfiguredWizardStepId)
@@ -654,6 +660,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                     wrapUpAPIOperation()
                     setCIGetStartedVisible(false)
                     if (createPipelineResponse?.data?.identifier) {
+                      setUseInputSetsSelected('provide')
                       reRouteToPipelineStudio({
                         pipelineIdentifier: createPipelineResponse.data.identifier,
                         includeGitParams: shouldSavePipelineToGit,

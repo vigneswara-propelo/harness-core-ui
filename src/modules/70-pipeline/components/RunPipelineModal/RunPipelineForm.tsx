@@ -94,6 +94,7 @@ import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { usePrevious } from '@common/hooks/usePrevious'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 
@@ -117,6 +118,7 @@ import { useInputSets } from './useInputSets'
 import { ActiveFreezeWarning } from './ActiveFreezeWarning'
 import { SelectStageToRetryState } from './SelectStageToRetryNew'
 import PipelineOutOfSync from './PipelineOutOfSync'
+import { ExistingProvide } from './type'
 import css from './RunPipelineForm.module.scss'
 
 export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & GitQueryParams> {
@@ -170,6 +172,11 @@ function RunPipelineFormBasic({
   preSelectLastStage = false,
   storeMetadata
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
+  const { preference: useInputSetSelected } = usePreferenceStore<ExistingProvide>(
+    PreferenceScope.USER,
+    'useInputSetsSelected'
+  )
+
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
@@ -195,7 +202,8 @@ function RunPipelineFormBasic({
     selectedStageItems: [getAllStageItem(getString)]
   })
   const { setPipeline: updatePipelineInVariablesContext, setSelectedInputSetsContext } = usePipelineVariables()
-  const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
+  const [existingProvide, setExistingProvide] = useState<ExistingProvide>(useInputSetSelected ?? 'existing')
+
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [currentPipeline, setCurrentPipeline] = useState<PipelineInfoConfig | undefined>()
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
@@ -562,9 +570,9 @@ function RunPipelineFormBasic({
     if (inputSetYAML) {
       setExistingProvide('provide')
     } else {
-      setExistingProvide(hasInputSets ? 'existing' : 'provide')
+      setExistingProvide(hasInputSets ? useInputSetSelected ?? 'existing' : 'provide')
     }
-  }, [inputSetYAML, hasInputSets])
+  }, [inputSetYAML, hasInputSets, useInputSetSelected])
 
   useEffect(() => {
     if (inputSetsError) {

@@ -387,9 +387,9 @@ export default function GetStartedWithCI(): React.ReactElement {
                             if (creditCardModalOpenedOnce && validCard?.data?.hasAtleastOneValidCreditCard) {
                               trackEvent(CIOnboardingActions.GetStartedWithValidCardClicked, {})
                             } else if (useLocalRunnerInfra) {
-                              trackEvent(CIOnboardingActions.GetStartedClicked, {})
-                            } else {
                               trackEvent(CIOnboardingActions.GetStartedWithLocalRunnerClicked, {})
+                            } else {
+                              trackEvent(CIOnboardingActions.GetStartedClicked, {})
                             }
                           } catch (e) {
                             // ignore error

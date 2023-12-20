@@ -29,6 +29,7 @@ import SelectExistingInputsOrProvideNew from '@pipeline/components/RunPipelineMo
 import { InputSetSelector } from '@pipeline/components/InputSetSelector/InputSetSelector'
 // import { PipelineInputSetForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 // import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { InputsKVPair } from './RunPipelineFormY1'
 // TODO end
 import { InputsForm } from '../InputsForm/InputsForm'
@@ -114,6 +115,10 @@ export default function VisualViewY1(props: VisualViewY1Props): React.ReactEleme
     retryStagesLoading
   } = props
   const { getString } = useStrings()
+  const { setPreference: setUseInputSetSelected } = usePreferenceStore<ExistingProvide>(
+    PreferenceScope.USER,
+    'useInputSetsSelected'
+  )
 
   const showInputSetSelector = (): boolean => {
     return !!(pipeline && currentPipeline && hasRuntimeInputs && existingProvide === 'existing' && hasInputSets)
@@ -136,6 +141,7 @@ export default function VisualViewY1(props: VisualViewY1Props): React.ReactEleme
   const onExistingProvideRadioChange = (ev: FormEvent<HTMLInputElement>): void => {
     const existingProvideValue = ev.currentTarget.checked ? 'existing' : 'provide'
     setExistingProvide(existingProvideValue)
+    setUseInputSetSelected(existingProvideValue)
   }
 
   const noRuntimeInputs =
