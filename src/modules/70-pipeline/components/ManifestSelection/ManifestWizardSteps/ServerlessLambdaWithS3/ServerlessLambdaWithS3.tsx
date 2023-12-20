@@ -42,6 +42,7 @@ import {
 import { useListAwsRegions } from 'services/portal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -95,6 +96,7 @@ export function ServerlessLambdaWithS3({
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [lastQueryData, setLastQueryData] = React.useState({ region: '' })
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
@@ -291,7 +293,11 @@ export function ServerlessLambdaWithS3({
             label={getString('pipeline.manifestType.bucketName')}
             placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
             name="bucketName"
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
           {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
@@ -322,6 +328,7 @@ export function ServerlessLambdaWithS3({
           multiTypeInputProps={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             selectProps: {
               noResults: (
                 <Text lineClamp={1} width={400} height={100} padding="small">
@@ -428,6 +435,7 @@ export function ServerlessLambdaWithS3({
                     multiTypeInputProps={{
                       expressions,
                       allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       onChange: selectedValue => {
                         const selectedValueString =
                           typeof selectedValue === 'string'

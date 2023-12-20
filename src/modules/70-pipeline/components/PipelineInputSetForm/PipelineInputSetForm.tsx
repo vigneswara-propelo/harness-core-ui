@@ -31,6 +31,7 @@ import { useDeepCompareEffect } from '@common/hooks'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { PipelineGitMetaData, StageFormContextProvider } from '@pipeline/context/StageFormContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
 import { stageTypeToIconMap } from '@pipeline/utils/constants'
 import { StageInputSetForm } from './StageInputSetForm'
@@ -109,6 +110,7 @@ export function StageFormInternal({
   viewTypeMetadata?: Record<string, boolean>
 }): JSX.Element {
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <div className={cx(css.topAccordion, stageClassName)}>
       {template?.stage?.timeout && (
@@ -119,6 +121,7 @@ export function StageFormInternal({
               label={getString('pipelineSteps.timeoutLabel')}
               multiTypeDurationProps={{
                 enableConfigureOptions: true,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 disabled: readonly,
                 allowableTypes: getFilteredAllowableTypes(allowableTypes, viewType)
               }}
@@ -459,6 +462,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     : path
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isInputStageDisabled = (stageId: string): boolean => {
     /* In retry pipeline form all the fields are disabled until any stage is selected,
@@ -490,6 +494,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions,
               disabled: readonly
             }}

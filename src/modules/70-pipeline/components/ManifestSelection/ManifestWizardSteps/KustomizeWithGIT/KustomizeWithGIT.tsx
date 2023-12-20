@@ -29,6 +29,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { KustomizeWithGITDataType, KustomizeWithGITManifestLastStepPrevStepData } from '../../ManifestInterface'
 import {
   getSkipResourceVersioningBasedOnDeclarativeRollback,
@@ -81,6 +82,7 @@ function KustomizeWithGIT({
     initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags || !!kustomizeYamlFolderPath
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
@@ -302,7 +304,11 @@ function KustomizeWithGIT({
                       <FormInput.MultiTextInput
                         label={getString('pipelineSteps.deploy.inputSet.branch')}
                         placeholder={getString('pipeline.manifestType.branchPlaceholder')}
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         name="branch"
                       />
                       {getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME && (
@@ -330,7 +336,11 @@ function KustomizeWithGIT({
                       <FormInput.MultiTextInput
                         label={getString('pipeline.manifestType.commitId')}
                         placeholder={getString('pipeline.manifestType.commitPlaceholder')}
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         name="commitId"
                       />
                       {getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME && (
@@ -369,7 +379,11 @@ function KustomizeWithGIT({
                           ? 'kustomizeBasePath'
                           : 'kustomizePathHelperText'
                       }}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values?.folderPath) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
@@ -399,7 +413,11 @@ function KustomizeWithGIT({
                         dataTooltipId: 'pluginPathHelperText'
                       }}
                       isOptional={true}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values?.pluginPath) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions

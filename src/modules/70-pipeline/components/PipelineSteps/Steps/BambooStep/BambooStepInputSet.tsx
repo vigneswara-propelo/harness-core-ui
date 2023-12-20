@@ -31,6 +31,7 @@ import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelecto
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { BambooPlanNames, useGetPlansKey } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ConnectorRefType, getScopedConnectorValue } from '@pipeline/utils/stepUtils'
@@ -57,6 +58,7 @@ function BambooStepInputSet(
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [connectorRef, setConnectorRef] = React.useState(
     get(formik, `values.${prefix}spec.connectorRef`) || get(inputSetData?.allValues, 'spec.connectorRef', '')
@@ -132,6 +134,7 @@ function BambooStepInputSet(
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               },
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions,
               disabled: readonly
             }}
@@ -157,6 +160,7 @@ function BambooStepInputSet(
             setRefValue
             multiTypeProps={{
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions
             }}
             configureOptionsProps={{
@@ -197,6 +201,7 @@ function BambooStepInputSet(
               }
               multiTypeInputProps={{
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   allowCreatingNewItems: true,
                   addClearBtn: !readonly,
@@ -264,6 +269,7 @@ function BambooStepInputSet(
                                 name={`${jobParameterPath}.value`}
                                 multiTextInputProps={{
                                   allowableTypes,
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                   expressions,
                                   disabled: readonly
                                 }}

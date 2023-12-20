@@ -29,6 +29,7 @@ import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { AcceptableValue } from '@modules/70-pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import type {
@@ -69,6 +70,7 @@ export function TasManifestWithArtifactBundle({
   const { getString } = useStrings()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const validationSchema = Yup.object().shape({
     ...ManifestIdentifierValidation(
@@ -242,7 +244,8 @@ export function TasManifestWithArtifactBundle({
                       })}
                       multiTextInputProps={{
                         allowableTypes,
-                        expressions
+                        expressions,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                     />
                     {getMultiTypeFromValue(formik.values.deployableUnitPath) === MultiTypeInputType.RUNTIME && (
@@ -274,7 +277,8 @@ export function TasManifestWithArtifactBundle({
                       })}
                       multiTextInputProps={{
                         allowableTypes,
-                        expressions
+                        expressions,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                     />
                     {getMultiTypeFromValue(formik.values.manifestPath) === MultiTypeInputType.RUNTIME && (

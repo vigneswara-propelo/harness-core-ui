@@ -52,6 +52,7 @@ import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRender
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { BambooFormContentInterface, BambooStepData } from './types'
 import { scriptInputType, variableSchema } from './helper'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
@@ -75,6 +76,7 @@ function FormContent({
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
 
@@ -149,7 +151,8 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             enableConfigureOptions: true,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       </div>
@@ -165,7 +168,7 @@ function FormContent({
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           type="Bamboo"
           enableConfigureOptions={false}
           selected={formik?.values?.spec.connectorRef as string}
@@ -215,6 +218,7 @@ function FormContent({
           multiTypeInputProps={{
             onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.planName', type),
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             selectProps: {
               allowCreatingNewItems: true,
               addClearBtn: true,
@@ -300,7 +304,8 @@ function FormContent({
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             label=""
                             disabled={readonly}

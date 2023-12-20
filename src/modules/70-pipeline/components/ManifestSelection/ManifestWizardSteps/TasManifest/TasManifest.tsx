@@ -28,6 +28,7 @@ import * as Yup from 'yup'
 import { get, set, isEmpty, defaultTo } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import type { ManifestTypes, TASManifestDataType, TASManifestLastStepPrevStepData } from '../../ManifestInterface'
 import {
@@ -73,6 +74,7 @@ function TasManifest({
   const { getString } = useStrings()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
@@ -306,7 +308,11 @@ function TasManifest({
                         })}
                       >
                         <FormInput.MultiTextInput
-                          multiTextInputProps={{ expressions, allowableTypes }}
+                          multiTextInputProps={{
+                            expressions,
+                            allowableTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                          }}
                           label={getString('pipelineSteps.deploy.inputSet.branch')}
                           placeholder={getString('pipeline.manifestType.branchPlaceholder')}
                           name="branch"
@@ -334,7 +340,11 @@ function TasManifest({
                         })}
                       >
                         <FormInput.MultiTextInput
-                          multiTextInputProps={{ expressions, allowableTypes }}
+                          multiTextInputProps={{
+                            expressions,
+                            allowableTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                          }}
                           label={getString('pipeline.manifestType.commitId')}
                           placeholder={getString('pipeline.manifestType.commitPlaceholder')}
                           name="commitId"

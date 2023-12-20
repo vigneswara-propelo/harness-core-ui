@@ -11,6 +11,7 @@ import { isEmpty } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeUserGroupInput } from '@rbac/components/UserGroupsInput/FormMultitypeUserGroupInput'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
@@ -34,6 +35,7 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
   const prefix = isEmpty(path) ? '' : `${path}.`
   const readonly = inputSetData?.readonly
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
 
   return (
@@ -48,6 +50,7 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
@@ -108,6 +111,7 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
             disabled: isApprovalStepFieldDisabled(readonly),
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             textProps: { type: 'number' }
           }}
           disabled={isApprovalStepFieldDisabled(readonly)}

@@ -34,6 +34,7 @@ import {
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isApprovalStepFieldDisabled } from './ApprovalCommons'
 import {
   handleOperatorChange,
@@ -105,6 +106,7 @@ export function Conditions({
 }: ConditionsInterface) {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const name = `spec.${mode}.spec.conditions`
   const approvalRejectionCriteriaError = get(formik?.errors, name)
   if (isFetchingFields) {
@@ -188,6 +190,7 @@ export function Conditions({
                         disabled={isApprovalStepFieldDisabled(readonly)}
                         multiTextInputProps={{
                           expressions,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                           allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
                         }}
                       />

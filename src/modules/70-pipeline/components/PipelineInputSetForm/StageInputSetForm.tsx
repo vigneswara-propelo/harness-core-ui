@@ -168,7 +168,7 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
-  const { CIE_HOSTED_VMS_WINDOWS, IACM_ENABLED } = useFeatureFlags()
+  const { CIE_HOSTED_VMS_WINDOWS, IACM_ENABLED, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const iacmRequired = stageType === StageType.IACM
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
@@ -201,6 +201,7 @@ export function StageInputSetFormInternal({
             placeholder={placeholderKey ? getString(placeholderKey) : ''}
             multiTypeInputProps={{
               allowableTypes: allowedTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions,
               selectProps: { disabled: readonly, items }
             }}
@@ -310,6 +311,7 @@ export function StageInputSetFormInternal({
         multiTypeTextbox={{
           expressions,
           allowableTypes,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
           disabled: readonly
         }}
         tooltipProps={{ dataTooltipId: tooltipId }}
@@ -335,6 +337,7 @@ export function StageInputSetFormInternal({
           name={name}
           multiTextInputProps={{
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
           }}
           formik={formik}
@@ -858,6 +861,7 @@ export function StageInputSetFormInternal({
                   inputProps: {
                     multiTextInputProps: {
                       expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       allowableTypes: allowableTypes,
                       placeholder: '1000'
                     },
@@ -877,6 +881,7 @@ export function StageInputSetFormInternal({
                   inputProps: {
                     multiTextInputProps: {
                       expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       allowableTypes: allowableTypes
                     },
                     disabled: readonly
@@ -900,6 +905,7 @@ export function StageInputSetFormInternal({
                   cardStyle={{ width: '50%' }}
                   valueMultiTextInputProps={{
                     expressions,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
                   }}
                   formik={formik}
@@ -948,6 +954,7 @@ export function StageInputSetFormInternal({
                     name={`${namePath}infrastructure.spec.initTimeout`}
                     multiTypeDurationProps={{
                       expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       allowableTypes: allowableTypes
                     }}
                     disabled={readonly}
@@ -1141,6 +1148,7 @@ export function StageInputSetFormInternal({
               name={`${namePath}sharedPaths`}
               multiTextInputProps={{
                 allowableTypes: allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 expressions
               }}
               multiTypeFieldSelectorProps={{
@@ -1171,6 +1179,7 @@ export function StageInputSetFormInternal({
                 name={`${namePath}caching.paths`}
                 multiTextInputProps={{
                   allowableTypes: allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   expressions
                 }}
                 multiTypeFieldSelectorProps={{
@@ -1192,6 +1201,7 @@ export function StageInputSetFormInternal({
                   inputProps: {
                     multiTextInputProps: {
                       expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       allowableTypes: allowableTypes
                     },
                     disabled: readonly

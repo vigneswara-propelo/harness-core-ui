@@ -29,6 +29,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type {
   OpenShiftTemplateGITDataType,
   OpenShiftTemplateGITManifestLastStepPrevStepData
@@ -75,6 +76,7 @@ function OpenShiftTemplateWithGit({
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
@@ -257,7 +259,11 @@ function OpenShiftTemplateWithGit({
                       <FormInput.MultiTextInput
                         label={getString('pipelineSteps.deploy.inputSet.branch')}
                         placeholder={getString('pipeline.manifestType.branchPlaceholder')}
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         name="branch"
                       />
                       {getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME && (
@@ -284,7 +290,11 @@ function OpenShiftTemplateWithGit({
                       <FormInput.MultiTextInput
                         label={getString('pipeline.manifestType.commitId')}
                         placeholder={getString('pipeline.manifestType.commitPlaceholder')}
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         name="commitId"
                       />
                       {getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME && (
@@ -313,7 +323,11 @@ function OpenShiftTemplateWithGit({
                       label={getString('pipeline.manifestType.osTemplatePath')}
                       placeholder={getString('pipeline.manifestType.osTemplatePathPlaceHolder')}
                       name="path"
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values?.path) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
@@ -376,7 +390,11 @@ function OpenShiftTemplateWithGit({
                             name="enableDeclarativeRollback"
                             label={getString('pipeline.manifestType.enableDeclarativeRollback')}
                             className={cx(templateCss.checkbox, templateCss.halfWidth)}
-                            multiTypeTextbox={{ expressions, allowableTypes }}
+                            multiTypeTextbox={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                           />
                           {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) ===
                             MultiTypeInputType.RUNTIME && (
@@ -398,7 +416,12 @@ function OpenShiftTemplateWithGit({
                             key={isSkipVersioningDisabled.toString()}
                             name="skipResourceVersioning"
                             label={getString('skipResourceVersion')}
-                            multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+                            multiTypeTextbox={{
+                              expressions,
+                              allowableTypes,
+                              disabled: isSkipVersioningDisabled,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                             disabled={isSkipVersioningDisabled}
                             className={cx(templateCss.halfWidth, templateCss.checkbox)}
                           />

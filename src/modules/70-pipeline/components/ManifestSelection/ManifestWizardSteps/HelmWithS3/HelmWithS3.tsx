@@ -40,6 +40,7 @@ import {
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -88,6 +89,7 @@ function HelmWithS3({
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [regions, setRegions] = useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
   const { chartVersions, loadingChartVersions, chartVersionsError, fetchChartVersions, setLastQueryData } =
@@ -301,7 +303,11 @@ function HelmWithS3({
             label={getString('pipeline.manifestType.bucketName')}
             placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
             name="bucketName"
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             onChange={() => {
               resetFieldValue(formik, 'chartVersion')
             }}
@@ -335,6 +341,7 @@ function HelmWithS3({
           multiTypeInputProps={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             selectProps: {
               noResults: (
                 <Text lineClamp={1}>{getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}</Text>
@@ -438,6 +445,7 @@ function HelmWithS3({
                     multiTypeInputProps={{
                       expressions,
                       allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       onChange: () => {
                         if (getMultiTypeFromValue(formik.values.bucketName) === MultiTypeInputType.FIXED) {
                           formik.setFieldValue('bucketName', '')
@@ -477,7 +485,11 @@ function HelmWithS3({
                     label={getString('chartPath')}
                     placeholder={getString('pipeline.manifestType.chartPathPlaceholder')}
                     name="folderPath"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     onChange={() => {
                       resetFieldValue(formik, 'chartVersion')
                     }}
@@ -504,7 +516,11 @@ function HelmWithS3({
                 >
                   <FormInput.MultiTextInput
                     name="chartName"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     label={getString('pipeline.manifestType.http.chartName')}
                     placeholder={getString('pipeline.manifestType.http.chartNamePlaceHolder')}
                     onChange={() => {
@@ -548,6 +564,7 @@ function HelmWithS3({
                     multiTypeInputProps={{
                       expressions,
                       disabled: isReadonly,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       allowableTypes,
                       selectProps: {
                         noResults: (
@@ -624,7 +641,11 @@ function HelmWithS3({
                     label={getString('pipeline.manifestType.subChart')}
                     placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
                     name="subChartPath"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     isOptional
                   />
                   {getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME && (

@@ -32,6 +32,7 @@ import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from '
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
@@ -80,6 +81,7 @@ function HelmWithHttp({
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
   const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V3')
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { chartVersions, loadingChartVersions, chartVersionsError, fetchChartVersions, setLastQueryData } =
     useGetHelmChartVersionData({ modifiedPrevStepData, fields: ['chartName'] })
 
@@ -236,7 +238,11 @@ function HelmWithHttp({
                 >
                   <FormInput.MultiTextInput
                     name="chartName"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     label={getString('pipeline.manifestType.http.chartName')}
                     placeholder={getString('pipeline.manifestType.http.chartNamePlaceHolder')}
                     onChange={() => {
@@ -280,6 +286,7 @@ function HelmWithHttp({
                       expressions,
                       disabled: isReadonly,
                       allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       selectProps: {
                         noResults: (
                           <Text lineClamp={1}>
@@ -349,7 +356,11 @@ function HelmWithHttp({
                     label={getString('pipeline.manifestType.subChart')}
                     placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
                     name="subChartPath"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     isOptional
                   />
                   {getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME && (

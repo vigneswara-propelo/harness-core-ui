@@ -19,6 +19,7 @@ import type { PipelineInfoConfig, TemplateStepNode } from 'services/pipeline-ng'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { StepMode } from '@pipeline/utils/stepUtils'
 import { StepViewType } from '../AbstractSteps/Step'
 import type { CommandFlags } from '../ManifestSelection/ManifestInterface'
@@ -60,6 +61,7 @@ function StepFormInternal({
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const renderCommandFlags = (commandFlagPath: string): React.ReactElement => {
     const commandFlags = get(template, commandFlagPath)
     return commandFlags?.map((commandFlag: CommandFlags, flagIdx: number) => {
@@ -71,6 +73,7 @@ function StepFormInternal({
               name={`${path}.spec.commandFlags[${flagIdx}].flag`}
               multiTextInputProps={{
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes
               }}
               label={`${commandFlag.commandType}: ${getString('flag')}`}

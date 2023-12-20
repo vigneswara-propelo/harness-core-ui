@@ -37,6 +37,7 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { useListAwsRegions } from 'services/portal'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import type { HelmWithOCIDataType, HelmWithOCIManifestLastStepPrevStepData } from '../../ManifestInterface'
@@ -87,6 +88,7 @@ function HelmWithOCI({
   const { getRBACErrorMessage } = useRBACError()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
   const [regions, setRegions] = React.useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
   const { accountId } = useParams<ProjectPathProps>()
@@ -295,7 +297,11 @@ function HelmWithOCI({
                 >
                   <FormInput.MultiTextInput
                     name="basePath"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     label={getString('pipeline.manifestType.basePath')}
                     placeholder={getString('pipeline.manifestType.basePathPlaceholder')}
                   />
@@ -322,7 +328,11 @@ function HelmWithOCI({
                 >
                   <FormInput.MultiTextInput
                     name="chartName"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     label={getString('pipeline.manifestType.http.chartName')}
                     placeholder={getString('pipeline.manifestType.http.chartNamePlaceHolder')}
                     onChange={() => {
@@ -362,6 +372,7 @@ function HelmWithOCI({
                     multiTypeInputProps={{
                       expressions,
                       disabled: isReadonly,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       allowableTypes,
                       selectProps: {
                         noResults: (
@@ -421,7 +432,11 @@ function HelmWithOCI({
                     label={getString('pipeline.manifestType.subChart')}
                     placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
                     name="subChartPath"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     isOptional
                   />
                   {getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME && (
@@ -445,6 +460,7 @@ function HelmWithOCI({
                       selectItems={regions}
                       useValue
                       multiTypeInputProps={{
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                         selectProps: {
                           items: regions,
                           noResults: (
@@ -484,7 +500,11 @@ function HelmWithOCI({
                         placeholder={getString('pipeline.artifactsSelection.registryIdPlaceholder')}
                         disabled={isReadonly}
                         isOptional={true}
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                       />
                       {getMultiTypeFromValue(formik.values?.registryId) === MultiTypeInputType.RUNTIME && (
                         <div className={css.configureOptions}>

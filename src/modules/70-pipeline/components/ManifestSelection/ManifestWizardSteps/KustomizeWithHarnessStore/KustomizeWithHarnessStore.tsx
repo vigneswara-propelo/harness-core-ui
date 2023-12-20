@@ -30,6 +30,7 @@ import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from '
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import {
   getSkipResourceVersioningBasedOnDeclarativeRollback,
@@ -73,6 +74,7 @@ function KustomizeWithHarnessStore({
   const { getString } = useStrings()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const getInitialValues = (): KustomizeWithHarnessStorePropTypeDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -222,7 +224,11 @@ function KustomizeWithHarnessStore({
                   >
                     <FormInput.MultiTextInput
                       name="overlayConfiguration"
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                       label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
                       placeholder={getString('pipeline.manifestType.kustomizeFolderPathPlaceholder')}
                     />
@@ -269,7 +275,11 @@ function KustomizeWithHarnessStore({
                       placeholder={getString('pipeline.manifestType.kustomizePluginPathPlaceholder')}
                       name="pluginPath"
                       isOptional={true}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values?.pluginPath) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions

@@ -344,7 +344,7 @@ function CICodebaseInputSetFormInternal({
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
   const [isFetchingBranches, setIsFetchingBranches] = useState<boolean>(false)
   const [isDefaultBranchSet, setIsDefaultBranchSet] = useState<boolean>(false)
-  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const { CDS_NAV_2_0, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const routes = CDS_NAV_2_0 ? routesV2 : routesV1
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
 
@@ -668,6 +668,7 @@ function CICodebaseInputSetFormInternal({
           name={codeBaseInputFieldFormName[type]}
           multiTextInputProps={{
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
           }}
           placeholder={triggerIdentifier && isNotScheduledTrigger ? placeholderValues[type] : ''}
@@ -721,6 +722,7 @@ function CICodebaseInputSetFormInternal({
       multiTypeProps: {
         expressions,
         disabled: readonly,
+        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
         allowableTypes: AllowableTypesForCodebaseProperties
       },
       onChange: (
@@ -817,6 +819,7 @@ function CICodebaseInputSetFormInternal({
                             multiTextInputProps={{
                               multiTextInputProps: {
                                 expressions,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                 allowableTypes: AllowableTypesForCodebaseRepoName
                               },
                               disabled: readonly || isFetchingBranches,
@@ -859,6 +862,7 @@ function CICodebaseInputSetFormInternal({
                             // value="<+input>"
                             multiTextInputProps={{
                               expressions,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                               allowableTypes: [MultiTypeInputType.FIXED]
                             }}
                             disabled={true}
@@ -953,6 +957,7 @@ function CICodebaseInputSetFormInternal({
                         multiTextInputProps={{
                           multiTextInputProps: {
                             expressions,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                             allowableTypes: AllowableTypesForCodebaseProperties,
                             textProps: { type: 'number' }
                           },
@@ -975,6 +980,7 @@ function CICodebaseInputSetFormInternal({
                           placeholder: getString('select'),
                           multiTypeInputProps: {
                             expressions,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                             selectProps: {
                               addClearBtn: true,
                               items: sslVerifyOptions as unknown as SelectOption[]
@@ -1002,6 +1008,7 @@ function CICodebaseInputSetFormInternal({
                           placeholder: getString('select'),
                           multiTypeInputProps: {
                             expressions,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                             selectProps: { addClearBtn: true, items: prCloneStrategyOptions },
                             allowableTypes: AllowableTypesForCodebaseProperties
                           },
@@ -1041,6 +1048,7 @@ function CICodebaseInputSetFormInternal({
                             multiTextInputProps={{
                               multiTextInputProps: {
                                 expressions,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                 allowableTypes: AllowableTypesForCodebaseProperties
                               },
                               disabled: readonly
@@ -1069,6 +1077,7 @@ function CICodebaseInputSetFormInternal({
                             multiTextInputProps={{
                               multiTextInputProps: {
                                 expressions,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                 allowableTypes: AllowableTypesForCodebaseProperties
                               },
                               disabled: readonly

@@ -51,6 +51,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { getTimeZoneOffsetInMinutes } from '@common/utils/dateUtils'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -78,6 +79,7 @@ function FormContent({
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const formikUserGroups = formik.values.spec?.approvers?.userGroups
   const [scopeCountMap, setScopeCountMap] = useState<Map<Scope, string[]>>(new Map<Scope, string[]>())
   const showAutoApporval = useFeatureFlag(FeatureFlag.CDS_AUTO_APPROVAL)
@@ -160,6 +162,7 @@ function FormContent({
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeDurationProps={{
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             enableConfigureOptions: true,
             allowableTypes
           }}
@@ -237,6 +240,7 @@ function FormContent({
           label={getString('pipeline.approvalStep.minimumCount')}
           multiTextInputProps={{
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             textProps: {
               type: 'number'
             },
@@ -335,6 +339,7 @@ function FormContent({
                                     allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                       item => !isMultiTypeRuntime(item)
                                     ) as AllowedTypes,
+                                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                     expressions
                                   }}
                                 />
