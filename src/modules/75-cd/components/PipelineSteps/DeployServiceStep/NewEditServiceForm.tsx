@@ -8,7 +8,7 @@
 import React from 'react'
 import { Divider } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
-import { Button, ButtonVariation, FormikForm, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, FormikForm, Container, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -32,50 +32,51 @@ const NewEditServiceForm: React.FC<NewEditServiceFormProps> = props => {
 
   return (
     <FormikForm className={css.serviceForm}>
-      <NameIdDescriptionTags
-        formikProps={formikProps}
-        className={css.nameIdDescriptionTags}
-        identifierProps={{
-          inputLabel: getString('name'),
-          inputGroupProps: {
-            inputGroup: {
-              autoFocus: true
-            }
-          },
-          isIdentifierEditable: !isEdit
-        }}
-      />
-
-      {isGitXEnabledForServices ? (
-        <>
-          <Divider />
-          <Text
-            font={{ variation: FontVariation.FORM_SUB_SECTION }}
-            margin={{ top: 'medium', bottom: 'medium' }}
-            data-tooltip-id="service-InlineRemoteSelect-label"
-          >
-            {getString('cd.pipelineSteps.serviceTab.chooseServiceSetupHeader')}
-          </Text>
-          <InlineRemoteSelect
-            className={css.serviceCardWrapper}
-            entityType={'Service'}
-            selected={defaultTo(formikProps?.values?.storeType, StoreType.INLINE)}
-            getCardDisabledStatus={(current, selected) => {
-              return isEdit ? current !== selected : false
-            }}
-            onChange={item => {
-              if (!isEdit) {
-                formikProps?.setFieldValue('storeType', item.type)
+      <Container className={css.serviceFormBody}>
+        <NameIdDescriptionTags
+          formikProps={formikProps}
+          className={css.nameIdDescriptionTags}
+          identifierProps={{
+            inputLabel: getString('name'),
+            inputGroupProps: {
+              inputGroup: {
+                autoFocus: true
               }
-            }}
-          />
-        </>
-      ) : null}
+            },
+            isIdentifierEditable: !isEdit
+          }}
+        />
 
-      {formikProps?.values?.storeType === StoreType.REMOTE ? (
-        <GitSyncForm formikProps={formikProps} isEdit={isEdit} />
-      ) : null}
+        {isGitXEnabledForServices ? (
+          <>
+            <Divider />
+            <Text
+              font={{ variation: FontVariation.FORM_SUB_SECTION }}
+              margin={{ top: 'medium', bottom: 'medium' }}
+              data-tooltip-id="service-InlineRemoteSelect-label"
+            >
+              {getString('cd.pipelineSteps.serviceTab.chooseServiceSetupHeader')}
+            </Text>
+            <InlineRemoteSelect
+              className={css.serviceCardWrapper}
+              entityType={'Service'}
+              selected={defaultTo(formikProps?.values?.storeType, StoreType.INLINE)}
+              getCardDisabledStatus={(current, selected) => {
+                return isEdit ? current !== selected : false
+              }}
+              onChange={item => {
+                if (!isEdit) {
+                  formikProps?.setFieldValue('storeType', item.type)
+                }
+              }}
+            />
+          </>
+        ) : null}
 
+        {formikProps?.values?.storeType === StoreType.REMOTE ? (
+          <GitSyncForm formikProps={formikProps} isEdit={isEdit} />
+        ) : null}
+      </Container>
       <Layout.Horizontal spacing="small" padding={{ top: 'xlarge' }}>
         <Button variation={ButtonVariation.PRIMARY} type={'submit'} text={getString('save')} data-id="service-save" />
         <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={closeModal} />

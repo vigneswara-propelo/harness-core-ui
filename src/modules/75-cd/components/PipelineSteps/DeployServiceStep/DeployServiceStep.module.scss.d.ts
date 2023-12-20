@@ -13,5 +13,6 @@ declare const styles: {
   readonly serviceActionWrapper: string
   readonly serviceCardWrapper: string
   readonly serviceForm: string
+  readonly serviceFormBody: string
 }
 export default styles

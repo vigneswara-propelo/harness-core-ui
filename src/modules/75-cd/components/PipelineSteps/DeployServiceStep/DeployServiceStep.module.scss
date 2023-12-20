@@ -23,6 +23,12 @@
 }
 
 .serviceForm {
+  .serviceFormBody {
+    max-height: 500px !important;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+
   .nameIdDescriptionTags {
     width: 350px !important;
   }

@@ -369,46 +369,6 @@ describe('ServiceModal ', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('Show PageSpinner for useCreateServiceV2 API loading when setShowOverlay is not passed', async () => {
-    jest.spyOn(cdNg, 'useCreateServiceV2').mockImplementation((): any => {
-      return { loading: true, mutate: jest.fn() }
-    })
-
-    const { container } = render(
-      <TestWrapper>
-        <NewEditServiceModal
-          {...props}
-          data={{
-            orgIdentifier: 'orgIdentifier',
-            projectIdentifier: 'projectIdentifier'
-          }}
-        />
-      </TestWrapper>
-    )
-
-    expect(getByText(container, 'Loading, please wait...')).toBeInTheDocument()
-  })
-
-  test('Show PageSpinner for useUpsertServiceV2 API loading when setShowOverlay is not passed', async () => {
-    jest.spyOn(cdNg, 'useUpsertServiceV2').mockImplementation((): any => {
-      return { loading: true, mutate: jest.fn() }
-    })
-
-    const { container } = render(
-      <TestWrapper>
-        <NewEditServiceModal
-          {...props}
-          data={{
-            orgIdentifier: 'orgIdentifier',
-            projectIdentifier: 'projectIdentifier'
-          }}
-        />
-      </TestWrapper>
-    )
-
-    expect(getByText(container, 'Loading, please wait...')).toBeInTheDocument()
-  })
-
   test('setShowOverlay should be called for useCreateServiceV2 API loading', async () => {
     const setShowOverlay = jest.fn()
     jest.spyOn(cdNg, 'useCreateServiceV2').mockImplementation((): any => {

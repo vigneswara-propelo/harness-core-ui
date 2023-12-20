@@ -8,9 +8,9 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { isUndefined, omit } from 'lodash-es'
+import { get, omit, defaultTo } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { Formik, PageSpinner, getErrorInfoFromErrorObject } from '@harness/uicore'
+import { Formik, getErrorInfoFromErrorObject } from '@harness/uicore'
 
 import {
   ServiceRequestDTO,
@@ -31,19 +31,19 @@ import { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToG
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { GitSyncFormFields, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import type { NewEditServiceModalProps } from './DeployServiceInterface'
 import NewEditServiceForm from './NewEditServiceForm'
 
 const cleanData = (values: ServiceRequestDTO): ServiceRequestDTO => {
-  const newDescription = values.description?.toString().trim()
-  const newId = values.identifier?.toString().trim()
-  const newName = values.name?.toString().trim()
+  const { description, identifier, name } = values
+
   return {
-    name: newName,
-    identifier: newId,
+    name: defaultTo(name, '').trim(),
+    identifier: defaultTo(identifier, '').trim(),
     orgIdentifier: values.orgIdentifier,
     projectIdentifier: values.projectIdentifier,
-    description: newDescription,
+    description: defaultTo(description, '').trim(),
     tags: values.tags,
     yaml: yamlStringify({
       service: {
@@ -64,11 +64,7 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
   const { getString } = useStrings()
   const isGitXEnabledForServices = useFeatureFlag(FeatureFlag.CDS_SERVICE_GITX)
 
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
-    orgIdentifier: string
-    projectIdentifier: string
-    accountId: string
-  }>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const { loading: createLoading, mutate: createService } = useCreateServiceV2({
     queryParams: {
@@ -93,17 +89,17 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
       payload?: ServiceRequestDTO
     ): Promise<ResponseServiceResponse> => {
       const isNewBranch = gitData?.isNewBranch
-      const selectedBranch = formikRef.current?.values?.branch
+      const selectedBranch = get(formikRef.current, 'values.branch')
       const response = await createService(
         { ...payload, orgIdentifier, projectIdentifier },
         {
           queryParams: {
             accountIdentifier: accountId,
             storeType: StoreType.REMOTE,
-            connectorRef: (formikRef.current?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value,
-            repoName: formikRef.current?.values?.repo,
+            connectorRef: get(formikRef.current, 'values.connectorRef.value'),
+            repoName: get(formikRef.current, 'values.repo'),
             isNewBranch: gitData?.isNewBranch,
-            filePath: formikRef.current?.values?.filePath,
+            filePath: get(formikRef.current, 'values.filePath'),
             ...(isNewBranch ? { baseBranch: selectedBranch, branch: gitData?.branch } : { branch: selectedBranch }),
             commitMsg: gitData?.commitMsg
           }
@@ -133,7 +129,7 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
           showError(getString('common.validation.fieldIsRequired', { name: 'Identifier' }))
         } else if (isEdit && id !== values.identifier) {
           showError(getString('cd.editIdError', { id: id }))
-        } else if (formikRef.current?.values?.storeType === StoreType.REMOTE) {
+        } else if (get(formikRef.current, 'values.storeType') === StoreType.REMOTE) {
           openSaveToGitDialog({
             isEditing: isEdit,
             resource: {
@@ -192,11 +188,6 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
   const formikRef = React.useRef<FormikProps<ServiceResponseDTO & GitSyncFormFields>>()
   const id = data.identifier
 
-  // If parent element is not handling loading and not passing setShowOverlay, show PageSpinner
-  if (isUndefined(setShowOverlay) && (createLoading || updateLoading)) {
-    return <PageSpinner />
-  }
-
   return (
     <Formik<Required<ServiceResponseDTO> & GitSyncFormFields>
       initialValues={data as Required<ServiceResponseDTO>}
@@ -205,7 +196,7 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
         onSubmit(values)
       }}
       validationSchema={Yup.object().shape({
-        name: NameSchema(getString, { requiredErrorMsg: getString?.('fieldRequired', { field: 'Service' }) }),
+        name: NameSchema(getString, { requiredErrorMsg: getString('fieldRequired', { field: 'Service' }) }),
         identifier: IdentifierSchema(getString),
         ...(isGitXEnabledForServices ? { ...gitSyncFormSchema(getString) } : {})
       })}
