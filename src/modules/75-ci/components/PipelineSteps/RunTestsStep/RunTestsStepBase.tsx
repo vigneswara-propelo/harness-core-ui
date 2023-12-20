@@ -267,7 +267,7 @@ export const RunTestsStepBase = (
       selectionState: { selectedStageId }
     }
   } = usePipelineContext()
-  const { TI_DOTNET, CI_PYTHON_TI, CI_RUBY_TI } = useFeatureFlags()
+  const { TI_DOTNET, CI_PYTHON_TI, CI_RUBY_TI, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const isErrorTrackingEnabled = licenseInformation['CET']?.status === 'ACTIVE'
   // temporary enable in QA for docs
@@ -325,7 +325,11 @@ export const RunTestsStepBase = (
             </Layout.Horizontal>
           }
           multiTextInputProps={{
-            multiTextInputProps: { expressions, allowableTypes },
+            multiTextInputProps: {
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            },
             disabled: readonly,
             placeholder: placeholder
           }}
@@ -372,7 +376,8 @@ export const RunTestsStepBase = (
             multiTypeInputProps: {
               onChange: option => onSelectChange?.(option),
               allowableTypes: allowableTypes,
-              expressions
+              expressions,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             },
             disabled: readonly
           }}
@@ -450,7 +455,8 @@ export const RunTestsStepBase = (
         placeholder={placeholderKey ? getString(placeholderKey) : ''}
         multiTextInputProps={{
           expressions,
-          allowableTypes: allowedTypesForEntries
+          allowableTypes: allowedTypesForEntries,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         multiTypeFieldSelectorProps={{
           label: (
@@ -870,7 +876,8 @@ gradle.projectsEvaluated {
                         multiTypeTextbox={{
                           expressions,
                           disabled: readonly,
-                          allowableTypes: AllMultiTypeInputTypesForStep
+                          allowableTypes: AllMultiTypeInputTypesForStep,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                         style={{ marginBottom: 'var(--spacing-small)' }}
                         disabled={readonly}

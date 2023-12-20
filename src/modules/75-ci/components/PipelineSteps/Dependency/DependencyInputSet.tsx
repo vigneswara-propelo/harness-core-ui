@@ -12,6 +12,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { Connectors } from '@platform/connectors/constants'
 import type { DependencyProps } from './Dependency'
 import { CIStep } from '../CIStep/CIStep'
@@ -29,6 +30,7 @@ export const DependencyInputSetBasic: React.FC<DependencyProps> = ({
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
@@ -54,6 +56,7 @@ export const DependencyInputSetBasic: React.FC<DependencyProps> = ({
                 disabled: readonly,
                 multiTextInputProps: {
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   allowableTypes,
                   textProps: {
                     autoComplete: 'off'

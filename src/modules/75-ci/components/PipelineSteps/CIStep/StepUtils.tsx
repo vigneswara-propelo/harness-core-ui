@@ -28,6 +28,7 @@ import type { BuildStageElementConfig, StageElementWrapper } from '@pipeline/uti
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { isRuntimeInput, CodebaseTypes } from '@pipeline/utils/CIUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   getBuildTypeLabels,
   getBuildTypeInputLabels,
@@ -113,7 +114,8 @@ export const renderBuildTypeInputField = ({
   allowableTypes,
   prefix,
   previousBuildTypeValues,
-  onChange
+  onChange,
+  NG_EXPRESSIONS_NEW_INPUT_ELEMENT
 }: {
   type: CodebaseTypes
   getString: UseStringsReturn['getString']
@@ -123,6 +125,7 @@ export const renderBuildTypeInputField = ({
   readonly?: boolean
   expressions?: string[]
   prefix?: string
+  NG_EXPRESSIONS_NEW_INPUT_ELEMENT?: boolean
 }): JSX.Element => {
   const inputLabels = getBuildTypeInputLabels(getString)
 
@@ -132,7 +135,8 @@ export const renderBuildTypeInputField = ({
       name={`${prefix}spec.build.spec.${type}`}
       multiTextInputProps={{
         expressions,
-        allowableTypes
+        allowableTypes,
+        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
       }}
       onChange={val => onChange?.({ ...(previousBuildTypeValues || {}), [type]: val } as Record<string, string>)}
       disabled={readonly}
@@ -170,6 +174,7 @@ export const RenderBuild = ({
   // build.type is the fieldName but as runtime input, requires special handling as build: <+input>
   const isBuildRuntimeInput = isRuntimeInput(buildValue) && stepViewType === StepViewType.InputSet
   const isBuildTypeRuntimeInput = isRuntimeInput(buildTypeValue)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const buildTypeError = get(formik?.errors, `${prefix}spec.build`)
   const [previousBuildTypeValues, setPreviousBuildTypeValues] = React.useState<Record<string, string>>({
     ...{
@@ -259,7 +264,8 @@ export const RenderBuild = ({
                 allowableTypes,
                 onChange: setPreviousBuildTypeValues,
                 previousBuildTypeValues,
-                prefix
+                prefix,
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })
             : null}
           {buildTypeValue === CodebaseTypes.TAG
@@ -271,7 +277,8 @@ export const RenderBuild = ({
                 allowableTypes,
                 onChange: setPreviousBuildTypeValues,
                 previousBuildTypeValues,
-                prefix
+                prefix,
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })
             : null}
           {buildTypeValue === CodebaseTypes.COMMIT
@@ -283,7 +290,8 @@ export const RenderBuild = ({
                 allowableTypes,
                 onChange: setPreviousBuildTypeValues,
                 previousBuildTypeValues,
-                prefix
+                prefix,
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })
             : null}
         </>

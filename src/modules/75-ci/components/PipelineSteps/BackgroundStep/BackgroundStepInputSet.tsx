@@ -19,6 +19,7 @@ import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { shouldRenderRunTimeInputViewWithAllowedValues, shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import type { BackgroundStepProps } from './BackgroundStep'
 import { CIStep } from '../CIStep/CIStep'
@@ -40,6 +41,7 @@ export const BackgroundStepInputSetBasic: React.FC<BackgroundStepProps> = props 
   const { template, path, readonly, stepViewType, allowableTypes, formik } = props
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { expressions } = useVariablesExpression()
   const pathnameParams = useLocation()?.pathname?.split('/') || []
@@ -74,7 +76,8 @@ export const BackgroundStepInputSetBasic: React.FC<BackgroundStepProps> = props 
             name={`${prefix}spec.entrypoint`}
             multiTextInputProps={{
               expressions,
-              allowableTypes: SupportedInputTypesForListItems
+              allowableTypes: SupportedInputTypesForListItems,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: (
@@ -112,7 +115,8 @@ export const BackgroundStepInputSetBasic: React.FC<BackgroundStepProps> = props 
                 getString,
                 readonly,
                 expressions,
-                template
+                template,
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })}
             </Container>
           ) : (

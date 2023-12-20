@@ -11,6 +11,7 @@ import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/
 import { useStrings } from 'framework/strings'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@platform/connectors/constants'
 import type { PluginStepProps } from './PluginStep'
@@ -28,6 +29,7 @@ export const PluginStepInputSetBasic: React.FC<PluginStepProps> = ({
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
@@ -52,7 +54,8 @@ export const PluginStepInputSetBasic: React.FC<PluginStepProps> = ({
                 disabled: readonly,
                 multiTextInputProps: {
                   expressions,
-                  allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
+                  allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }
               }
             }

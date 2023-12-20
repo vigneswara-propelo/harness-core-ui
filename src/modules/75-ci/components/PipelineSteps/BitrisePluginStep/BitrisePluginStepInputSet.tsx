@@ -8,6 +8,7 @@
 import React from 'react'
 import { connect } from 'formik'
 import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -27,6 +28,7 @@ export const BitrisePluginStepInputSetBasic: React.FC<BitrisePluginStepProps> = 
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
@@ -45,6 +47,7 @@ export const BitrisePluginStepInputSetBasic: React.FC<BitrisePluginStepProps> = 
                 disabled: readonly,
                 multiTextInputProps: {
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
                 }
               }

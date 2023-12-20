@@ -30,6 +30,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ConnectorReferenceProps } from '@common/components/MultiTypeList/MultiTypeList'
 import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import type { RunTestsStepProps } from './RunTestsStep'
@@ -51,6 +52,7 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const stepCss = stepViewType === StepViewType.DeploymentForm ? css.sm : css.lg
 
@@ -131,7 +133,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
         name={name}
         multiTextInputProps={{
           expressions,
-          allowableTypes: allowedTypesForEntries
+          allowableTypes: allowedTypesForEntries,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         multiTypeFieldSelectorProps={{
           label: (
@@ -284,7 +287,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
             multiTextInputProps={{
               multiTextInputProps: {
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             }}
@@ -308,7 +312,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
             multiTextInputProps={{
               multiTextInputProps: {
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             }}
@@ -333,7 +338,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
             multiTextInputProps={{
               multiTextInputProps: {
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             }}
@@ -348,7 +354,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
             multiTypeTextbox={{
               expressions,
               disabled: readonly,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             setToFalseWhenEmpty={true}
           />
@@ -371,7 +378,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
             multiTextInputProps={{
               multiTextInputProps: {
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             }}
@@ -395,7 +403,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
             multiTextInputProps={{
               multiTextInputProps: {
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             }}
@@ -419,6 +428,7 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
             multiTextInputProps={{
               multiTextInputProps: {
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes
               },
               disabled: readonly
@@ -492,7 +502,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
               getString,
               readonly,
               expressions,
-              template
+              template,
+              NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             })}
           </Container>
         ) : (
@@ -510,7 +521,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
               getString,
               readonly,
               expressions,
-              template
+              template,
+              NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             })}
           </Container>
         ) : (

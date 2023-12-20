@@ -40,7 +40,7 @@ import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinde
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import MultiTypeSecretInput from '@platform/secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { StageTimeout } from '@modules/75-cd/components/PipelineStudio/StageTimeout/StageTimeout'
 import { BuildTabs } from '../CIPipelineStagesUtils'
@@ -57,6 +57,7 @@ export interface Variable {
 
 export default function BuildStageSpecifications({ children }: React.PropsWithChildren<unknown>): JSX.Element {
   const { variablesPipeline, metadataMap } = usePipelineVariables()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { getString } = useStrings()
   const SSCA_SLSA_COMPLIANCE = useFeatureFlag(FeatureFlag.SSCA_SLSA_COMPLIANCE)
@@ -355,7 +356,8 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                       name="sharedPaths"
                       multiTextInputProps={{
                         expressions,
-                        allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                        allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                       multiTypeFieldSelectorProps={{
                         label: (
@@ -392,7 +394,8 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                             name="cacheIntelligencePaths"
                             multiTextInputProps={{
                               expressions,
-                              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             multiTypeFieldSelectorProps={{
                               label: (
@@ -438,7 +441,8 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                                   MultiTypeInputType.FIXED,
                                   MultiTypeInputType.EXPRESSION,
                                   MultiTypeInputType.RUNTIME
-                                ]
+                                ],
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               },
                               placeholder: getString('ci.cacheIntelligence.keyNamePlaceholder')
                             }}

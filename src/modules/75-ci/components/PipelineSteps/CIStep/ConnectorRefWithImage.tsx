@@ -13,6 +13,7 @@ import { Text, Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Connectors } from '@platform/connectors/constants'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -48,6 +49,7 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const gitScope = useGitScope()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -69,7 +71,8 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
                 getString,
                 readonly,
                 expressions,
-                template
+                template,
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })}
             </Container>
           ) : (
@@ -98,7 +101,8 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
               multiTypeProps={{
                 expressions,
                 allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
-                disabled: readonly
+                disabled: readonly,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               gitScope={gitScope}
               setRefValue
@@ -120,7 +124,8 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
               getString,
               readonly,
               expressions,
-              template
+              template,
+              NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             })
           ) : (
             <MultiTypeTextField
@@ -149,6 +154,7 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
               multiTextInputProps={{
                 disabled: readonly,
                 multiTextInputProps: {
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
                 }
               }}

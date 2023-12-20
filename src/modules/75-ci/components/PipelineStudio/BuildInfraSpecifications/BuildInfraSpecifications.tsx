@@ -475,6 +475,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
 
   const { stage } = getStageFromPipeline<BuildStageElementConfig>(selectedStageId || '')
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [currentMode, setCurrentMode] = React.useState<Modes>(() =>
     (stage?.stage?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage
@@ -934,7 +935,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         <Container className={css.bottomMargin7}>
           <FormMultiTypeDurationField
             name="initTimeout"
-            multiTypeDurationProps={{ expressions, allowableTypes }}
+            multiTypeDurationProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             label={
               <Text
                 font={{ variation: FontVariation.FORM_LABEL }}
@@ -971,6 +976,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               multiTypeTextbox={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 disabled: isReadonly
               }}
               tooltipProps={{ dataTooltipId: tooltipId }}
@@ -988,7 +994,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       <Container className={css.bottomMargin7}>
         <MultiTypeMap
           name={fieldName}
-          valueMultiTextInputProps={{ expressions, allowableTypes }}
+          valueMultiTextInputProps={{
+            expressions,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           multiTypeFieldSelectorProps={{
             label: (
               <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
@@ -1029,7 +1039,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             name="addCapabilities"
             multiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: (
@@ -1050,7 +1061,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             name="dropCapabilities"
             multiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: (
@@ -1090,7 +1102,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             name="runAsUser"
             style={{ width: 300, marginBottom: 'var(--spacing-xsmall)' }}
             multiTextInputProps={{
-              multiTextInputProps: { expressions, allowableTypes },
+              multiTextInputProps: {
+                expressions,
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              },
               disabled: isReadonly,
               placeholder: '1000'
             }}
@@ -1446,7 +1462,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             name={'poolName'}
             style={{ width: 300 }}
             multiTextInputProps={{
-              multiTextInputProps: { expressions, allowableTypes },
+              multiTextInputProps: {
+                expressions,
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              },
               disabled: isReadonly
             }}
             configureOptionsProps={{
@@ -1476,7 +1496,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             gitScope={gitScope}
-            multiTypeProps={{ expressions, disabled: isReadonly, allowableTypes }}
+            multiTypeProps={{
+              expressions,
+              disabled: isReadonly,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             configureOptionsProps={{
               hideExecutionTimeField: true
             }}
@@ -1496,7 +1521,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             name={'namespace'}
             style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
             multiTextInputProps={{
-              multiTextInputProps: { expressions, allowableTypes },
+              multiTextInputProps: {
+                expressions,
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              },
               disabled: isReadonly,
               placeholder: getString('pipeline.infraSpecifications.namespacePlaceholder')
             }}
@@ -1538,7 +1567,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               name="serviceAccountName"
               style={{ width: 300 }}
               multiTextInputProps={{
-                multiTextInputProps: { expressions, allowableTypes },
+                multiTextInputProps: {
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                },
                 disabled: isReadonly,
                 placeholder: getString('pipeline.infraSpecifications.serviceAccountNamePlaceholder')
               }}
@@ -1554,6 +1587,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               multiTypeTextbox={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 disabled: isReadonly
               }}
               tooltipProps={{ dataTooltipId: 'automountServiceAccountToken' }}
@@ -1581,7 +1615,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               name="priorityClassName"
               style={{ width: 300, marginBottom: 'var(--spacing-xsmall)' }}
               multiTextInputProps={{
-                multiTextInputProps: { expressions, allowableTypes },
+                multiTextInputProps: {
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                },
                 disabled: isReadonly
               }}
               configureOptionsProps={{
@@ -1607,7 +1645,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                 cardStyle={{ width: '50%' }}
                 valueMultiTextInputProps={{
                   expressions,
-                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 formik={formik}
                 multiTypeFieldSelectorProps={{
@@ -1636,7 +1675,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               name="hostNames"
               multiTextInputProps={{
                 expressions,
-                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               formik={formik}
               multiTypeFieldSelectorProps={{

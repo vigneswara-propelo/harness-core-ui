@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
@@ -51,6 +52,7 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
     getMultiTypeFromValue(template?.spec?.resources?.limits?.memory) === MultiTypeInputType.RUNTIME
   const isLimitCPURuntime = getMultiTypeFromValue(template?.spec?.resources?.limits?.cpu) === MultiTypeInputType.RUNTIME
   const isTimeoutRuntime = getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const stepCss = stepViewType === StepViewType.DeploymentForm ? css.sm : css.lg
 
@@ -77,7 +79,8 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
         readonly,
         expressions,
         template,
-        showOptionalSublabel: true
+        showOptionalSublabel: true,
+        NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
       })
     }
     return (
@@ -125,7 +128,8 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
               multiTypeInputProps: {
                 expressions,
                 selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) },
-                allowableTypes: AllMultiTypeInputTypesForInputSet
+                allowableTypes: AllMultiTypeInputTypesForInputSet,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             }}
@@ -143,7 +147,8 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
             inputProps: {
               multiTextInputProps: {
                 expressions,
-                allowableTypes: AllMultiTypeInputTypesForInputSet
+                allowableTypes: AllMultiTypeInputTypesForInputSet,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly,
               placeholder: '1000'
@@ -172,7 +177,8 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
               multiTypeInputProps: {
                 expressions,
                 selectProps: { addClearBtn: true, items: getCIShellOptions(getString) },
-                allowableTypes: AllMultiTypeInputTypesForInputSet
+                allowableTypes: AllMultiTypeInputTypesForInputSet,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             }}
@@ -210,7 +216,8 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
                   inputProps: {
                     multiTextInputProps: {
                       expressions,
-                      allowableTypes: AllMultiTypeInputTypesForInputSet
+                      allowableTypes: AllMultiTypeInputTypesForInputSet,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     },
                     disabled: readonly
                   },
@@ -250,7 +257,8 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
               readonly,
               expressions,
               template,
-              showOptionalSublabel: true
+              showOptionalSublabel: true,
+              NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             })
           ) : (
             <FormMultiTypeDurationField
@@ -268,7 +276,8 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
               placeholder={getString('pipelineSteps.timeoutPlaceholder')}
               multiTypeDurationProps={{
                 expressions,
-                allowableTypes: AllMultiTypeInputTypesForInputSet
+                allowableTypes: AllMultiTypeInputTypesForInputSet,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={readonly}
             />

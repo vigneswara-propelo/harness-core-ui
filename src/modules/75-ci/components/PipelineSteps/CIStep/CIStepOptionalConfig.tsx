@@ -26,6 +26,7 @@ import {
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   getAllowedValuesFromTemplate,
   shouldRenderRunTimeInputViewWithAllowedValues,
@@ -111,7 +112,8 @@ export const renderMultiTypeListInputSet = ({
   showConnectorRef,
   connectorTypes,
   connectorRefRenderer,
-  restrictToSingleEntry
+  restrictToSingleEntry,
+  NG_EXPRESSIONS_NEW_INPUT_ELEMENT
 }: {
   name: string
   tooltipId: string
@@ -126,12 +128,14 @@ export const renderMultiTypeListInputSet = ({
   readonly?: boolean
   formik?: any
   restrictToSingleEntry?: boolean
+  NG_EXPRESSIONS_NEW_INPUT_ELEMENT?: boolean
 } & ConnectorReferenceProps): React.ReactElement => (
   <MultiTypeListInputSet
     name={name}
     multiTextInputProps={{
       expressions,
-      allowableTypes: allowedTypesForEntries
+      allowableTypes: allowedTypesForEntries,
+      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
     }}
     multiTypeFieldSelectorProps={{
       label: (
@@ -171,7 +175,8 @@ export const renderMultiTypeInputWithAllowedValues = ({
   expressions,
   readonly,
   getString,
-  showOptionalSublabel
+  showOptionalSublabel,
+  NG_EXPRESSIONS_NEW_INPUT_ELEMENT
 }: {
   name: string
   tooltipId?: string
@@ -180,6 +185,7 @@ export const renderMultiTypeInputWithAllowedValues = ({
   template?: Record<string, any>
   expressions: string[]
   readonly?: boolean
+  NG_EXPRESSIONS_NEW_INPUT_ELEMENT?: boolean
   getString: (key: keyof StringsMap, vars?: Record<string, unknown> | undefined) => string
   showOptionalSublabel?: boolean
 }): React.ReactElement | undefined => {
@@ -197,6 +203,7 @@ export const renderMultiTypeInputWithAllowedValues = ({
         multiTypeInputProps={{
           allowableTypes: AllMultiTypeInputTypesForInputSet,
           expressions,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
           selectProps: { disabled: readonly, items }
         }}
         disabled={readonly}
@@ -231,6 +238,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
   const [registeredPrefixes, setRegisteredPrefixes] = React.useState<string[]>([])
   const [forceRenders, setForceRenders] = React.useState<number>(0) // for renderMultiTypeMapInputSet
   const hasAppliedInputSet = typeof selectedInputSetsContext !== 'undefined' && selectedInputSetsContext?.length > 0
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   // All optional values that have a map structure should never be defaulted with ""
   // and instead set to {} once pipeline api completes
@@ -330,7 +338,11 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       <Container className={cx(css.lg, css.bottomMargin5)}>
         <MultiTypeMap
           name={fieldName}
-          valueMultiTextInputProps={{ expressions, allowableTypes }}
+          valueMultiTextInputProps={{
+            expressions,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           multiTypeFieldSelectorProps={{
             label: (
               <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
@@ -386,6 +398,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           name={fieldName}
           valueMultiTextInputProps={{
             allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions
           }}
           multiTypeFieldSelectorProps={{
@@ -441,7 +454,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           getString,
           readonly,
           expressions,
-          template
+          template,
+          NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         })
       }
       return (
@@ -487,7 +501,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         multiTypeTextbox={{
           expressions,
           allowableTypes,
-          disabled: readonly
+          disabled: readonly,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         tooltipProps={{ dataTooltipId: tooltipId }}
         disabled={readonly}
@@ -523,7 +538,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         placeholder={placeholderKey ? getString(placeholderKey) : ''}
         multiTextInputProps={{
           expressions,
-          allowableTypes: allowedTypesForEntries
+          allowableTypes: allowedTypesForEntries,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         multiTypeFieldSelectorProps={{
           label: (
@@ -598,7 +614,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
             name={`${prefix}spec.tags`}
             multiTextInputProps={{
               allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
-              expressions
+              expressions,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: (
@@ -634,7 +651,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
                 showConnectorRef: true,
                 connectorTypes: enableFields['spec.baseImageConnectorRefs'].type,
                 connectorRefRenderer: renderConnectorRef,
-                restrictToSingleEntry: true
+                restrictToSingleEntry: true,
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })
             : renderMultiTypeList({
                 name: `${prefix}spec.baseImageConnectorRefs`,
@@ -687,7 +705,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
                 expressions,
                 getString,
                 readonly,
-                formik
+                formik,
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })
             : renderMultiTypeList({
                 name: `${prefix}spec.reportPaths`,
@@ -712,7 +731,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
                 readonly,
                 formik,
                 withObjectStructure: true,
-                keyName: 'name'
+                keyName: 'name',
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })
             : renderMultiTypeList({
                 name: `${prefix}spec.outputVariables`,
@@ -783,7 +803,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
                 expressions,
                 getString,
                 readonly,
-                formik
+                formik,
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })
             : renderMultiTypeList({
                 name: `${prefix}spec.entrypoint`,
@@ -806,7 +827,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
                 expressions,
                 getString,
                 readonly,
-                formik
+                formik,
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })
             : renderMultiTypeList({
                 name: `${prefix}spec.args`,
@@ -858,6 +880,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
             inputProps: {
               multiTextInputProps: {
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
               },
               disabled: readonly
@@ -875,7 +898,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
             inputProps: {
               multiTextInputProps: {
                 expressions,
-                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             },
@@ -921,7 +945,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               placeholder: getString('pipelineSteps.endpointPlaceholder'),
               multiTextInputProps: {
                 expressions,
-                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             },
@@ -939,7 +964,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               placeholder: getString('pipelineSteps.artifactsTargetPlaceholder'),
               multiTextInputProps: {
                 expressions,
-                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             },
@@ -956,7 +982,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
             inputProps: {
               multiTextInputProps: {
                 expressions,
-                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled: readonly
             },
@@ -986,6 +1013,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               selectItems: ArchiveFormatOptions,
               multiTypeInputProps: {
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes: isInputSetView
                   ? AllMultiTypeInputTypesForInputSet
                   : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
@@ -1035,6 +1063,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
             inputProps: {
               multiTextInputProps: {
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
               },
               disabled: readonly
@@ -1053,6 +1082,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
             inputProps: {
               multiTextInputProps: {
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
               },
               disabled: readonly
@@ -1085,6 +1115,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               placeholder: getString('select'),
               multiTypeInputProps: {
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   addClearBtn: true,
                   items: sslVerifyOptions as unknown as SelectOption[]

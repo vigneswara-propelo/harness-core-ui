@@ -12,6 +12,7 @@ import { Color } from '@harness/design-system'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
@@ -55,6 +56,7 @@ const StepCommonFields = ({
 }: StepCommonFieldsProps): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const shouldRenderContainerResourcesSection = ![
     CIBuildInfrastructureType.VM,
@@ -94,6 +96,7 @@ const StepCommonFields = ({
               selectItems: getImagePullPolicyOptions(getString),
               placeholder: getString('select'),
               multiTypeInputProps: {
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 expressions,
                 selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) },
                 allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
@@ -127,7 +130,11 @@ const StepCommonFields = ({
             }
             name="spec.runAsUser"
             multiTextInputProps={{
-              multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
+              multiTextInputProps: {
+                expressions,
+                allowableTypes: AllMultiTypeInputTypesForStep,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              },
               disabled,
               placeholder: '1000'
             }}
@@ -161,7 +168,8 @@ const StepCommonFields = ({
               multiTypeInputProps: {
                 expressions,
                 selectProps: { addClearBtn: true, items: getCIShellOptions(getString) },
-                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               },
               disabled
             }}
@@ -203,7 +211,8 @@ const StepCommonFields = ({
               multiTextInputProps={{
                 multiTextInputProps: {
                   expressions,
-                  allowableTypes: AllMultiTypeInputTypesForStep
+                  allowableTypes: AllMultiTypeInputTypesForStep,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 },
                 disabled
               }}
@@ -230,7 +239,11 @@ const StepCommonFields = ({
                 </Layout.Horizontal>
               }
               multiTextInputProps={{
-                multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
+                multiTextInputProps: {
+                  expressions,
+                  allowableTypes: AllMultiTypeInputTypesForStep,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                },
                 disabled
               }}
               configureOptionsProps={{ variableName: 'spec.limit.cpu', hideExecutionTimeField: true }}
@@ -244,7 +257,11 @@ const StepCommonFields = ({
           <FormMultiTypeDurationField
             className={css.removeBpLabelMargin}
             name="timeout"
-            multiTypeDurationProps={{ expressions, allowableTypes: AllMultiTypeInputTypesForStep }}
+            multiTypeDurationProps={{
+              expressions,
+              allowableTypes: AllMultiTypeInputTypesForStep,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             label={
               <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
                 <Text className={css.inpLabel} color={Color.GREY_600} font={{ size: 'small', weight: 'semi-bold' }}>

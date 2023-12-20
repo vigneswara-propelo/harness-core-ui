@@ -13,6 +13,7 @@ import { isEmpty, startCase } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -29,6 +30,7 @@ export const RunStepInputSetBasic: React.FC<RunStepProps> = props => {
   const { template, path, readonly, stepViewType, allowableTypes } = props
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { expressions } = useVariablesExpression()
 
@@ -65,7 +67,8 @@ export const RunStepInputSetBasic: React.FC<RunStepProps> = props => {
                 getString,
                 readonly,
                 expressions,
-                template
+                template,
+                NG_EXPRESSIONS_NEW_INPUT_ELEMENT: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               })}
             </Container>
           ) : (
@@ -120,7 +123,8 @@ export const RunStepInputSetBasic: React.FC<RunStepProps> = props => {
             disabled={readonly}
             multiTypeTextbox={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             tooltipProps={{ dataTooltipId: 'privileged' }}
             setToFalseWhenEmpty={true}

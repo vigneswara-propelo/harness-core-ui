@@ -40,6 +40,7 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { BackgroundStepProps, BackgroundStepData, BackgroundStepDataUI } from './BackgroundStep'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './BackgroundStepFunctionConfigs'
 import { CIStepOptionalConfig, getOptionalSubLabel, PathnameParams } from '../CIStep/CIStepOptionalConfig'
@@ -81,6 +82,7 @@ export const BackgroundStepBase = (
   const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
   const { templateType } = useParams<TemplateStudioPathProps>()
   const allowEmptyConnectorImage = isTemplateStudio && (templateType === 'Step' || templateType === 'StepGroup')
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const EntryPointElement = (): JSX.Element => (
     <div className={cx(css.fieldsGroup, css.withoutSpacing, css.topPadding3, css.bottomPadding3)}>
@@ -88,7 +90,8 @@ export const BackgroundStepBase = (
         name="spec.entrypoint"
         multiTextInputProps={{
           expressions,
-          allowableTypes: SupportedInputTypesForListItems
+          allowableTypes: SupportedInputTypesForListItems,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         multiTypeFieldSelectorProps={{
           label: (
@@ -195,7 +198,8 @@ export const BackgroundStepBase = (
                   multiTypeInputProps: {
                     expressions,
                     selectProps: { items: getCIShellOptions(getString) },
-                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   },
                   disabled: readonly
                 }}

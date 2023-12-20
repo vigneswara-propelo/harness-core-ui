@@ -16,6 +16,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { useStrings } from 'framework/strings'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
@@ -43,6 +44,7 @@ export const GHAPluginStepBase = (
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
@@ -103,7 +105,11 @@ export const GHAPluginStepBase = (
                   tooltipId: 'pluginUsesInfo',
                   multiTextInputProps: {
                     placeholder: getString('ci.GHAPluginUsesPlaceholder'),
-                    multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
+                    multiTextInputProps: {
+                      expressions,
+                      allowableTypes: AllMultiTypeInputTypesForStep,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    },
                     disabled: readonly
                   }
                 }

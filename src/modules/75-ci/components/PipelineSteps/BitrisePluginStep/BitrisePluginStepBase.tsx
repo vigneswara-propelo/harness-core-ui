@@ -15,6 +15,7 @@ import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   getInitialValuesInCorrectFormat,
@@ -41,6 +42,7 @@ export const BitrisePluginStepBase = (
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
@@ -99,7 +101,11 @@ export const BitrisePluginStepBase = (
                   tooltipId: 'pluginUsesInfo',
                   multiTextInputProps: {
                     placeholder: getString('ci.bitrisePluginUsesPlaceholder'),
-                    multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
+                    multiTextInputProps: {
+                      expressions,
+                      allowableTypes: AllMultiTypeInputTypesForStep,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    },
                     disabled: readonly
                   }
                 }

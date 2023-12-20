@@ -10,6 +10,7 @@ import { connect } from 'formik'
 import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import type { GHAPluginStepProps } from './GHAPluginStep'
@@ -27,6 +28,7 @@ export const GHAPluginStepInputSetBasic: React.FC<GHAPluginStepProps> = ({
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
@@ -45,7 +47,8 @@ export const GHAPluginStepInputSetBasic: React.FC<GHAPluginStepProps> = ({
                 disabled: readonly,
                 multiTextInputProps: {
                   expressions,
-                  allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
+                  allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }
               }
             }

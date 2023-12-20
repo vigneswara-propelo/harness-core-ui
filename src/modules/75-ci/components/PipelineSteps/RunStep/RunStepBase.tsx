@@ -37,6 +37,7 @@ import {
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import type { RunStepProps, RunStepData, RunStepDataUI } from './RunStep'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './RunStepFunctionConfigs'
@@ -87,6 +88,7 @@ export const RunStepBase = (
   const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
   const { templateType } = useParams<TemplateStudioPathProps>()
   const allowEmptyConnectorImage = isTemplateStudio && (templateType === 'Step' || templateType === 'StepGroup')
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <Formik
@@ -184,7 +186,8 @@ export const RunStepBase = (
                   multiTypeInputProps: {
                     expressions,
                     selectProps: { items: getCIShellOptions(getString) },
-                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   },
                   disabled: readonly
                 }}

@@ -16,6 +16,7 @@ import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Ste
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
@@ -42,6 +43,7 @@ export const DependencyBase = (
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
@@ -114,7 +116,8 @@ export const DependencyBase = (
                         textProps: {
                           autoComplete: 'off'
                         },
-                        allowableTypes: AllMultiTypeInputTypesForStep
+                        allowableTypes: AllMultiTypeInputTypesForStep,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }
                     }
                   }
