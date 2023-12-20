@@ -21,11 +21,11 @@ import { Connectors } from '@platform/connectors/constants'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { SscaCdOrchestrationStepData, SscaCiOrchestrationStepData, SscaStepProps } from './types'
+import { SscaCdOrchestrationStepData, SscaOrchestrationStepData, SscaStepProps } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function SscaOrchestrationStepInputSet(
-  props: SscaStepProps<SscaCdOrchestrationStepData | SscaCiOrchestrationStepData>
+  props: SscaStepProps<SscaCdOrchestrationStepData | SscaOrchestrationStepData>
 ): React.ReactElement {
   const { template, path, readonly, stepViewType, allowableTypes, stepType } = props
   const { getString } = useStrings()

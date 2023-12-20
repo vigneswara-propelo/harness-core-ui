@@ -329,6 +329,7 @@ export interface StringsMap {
   'common.download': string
   'common.downloadCSV': string
   'common.downloadYaml': string
+  'common.drift': string
   'common.duplicateId': string
   'common.duration.3months': string
   'common.duration.6months': string
@@ -9613,8 +9614,12 @@ export interface StringsMap {
   'ssca.enforcementStep.policyConfiguration': string
   'ssca.enforcementStep.verifyAttestation': string
   'ssca.orchestrationStep.artifactSource': string
+  'ssca.orchestrationStep.detectDriftFrom.baseline': string
+  'ssca.orchestrationStep.detectDriftFrom.lastExecution': string
+  'ssca.orchestrationStep.detectSbomDrift': string
   'ssca.orchestrationStep.ingestion.file': string
   'ssca.orchestrationStep.sbomAttestation': string
+  'ssca.orchestrationStep.sbomDrift': string
   'ssca.orchestrationStep.sbomFormat': string
   'ssca.orchestrationStep.sbomGeneration': string
   'ssca.orchestrationStep.sbomIngestion': string

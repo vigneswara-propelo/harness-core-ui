@@ -105,10 +105,9 @@ export const ViolationsCell: CellType = ({ row, column }) => {
   )
 }
 
-export const TypeCell: CellType = ({ row }) => {
+export const TypeCell: CellType = ({ row, column }) => {
   const artifact = row.original
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-
   const query = useDownloadSbomQuery(
     {
       org: orgIdentifier,
@@ -143,12 +142,32 @@ export const TypeCell: CellType = ({ row }) => {
         >
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
             <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
-              {artifact.sbomName}
+              {getString('common.sbom')}
             </Text>
             <Icon size={12} name="import" color={Color.PRIMARY_7} />
           </Layout.Horizontal>
         </Button>
       )}
+      {artifact.driftId && (
+        <Button
+          className={css.action}
+          variation={ButtonVariation.LINK}
+          size={ButtonSize.SMALL}
+          onClick={() =>
+            column.showDrift({
+              drift_id: artifact.driftId,
+              base_tag: artifact.baseTag,
+              tag: artifact.tag,
+              artifact_name: artifact.imageName
+            })
+          }
+        >
+          <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
+            {getString('common.drift')}
+          </Text>
+        </Button>
+      )}
+
       {artifact.provenance && (
         <Button
           className={css.action}

@@ -87,9 +87,27 @@ describe('SBOM Orchestration Step', () => {
     factory.registerStep(new SscaOrchestrationStep())
   })
 
-  test('edit view as new step', () => {
+  test('new step | SBOM Drift FF ON', async () => {
+    render(
+      <TestStepWidget
+        initialValues={{}}
+        type={StepType.SscaOrchestration}
+        stepViewType={StepViewType.Edit}
+        isNewStep={true}
+        testWrapperProps={{
+          defaultFeatureFlagValues: { SSCA_SBOM_DRIFT: true }
+        }}
+      />
+    )
+
+    expect(await screen.findByRole('checkbox', { name: 'ssca.orchestrationStep.detectSbomDrift' })).toBeChecked()
+    expect(screen.getByLabelText('ssca.orchestrationStep.detectDriftFrom.lastExecution')).toBeChecked()
+  })
+
+  test('existing step', () => {
     render(<TestStepWidget initialValues={{}} type={StepType.SscaOrchestration} stepViewType={StepViewType.Edit} />)
     expect(screen.getByText('pipelineSteps.stepNameLabel')).toBeInTheDocument()
+    expect(screen.queryByRole('checkbox', { name: 'ssca.orchestrationStep.detectSbomDrift' })).not.toBeInTheDocument()
   })
 
   test('edit view renders with runtime inputs', async () => {

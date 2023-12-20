@@ -108,7 +108,7 @@ const emptyInitialValues = {
   }
 }
 
-describe('SBOM Enforcement Step', () => {
+describe('SBOM Policy Enforcement Step', () => {
   beforeAll(() => {
     factory.registerStep(new SscaEnforcementStep())
   })

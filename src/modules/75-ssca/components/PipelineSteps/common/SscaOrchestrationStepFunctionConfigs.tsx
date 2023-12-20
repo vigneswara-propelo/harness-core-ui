@@ -9,10 +9,10 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
-import { Field, SscaCdOrchestrationStepData, SscaCiOrchestrationStepData } from './types'
+import { Field, SscaCdOrchestrationStepData, SscaOrchestrationStepData } from './types'
 
 export function transformValuesFieldsConfig<StepType, T>(stepType?: StepType, data?: T): Field[] {
-  const _data = data as SscaCiOrchestrationStepData | SscaCdOrchestrationStepData
+  const _data = data as SscaOrchestrationStepData | SscaCdOrchestrationStepData
 
   return [
     {
@@ -45,6 +45,10 @@ export function transformValuesFieldsConfig<StepType, T>(stepType?: StepType, da
     },
     {
       name: 'spec.source.spec.image',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.sbom_drift.base',
       type: TransformValuesTypes.Text
     },
     ...(_data?.spec.mode === 'ingestion'
@@ -165,6 +169,11 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
     type: ValidationFieldTypes.Text,
     label: 'imageLabel',
     isRequired: true
+  },
+  {
+    name: 'spec.sbom_drift.base',
+    type: ValidationFieldTypes.Text,
+    label: 'ssca.orchestrationStep.detectSbomDrift'
   },
   ...(stepType === StepType.CdSscaOrchestration
     ? [

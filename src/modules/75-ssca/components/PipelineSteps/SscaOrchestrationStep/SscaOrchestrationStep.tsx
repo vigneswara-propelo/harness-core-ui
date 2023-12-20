@@ -18,7 +18,6 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { VariableListTableProps, VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { StringsMap } from 'stringTypes'
-import { SscaCiOrchestrationStepData } from '../common/types'
 import {
   transformValuesFieldsConfig,
   getInputSetViewValidateFieldsConfig
@@ -26,8 +25,9 @@ import {
 import { SscaOrchestrationStepEditWithRef } from '../common/SscaOrchestrationStepEdit'
 import SscaOrchestrationStepInputSet from '../common/SscaOrchestrationStepInputSet'
 import { commonDefaultOrchestrationSpecValues, ciSpecValues } from '../common/utils'
+import { SscaOrchestrationStepData } from '../common/types'
 
-export class SscaOrchestrationStep extends PipelineStep<SscaCiOrchestrationStepData> {
+export class SscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
@@ -40,7 +40,7 @@ export class SscaOrchestrationStep extends PipelineStep<SscaCiOrchestrationStepD
   protected stepIconColor = Color.GREY_600
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SscaOrchestration'
   protected stepPaletteVisible = false
-  protected defaultValues: SscaCiOrchestrationStepData = {
+  protected defaultValues: SscaOrchestrationStepData = {
     type: StepType.SscaOrchestration,
     identifier: '',
     spec: {
@@ -49,8 +49,8 @@ export class SscaOrchestrationStep extends PipelineStep<SscaCiOrchestrationStepD
     }
   }
 
-  processFormData<T>(data: T): SscaCiOrchestrationStepData {
-    return getFormValuesInCorrectFormat<T, SscaCiOrchestrationStepData>(
+  processFormData<T>(data: T): SscaOrchestrationStepData {
+    return getFormValuesInCorrectFormat<T, SscaOrchestrationStepData>(
       data,
       transformValuesFieldsConfig(this?.type, data)
     )
@@ -61,7 +61,7 @@ export class SscaOrchestrationStep extends PipelineStep<SscaCiOrchestrationStepD
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<SscaCiOrchestrationStepData>): FormikErrors<SscaCiOrchestrationStepData> {
+  }: ValidateInputSetProps<SscaOrchestrationStepData>): FormikErrors<SscaOrchestrationStepData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
       return validateInputSet(
@@ -76,7 +76,7 @@ export class SscaOrchestrationStep extends PipelineStep<SscaCiOrchestrationStepD
     return {}
   }
 
-  renderStep(props: StepProps<SscaCiOrchestrationStepData>): JSX.Element {
+  renderStep(props: StepProps<SscaOrchestrationStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,

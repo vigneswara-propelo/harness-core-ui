@@ -8,6 +8,7 @@
 import { TableV2 } from '@harness/uicore'
 import React from 'react'
 import type { Column } from 'react-table'
+import { ArtifactSbomDriftResponse } from '@harnessio/react-ssca-manager-client'
 import { useStrings } from 'framework/strings'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { ArtifactCell, PipelineStepCell, SLSAVerificationCell, TypeCell, ViolationsCell } from './ArtifactTableCells'
@@ -19,6 +20,8 @@ export interface Artifact {
   type: ArtifactType
   imageName: string
   tag: string
+  baseTag: string
+  driftId: string
   url: string
   id?: string // artifact Id
   stepExecutionId?: string
@@ -34,13 +37,18 @@ export interface Artifact {
 
 export interface ArtifactsColumnActions {
   showEnforcementViolations: (stepExecutionId?: string) => void
+  showDrift: (driftData: ArtifactSbomDriftResponse) => void
 }
 
 export interface ArtifactsTableProps extends ArtifactsColumnActions {
   artifacts: Artifact[]
 }
 
-export function ArtifactsTable({ artifacts, showEnforcementViolations }: ArtifactsTableProps): React.ReactElement {
+export function ArtifactsTable({
+  artifacts,
+  showEnforcementViolations,
+  showDrift
+}: ArtifactsTableProps): React.ReactElement {
   const { getString } = useStrings()
 
   const columns: Column<Artifact>[] = React.useMemo(() => {
@@ -58,7 +66,8 @@ export function ArtifactsTable({ artifacts, showEnforcementViolations }: Artifac
       {
         Header: getString('pipeline.artifactsSelection.artifactType'),
         accessor: 'type',
-        Cell: TypeCell
+        Cell: TypeCell,
+        showDrift
       },
       {
         Header: getString('pipeline.sbomPolicyViolations'),
@@ -72,7 +81,7 @@ export function ArtifactsTable({ artifacts, showEnforcementViolations }: Artifac
         Cell: SLSAVerificationCell
       }
     ]
-  }, [getString, showEnforcementViolations])
+  }, [getString, showDrift, showEnforcementViolations])
 
   return <TableV2 className={css.table} columns={columns} data={artifacts} sortable />
 }

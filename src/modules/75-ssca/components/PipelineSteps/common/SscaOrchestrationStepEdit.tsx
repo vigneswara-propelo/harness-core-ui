@@ -6,11 +6,22 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
-import { Accordion, Formik, FormikForm, FormInput, Icon, Layout, SelectOption, Text } from '@harness/uicore'
+import {
+  Accordion,
+  Checkbox,
+  Container,
+  Formik,
+  FormikForm,
+  FormInput,
+  Icon,
+  Layout,
+  SelectOption,
+  Text
+} from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { get } from 'lodash-es'
-import React from 'react'
+import { get, set } from 'lodash-es'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -33,13 +44,14 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useGitScope } from '@pipeline/utils/CIUtils'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import { useStrings } from 'framework/strings'
+import { StringKeys, useStrings } from 'framework/strings'
 import type {} from 'services/ci'
 import { SbomOrchestrationTool, SbomSource, SyftSbomOrchestration } from 'services/pipeline-ng'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { editViewValidateFieldsConfig, transformValuesFieldsConfig } from './SscaOrchestrationStepFunctionConfigs'
-import { SscaStepProps } from './types'
+import { SscaCdOrchestrationStepData, SscaOrchestrationStepData, SscaStepProps } from './types'
 import { AllMultiTypeInputTypesForStep } from './utils'
 import css from './SscaStep.module.scss'
 
@@ -51,6 +63,14 @@ const SbomStepModes: { label: string; value: string }[] = [
   { label: 'Generation', value: 'generation' },
   { label: 'Ingestion', value: 'ingestion' }
 ]
+
+export const getSbomDriftModes = (getString: (key: StringKeys) => string): { label: string; value: string }[] => {
+  return [
+    { label: getString('ssca.orchestrationStep.detectDriftFrom.lastExecution'), value: 'last_generated_sbom' },
+    { label: getString('ssca.orchestrationStep.detectDriftFrom.baseline'), value: 'baseline' }
+  ]
+}
+
 const artifactTypeOptions = getTypedOptions<SbomSource['type']>(['image'])
 const sbomGenerationToolOptions = getTypedOptions<SbomOrchestrationTool['type']>(['Syft'])
 const syftSbomFormats: { label: string; value: SyftSbomOrchestration['format'] }[] = [
@@ -58,7 +78,7 @@ const syftSbomFormats: { label: string; value: SyftSbomOrchestration['format'] }
   { label: 'CycloneDX', value: 'cyclonedx-json' }
 ]
 
-const SscaOrchestrationStepEdit = <T,>(
+const SscaOrchestrationStepEdit = <T extends SscaOrchestrationStepData | SscaCdOrchestrationStepData>(
   {
     initialValues,
     onUpdate,
@@ -73,6 +93,12 @@ const SscaOrchestrationStepEdit = <T,>(
 ): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { SSCA_SBOM_DRIFT } = useFeatureFlags()
+
+  const [detectSbomDrift, setDetectSbomDrift] = useState(
+    isNewStep ? SSCA_SBOM_DRIFT : SSCA_SBOM_DRIFT && !!get(initialValues, 'spec.sbom_drift.base')
+  )
+
   const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
   const { getStageFromPipeline, state } = usePipelineContext()
   const { stage: currentStage } = getStageFromPipeline<BuildStageElementConfig>(
@@ -87,12 +113,18 @@ const SscaOrchestrationStepEdit = <T,>(
 
   const gitScope = useGitScope()
 
+  const _initialValues = getInitialValuesInCorrectFormat<T, T>(
+    initialValues,
+    transformValuesFieldsConfig(stepType, initialValues)
+  )
+
+  if (isNewStep && detectSbomDrift && !get(_initialValues, 'spec.sbom_drift.base')) {
+    set(_initialValues, 'spec.sbom_drift.base', 'last_generated_sbom')
+  }
+
   return (
     <Formik
-      initialValues={getInitialValuesInCorrectFormat<T, T>(
-        initialValues,
-        transformValuesFieldsConfig(stepType, initialValues)
-      )}
+      initialValues={_initialValues}
       formName={stepType}
       validate={valuesToValidate => {
         const schemaValues = getFormValuesInCorrectFormat<T, T>(
@@ -150,7 +182,28 @@ const SscaOrchestrationStepEdit = <T,>(
                 </>
               )}
 
-              {get(formik.values, 'spec.mode') !== 'ingestion' && (
+              {get(formik.values, 'spec.mode') === 'ingestion' ? (
+                <>
+                  <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} color={Color.GREY_900}>
+                    {getString('ssca.orchestrationStep.sbomIngestion')}
+                  </Text>
+
+                  <MultiTypeTextField
+                    name="spec.ingestion.file"
+                    label={<Text className={css.formLabel}>{getString('ssca.orchestrationStep.ingestion.file')}</Text>}
+                    multiTextInputProps={{
+                      disabled: readonly,
+                      multiTextInputProps: {
+                        expressions,
+                        allowableTypes: AllMultiTypeInputTypesForStep
+                      }
+                    }}
+                    configureOptionsProps={{
+                      hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
+                    }}
+                  />
+                </>
+              ) : (
                 <>
                   <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} color={Color.GREY_900}>
                     {getString('ssca.orchestrationStep.sbomGeneration')}
@@ -170,29 +223,6 @@ const SscaOrchestrationStepEdit = <T,>(
                     label={getString('ssca.orchestrationStep.sbomFormat')}
                     disabled={readonly}
                     radioGroup={{ inline: true }}
-                  />
-                </>
-              )}
-
-              {get(formik.values, 'spec.mode') === 'ingestion' && (
-                <>
-                  <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} color={Color.GREY_900}>
-                    {getString('ssca.orchestrationStep.sbomIngestion')}
-                  </Text>
-
-                  <MultiTypeTextField
-                    name="spec.ingestion.file"
-                    label={<Text className={css.formLabel}>{getString('ssca.orchestrationStep.ingestion.file')}</Text>}
-                    multiTextInputProps={{
-                      disabled: readonly,
-                      multiTextInputProps: {
-                        expressions,
-                        allowableTypes: AllMultiTypeInputTypesForStep
-                      }
-                    }}
-                    configureOptionsProps={{
-                      hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
-                    }}
                   />
                 </>
               )}
@@ -284,6 +314,37 @@ const SscaOrchestrationStepEdit = <T,>(
                 }}
                 disabled={readonly}
               />
+
+              {SSCA_SBOM_DRIFT && (
+                <>
+                  <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} color={Color.GREY_900}>
+                    {getString('ssca.orchestrationStep.sbomDrift')}
+                  </Text>
+                  <Checkbox
+                    label={getString('ssca.orchestrationStep.detectSbomDrift')}
+                    checked={detectSbomDrift}
+                    onChange={e => {
+                      const isChecked = e.currentTarget.checked
+                      setDetectSbomDrift(isChecked)
+
+                      if (isChecked) {
+                        set(formik.values, 'spec.sbom_drift.base', 'last_generated_sbom')
+                      } else {
+                        set(formik.values, 'spec.sbom_drift', undefined)
+                      }
+                    }}
+                  />
+                  {detectSbomDrift && (
+                    <Container margin={{ left: 'xlarge' }}>
+                      <FormInput.RadioGroup
+                        items={getSbomDriftModes(getString)}
+                        name="spec.sbom_drift.base"
+                        disabled={readonly}
+                      />
+                    </Container>
+                  )}
+                </>
+              )}
 
               {stepType === StepType.CdSscaOrchestration && (
                 <>

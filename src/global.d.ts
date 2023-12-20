@@ -306,6 +306,11 @@ declare module 'ssca/MicroFrontendApp' {
   export default ChildApp
 }
 
+declare module 'ssca/DriftDrawer' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'governance/App' {
   const ChildApp: ChildAppComponent
   export default ChildApp

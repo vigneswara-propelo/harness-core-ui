@@ -21,7 +21,7 @@ export interface SscaCdOrchestrationStepData extends SscaCommonStepData {
   spec: CommonSscaOrchestrationStepSpec & CdResourcesSpec
 }
 
-export interface SscaCiOrchestrationStepData extends SscaCommonStepData {
+export interface SscaOrchestrationStepData extends SscaCommonStepData {
   spec: CommonSscaOrchestrationStepSpec & CiResourcesSpec
 }
 
@@ -67,6 +67,9 @@ export interface CommonSscaOrchestrationStepSpec {
   attestation: {
     type: Attestation['type']
     spec: CosignAttestation
+  }
+  sbom_drift?: {
+    base?: 'baseline' | 'last_generated_sbom'
   }
 }
 

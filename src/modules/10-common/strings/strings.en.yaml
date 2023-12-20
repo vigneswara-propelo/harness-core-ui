@@ -1550,6 +1550,7 @@ userGroupsWarningMessage: 'Some of the User Groups referenced in this scope have
 pipelineStage: Pipeline Stage
 violations: Violations
 sbom: SBOM
+drift: Drift
 welcomePage:
   allusecases: All Use Cases
   selectusecase: Choose your starting use case.

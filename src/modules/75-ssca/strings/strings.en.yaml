@@ -10,7 +10,11 @@ orchestrationStep:
   sbomAttestation: SBOM Attestation
   ingestion:
     file: SBOM File Path
-
+  sbomDrift: SBOM Drift
+  detectSbomDrift: Detect SBOM Drift
+  detectDriftFrom:
+    lastExecution: Detect drift from the previous successful pipeline execution
+    baseline: Detect drift from baseline
 enforcementStep:
   verifyAttestation: Verify Attestation
   policyConfiguration: Policy Configuration
