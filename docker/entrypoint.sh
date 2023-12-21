@@ -36,6 +36,7 @@ sed -i "s|<\!-- harnessClusterURLPlaceHolder -->|<script>window.harnessClusterUR
 sed -i "s|<\!-- stripeApiKey -->|<script>window.stripeApiKey = '$STRIPE_API_KEY'</script>|" index.html
 sed -i "s|<\!-- cannyAppId -->|<script>window.cannyAppId = '$CANNY_APP_ID'</script>|" index.html
 sed -i "s|<\!-- releaseNotesLink -->|<script>window.releaseNotesLink = '$RELEASE_NOTES_LINK'</script>|" index.html
+sed -i "s|<\!-- sscaPathPrefix -->|<script>window.sscaPathPrefix = '$SSCA_PATH_PREFIX'</script>|" index.html
 
 sed -i "s|USE_LEGACY_FEATURE_FLAGS_PLACEHOLDER|$USE_LEGACY_FEATURE_FLAGS|" index.html
 sed -i "s|HARNESS_FF_SDK_BASE_URL_PLACEHOLDER|$HARNESS_FF_SDK_BASE_URL|" index.html

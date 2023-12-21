@@ -15,6 +15,7 @@ import { SRMServiceAPIClient } from '@harnessio/react-srm-service-client'
 import { TemplateServiceAPIClient } from '@harnessio/react-template-service-client'
 
 import SessionToken from 'framework/utils/SessionToken'
+import { getSSCAPathPrefix } from 'framework/utils/APIUtils'
 
 type UseOpenApiClientsReturn = {
   auditServiceClientRef: React.MutableRefObject<AuditServiceClient>
@@ -28,14 +29,15 @@ type UseOpenApiClientsReturn = {
 
 export const getOpenAPIClientInitiator = (
   globalResponseHandler: (response: Response) => void,
-  accountId: string
+  accountId: string,
+  pathPrefix?: string
 ): any => {
   const responseInterceptor = (response: Response): Response => {
     globalResponseHandler(response.clone())
     return response
   }
   const urlInterceptor = (url: string): string => {
-    return window.getApiBaseUrl(url)
+    return pathPrefix ? `${pathPrefix}${window.getApiBaseUrl(url)}` : window.getApiBaseUrl(url)
   }
   const requestInterceptor = (request: Request): Request => {
     const oldRequest = request.clone()
@@ -65,7 +67,9 @@ const useOpenApiClients = (
   const auditServiceClientRef = useRef(new AuditServiceClient(openAPIClientInitiator))
   const idpServiceClientRef = useRef(new IDPServiceAPIClient(openAPIClientInitiator))
   const pipelineServiceClientRef = useRef(new PipelineServiceAPIClient(openAPIClientInitiator))
-  const sscaManagerClientRef = useRef(new SSCAManagerAPIClient(openAPIClientInitiator))
+  const sscaManagerClientRef = useRef(
+    new SSCAManagerAPIClient(getOpenAPIClientInitiator(globalResponseHandler, accountId, getSSCAPathPrefix()))
+  )
   const srmManagerClientRef = useRef(new SRMServiceAPIClient(openAPIClientInitiator))
   const ngManagerServiceClientRef = useRef(new NGManagerServiceAPIClient(openAPIClientInitiator))
   const templateServiceClientRef = useRef(new TemplateServiceAPIClient(openAPIClientInitiator))

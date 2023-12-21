@@ -93,6 +93,7 @@ declare interface Window {
   currentIP?: string | undefined
   publicAccessOnAccount?: boolean
   releaseNotesLink: string
+  sscaPathPrefix?: string
   Canny: any
 }
 

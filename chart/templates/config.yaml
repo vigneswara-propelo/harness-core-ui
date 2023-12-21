@@ -16,6 +16,7 @@ data:
   HARNESS_ENABLE_NG_AUTH_UI_PLACEHOLDER: "true"
   HARNESS_BROWSER_ROUTER_ENABLED: "true"
   HARNESS_CLUSTER_URL: ''
+  SSCA_PATH_PREFIX: '/ssca-manager'
   {{- if .Values.additionalConfigs }}
   {{- toYaml .Values.additionalConfigs | nindent 2 }}
   {{- end }}

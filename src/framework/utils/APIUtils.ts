@@ -7,3 +7,7 @@
 
 export const isJsonResponse = (response: Response): boolean =>
   !!response.headers.get('content-type')?.includes('application/json')
+
+export const getSSCAPathPrefix = (): string | undefined => {
+  return window.sscaPathPrefix
+}

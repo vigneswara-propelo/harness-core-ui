@@ -66,6 +66,9 @@ module.exports = {
   '/sto-manager': {
     target: targetLocalHost ? 'https://localhost:7172' : baseUrl
   },
+  '/ssca-manager': {
+    target: targetLocalHost ? 'https://localhost:8188' : baseUrl
+  },
   '/ti-service': {
     target: targetLocalHost ? 'https://localhost:7457' : baseUrl
   },
