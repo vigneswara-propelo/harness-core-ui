@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, screen, fireEvent } from '@testing-library/react'
+import { render, waitFor, screen, fireEvent, act } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { NAV_MODE } from '@common/utils/routeUtils'
 import NGBreadcrumbsV2 from '@common/components/NGBreadcrumbs/NGBreadcrumbsV2'
@@ -64,20 +64,20 @@ describe('NGBreadcrumbsV2', () => {
     })
   })
   test('on clicking account should call showSecondaryScopeSwitchDialog', async () => {
-    const { container } = render(<WrapperComponent />)
+    const { container, getByTestId } = render(<WrapperComponent />)
     fireEvent.click(container.querySelector('span[class="bp3-popover-target"]') as HTMLElement)
     fireEvent.click(screen.getByText('account: accountName'))
-    await waitFor(() => {
-      expect(screen.getByText('common.scopeSwitchDialog.secondary.title')).toBeInTheDocument()
-    })
+    await waitFor(() => getByTestId('location'))
+    expect(getByTestId('location')).toHaveTextContent('/')
   })
   test('on clicking org should call showSecondaryScopeSwitchDialog', async () => {
-    const { container } = render(<WrapperComponent />)
+    const { container, getByTestId } = render(<WrapperComponent />)
     fireEvent.click(container.querySelector('span[class="bp3-popover-target"]') as HTMLElement)
     fireEvent.click(screen.getByText('orgLabel: selectedOrgName'))
-    await waitFor(() => {
-      expect(screen.getByText('common.scopeSwitchDialog.secondary.title')).toBeInTheDocument()
+    act(() => {
+      waitFor(() => getByTestId('location'))
     })
+    expect(getByTestId('location')).toHaveTextContent('/')
   })
   test('should render name only if label is not present', async () => {
     mockImport('framework/AppStore/AppStoreContext', {
