@@ -16,23 +16,44 @@ import css from './ArtifactsTable.module.scss'
 
 export type ArtifactType = 'File' | 'Image' | 'SBOM'
 
-export interface Artifact {
+interface ArtifactMetadata {
   type: ArtifactType
-  imageName: string
-  tag: string
-  baseTag: string
-  driftId: string
-  url: string
-  id?: string // artifact Id
-  stepExecutionId?: string
-  sbomName?: string
-  sbomUrl?: string
-  isSbomAttested?: string
   node?: ExecutionNode
   stage: string
-  allowListViolationCount: number | undefined
-  denyListViolationCount: number | undefined
-  provenance?: any //TODO
+  provenance: unknown
+}
+
+export interface Artifact extends ArtifactMetadata {
+  id: string
+  url: string
+  imageName: string
+  tag: string
+  sbomName: string
+  stepExecutionId: string
+  isSbomAttested: boolean
+  allowListViolationCount: number
+  denyListViolationCount: number
+  scorecard: Scorecard
+  drift: Drift
+}
+
+export interface Drift {
+  base: string
+  baseTag: string
+  driftId: string
+  totalDrifts: number
+  componentDrifts: number
+  licenseDrifts: number
+  componentsAdded: number
+  componentsModified: number
+  componentsDeleted: number
+  licenseAdded: number
+  licenseDeleted: number
+}
+
+export interface Scorecard {
+  avgScore: string
+  maxScore: string
 }
 
 export interface ArtifactsColumnActions {

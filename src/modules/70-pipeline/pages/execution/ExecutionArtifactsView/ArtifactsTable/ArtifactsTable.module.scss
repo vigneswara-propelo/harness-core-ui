@@ -27,4 +27,7 @@
 
 .action {
   margin-left: calc(var(--spacing-4) * -1) !important;
+  &:hover {
+    text-decoration: underline;
+  }
 }

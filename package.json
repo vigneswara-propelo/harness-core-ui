@@ -74,7 +74,7 @@
     "@harnessio/react-ng-manager-client": "^1.18.0",
     "@harnessio/react-pipeline-service-client": "1.9.0",
     "@harnessio/react-srm-service-client": "1.0.0",
-    "@harnessio/react-ssca-manager-client": "^0.17.0",
+    "@harnessio/react-ssca-manager-client": "^0.18.0",
     "@harnessio/react-template-service-client": "^0.1.0",
     "@popperjs/core": "^2.4.2",
     "@stripe/react-stripe-js": "^1.9.0",
