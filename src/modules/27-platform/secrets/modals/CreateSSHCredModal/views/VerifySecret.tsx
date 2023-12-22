@@ -5,17 +5,25 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { StepsProgress, ModalErrorHandler, ModalErrorHandlerBinding } from '@harness/uicore'
+import { StepsProgress } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { SSHKeyValidationMetadata, useValidateSecret, ResponseSecretValidationResultDTO } from 'services/cd-ng'
+import { defaultTo } from 'lodash-es'
+import {
+  SSHKeyValidationMetadata,
+  useValidateSecret,
+  ResponseSecretValidationResultDTO,
+  ResponseMessage,
+  Error
+} from 'services/cd-ng'
 import { useGetDelegatesStatus, RestResponseDelegateStatus } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { ErrorHandler } from '@modules/10-common/components/ErrorHandler/ErrorHandler'
 
-interface VerifySecretProps {
+export interface VerifySecretProps {
   validationMetadata?: SSHKeyValidationMetadata
   identifier: string
   onFinish?: (status: Status) => void
@@ -23,7 +31,7 @@ interface VerifySecretProps {
   mockValidateSecret?: UseGetMockData<ResponseSecretValidationResultDTO>
 }
 
-enum Step {
+export enum Step {
   ZERO,
   ONE,
   TWO
@@ -44,7 +52,6 @@ const VerifySecret: React.FC<VerifySecretProps> = ({
   mockValidateSecret
 }) => {
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const { getString } = useStrings()
   const {
     data: delegateStatus,
@@ -60,9 +67,15 @@ const VerifySecret: React.FC<VerifySecretProps> = ({
     queryParams: { identifier, accountIdentifier, projectIdentifier, orgIdentifier },
     mock: mockValidateSecret
   })
+  const [secretErrors, setSecretErrors] = useState<ResponseMessage[]>([])
+  const [delegateErrors, setDelegateErrors] = useState<ResponseMessage[]>([])
   const [currentStep, setCurrentStep] = useState<Step>(Step.ONE)
   const [currentStatus, setCurrentStatus] = useState<Status>(Status.WAIT)
   const [currentIntent, setCurrentIntent] = useState<Intent>(Intent.WARNING)
+
+  const handleSecretErrors = (errorResponse: ResponseSecretValidationResultDTO): void => {
+    setSecretErrors(defaultTo((errorResponse?.data as Error)?.responseMessages, []))
+  }
 
   useEffect(() => {
     switch (currentStep) {
@@ -83,14 +96,14 @@ const VerifySecret: React.FC<VerifySecretProps> = ({
               } else {
                 setCurrentStatus(Status.ERROR)
                 setCurrentIntent(Intent.DANGER)
-                response.data?.message && modalErrorHandler?.showDanger(response.data.message)
+                handleSecretErrors(response)
                 onFinish?.(currentStatus)
               }
             },
             _error => {
               setCurrentStatus(Status.ERROR)
               setCurrentIntent(Intent.DANGER)
-              _error?.data?.message && modalErrorHandler?.showDanger(_error.data.message)
+              handleSecretErrors(_error)
               onFinish?.(currentStatus)
             }
           )
@@ -105,8 +118,7 @@ const VerifySecret: React.FC<VerifySecretProps> = ({
     } else if (delegateStatusError) {
       setCurrentStatus(Status.ERROR)
       setCurrentIntent(Intent.DANGER)
-      const err = (delegateStatusError.data as any)?.responseMessages?.[0]?.message
-      err && modalErrorHandler?.showDanger(err)
+      setDelegateErrors(defaultTo((delegateStatusError?.data as Error)?.responseMessages, []))
       onFinish?.(currentStatus)
     } else if (delegateStatus) {
       setCurrentStatus(Status.DONE)
@@ -126,7 +138,8 @@ const VerifySecret: React.FC<VerifySecretProps> = ({
         currentStatus={currentStatus}
         intent={currentIntent}
       />
-      <ModalErrorHandler bind={setModalErrorHandler} style={{ marginTop: 'var(--spacing-large)' }} />
+      {!!delegateErrors.length && <ErrorHandler responseMessages={delegateErrors} />}
+      {!!secretErrors.length && <ErrorHandler responseMessages={secretErrors} />}
     </>
   )
 }

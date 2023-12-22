@@ -10,7 +10,7 @@ import { renderHook } from '@testing-library/react-hooks'
 import { waitFor } from '@testing-library/dom'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { SecretDTOV2 } from 'services/cd-ng'
-import { useVerifyModal } from '../useVerifyModal'
+import { useVerifyModal } from '../../CreateSSHCredModal/useVerifyModal'
 
 const secretMock: SecretDTOV2 = {
   identifier: 'dummy identifier',
@@ -26,7 +26,7 @@ describe('Test hook for correctness', () => {
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper>{children}</TestWrapper>
     )
-    const { result } = renderHook(() => useVerifyModal(), { wrapper })
+    const { result } = renderHook(() => useVerifyModal({ type: 'WinRmCredentials' }), { wrapper })
     expect(Object.keys(result.current).indexOf('openVerifyModal')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('closeVerifyModal')).not.toBe(-1)
     await waitFor(() => {
@@ -38,7 +38,7 @@ describe('Test hook for correctness', () => {
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper>{children}</TestWrapper>
     )
-    const { result } = renderHook(() => useVerifyModal(), { wrapper })
+    const { result } = renderHook(() => useVerifyModal({ type: 'WinRmCredentials' }), { wrapper })
     expect(Object.keys(result.current).indexOf('openVerifyModal')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('closeVerifyModal')).not.toBe(-1)
     await waitFor(() => {

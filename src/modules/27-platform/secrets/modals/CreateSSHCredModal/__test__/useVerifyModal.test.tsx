@@ -26,7 +26,7 @@ describe('Test hook for correctness', () => {
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper>{children}</TestWrapper>
     )
-    const { result } = renderHook(() => useVerifyModal(), { wrapper })
+    const { result } = renderHook(() => useVerifyModal({ type: 'SSHKey' }), { wrapper })
     expect(Object.keys(result.current).indexOf('openVerifyModal')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('closeVerifyModal')).not.toBe(-1)
     await waitFor(() => {
@@ -38,7 +38,7 @@ describe('Test hook for correctness', () => {
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper>{children}</TestWrapper>
     )
-    const { result } = renderHook(() => useVerifyModal(), { wrapper })
+    const { result } = renderHook(() => useVerifyModal({ type: 'SSHKey' }), { wrapper })
     expect(Object.keys(result.current).indexOf('openVerifyModal')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('closeVerifyModal')).not.toBe(-1)
     await waitFor(() => {

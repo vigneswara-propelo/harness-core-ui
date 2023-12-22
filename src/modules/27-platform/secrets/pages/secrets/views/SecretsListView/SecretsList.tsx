@@ -31,8 +31,7 @@ import type { PageSecretResponseWrapper, SecretTextSpecDTO, SecretDTOV2 } from '
 import { getStringForType } from '@secrets/utils/SSHAuthUtils'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
 import useCreateUpdateSecretModal from '@secrets/modals/CreateSecretModal/useCreateUpdateSecretModal'
-import { useVerifyModal as useVerifyModalSSH } from '@secrets/modals/CreateSSHCredModal/useVerifyModal'
-import { useVerifyModal as useVerifyModalWinRM } from '@secrets/modals/CreateWinRmCredModal/useVerifyModal'
+import { useVerifyModal } from '@secrets/modals/CreateSSHCredModal/useVerifyModal'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { SecretIdentifiers } from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -158,8 +157,8 @@ const RenderColumnActivity: Renderer<CellProps<SecretResponseWrapper>> = ({ row 
 
 const RenderColumnStatus: Renderer<CellProps<SecretResponseWrapper>> = ({ row }) => {
   const data = row.original.secret
-  const { openVerifyModal: openVerifyModalSSH } = useVerifyModalSSH()
-  const { openVerifyModal: openVerifyModalWinRM } = useVerifyModalWinRM()
+  const { openVerifyModal: openVerifyModalSSH } = useVerifyModal({ type: 'SSHKey' })
+  const { openVerifyModal: openVerifyModalWinRM } = useVerifyModal({ type: 'WinRmCredentials' })
   if (data.type === 'SecretText' || data.type === 'SecretFile') {
     return row.original.draft ? (
       <Text icon="warning-sign" intent="warning">

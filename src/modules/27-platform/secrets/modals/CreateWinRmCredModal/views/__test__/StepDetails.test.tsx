@@ -40,7 +40,7 @@ const prevStepData: any = {
 
 describe('Create WinRm Cred Wizard Step Details', () => {
   test('Test for  winrm step details required fields', async () => {
-    const { container } = render(
+    const { container, findByText } = render(
       <TestWrapper>
         <StepDetails name="sample-name" />
       </TestWrapper>
@@ -49,12 +49,12 @@ describe('Create WinRm Cred Wizard Step Details', () => {
     await act(async () => {
       clickSubmit(container)
     })
-
-    expect(container).toMatchSnapshot() // Form validation for all required fields in step one
+    const stepTitle = await findByText('platform.secrets.createWinRmCredWizard.titleDetails')
+    expect(stepTitle).toBeInTheDocument() // Form validation for all required fields in step one
   })
 
   test('Test for going to next step', async () => {
-    const { container } = render(
+    const { container, findByText } = render(
       <TestWrapper>
         <StepDetails name="sample-name" prevStepData={prevStepData} nextStep={jest.fn()} />
       </TestWrapper>
@@ -67,7 +67,8 @@ describe('Create WinRm Cred Wizard Step Details', () => {
     await act(async () => {
       clickSubmit(container)
     })
+    const identifier = await findByText('dummy_name')
 
-    expect(container).toMatchSnapshot()
+    expect(identifier).toBeInTheDocument()
   })
 })

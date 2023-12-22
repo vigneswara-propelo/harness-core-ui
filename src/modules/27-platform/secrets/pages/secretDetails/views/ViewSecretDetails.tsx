@@ -27,8 +27,7 @@ import type {
 } from 'services/cd-ng'
 import { getKeyForCredentialType, getStringForType } from '@secrets/utils/SSHAuthUtils'
 
-import VerifyConnectionSSH from '@secrets/modals/CreateSSHCredModal/views/VerifyConnection'
-import VerifyConnectionWinRM from '@secrets/modals/CreateWinRmCredModal/views/VerifyConnection'
+import VerifyConnection from '@secrets/modals/CreateSSHCredModal/views/VerifyConnection'
 import ConnectorStats from '@common/components/ConnectorStats/ConnectorStats'
 import {
   ActivityDetailsRowInterface,
@@ -309,8 +308,7 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
             status={'' as ConnectorConnectivityDetails['status']}
             className={css.stats}
           />
-          {secret.type === 'SSHKey' && <VerifyConnectionSSH identifier={secret.identifier} />}
-          {secret.type === 'WinRmCredentials' && <VerifyConnectionWinRM identifier={secret.identifier} />}
+          <VerifyConnection identifier={secret.identifier} type={secret.type} />
         </Layout.Vertical>
       ) : null}
     </Layout.Horizontal>

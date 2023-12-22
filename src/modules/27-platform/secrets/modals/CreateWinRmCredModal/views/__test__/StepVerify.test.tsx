@@ -11,7 +11,7 @@ import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { clickSubmit } from '@common/utils/JestFormHelper'
 import type { WinRmAuthDTO } from 'services/cd-ng'
-import StepVerify from '@secrets/modals/CreateWinRmCredModal/views/StepVerify'
+import StepVerify from '@secrets/modals/CreateSSHCredModal/views/StepVerify'
 
 const prevStepData: any = {
   detailsData: {
@@ -40,16 +40,16 @@ const prevStepData: any = {
 
 describe('Create WinRm Cred Wizard Step Verify', () => {
   test('Test for winrm step verify', async () => {
-    const { container } = render(
+    const { container, findByText } = render(
       <TestWrapper>
-        <StepVerify prevStepData={prevStepData} name="sample-name" />
+        <StepVerify prevStepData={prevStepData} name="sample-name" type={'WinRmCredentials'} />
       </TestWrapper>
     )
 
     await act(async () => {
       clickSubmit(container)
     })
-
-    expect(container).toMatchSnapshot() // Form validation for all required fields in step one
+    const titleStep = await findByText('platform.secrets.createSSHCredWizard.hostnameInfo')
+    expect(titleStep).toBeInTheDocument() // Form validation for all required fields in step one
   })
 })

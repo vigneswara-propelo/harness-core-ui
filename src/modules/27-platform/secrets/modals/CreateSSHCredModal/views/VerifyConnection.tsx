@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import * as Yup from 'yup'
 import { Button, ButtonSize, ButtonVariation, Container, Formik, FormikForm, FormInput, Text } from '@harness/uicore'
-import type { SSHKeyValidationMetadata as ValidationMetadata } from 'services/cd-ng'
+import type { SSHKeyValidationMetadata as ValidationMetadata, SecretValidationMetaData } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
@@ -19,9 +19,15 @@ interface VerifyConnectionProps {
   identifier: string
   closeModal?: () => void
   showFinishBtn?: boolean
+  type: SecretValidationMetaData['type']
 }
 
-const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeModal, showFinishBtn = false }) => {
+const VerifyConnection: React.FC<VerifyConnectionProps> = ({
+  identifier,
+  closeModal,
+  showFinishBtn = false,
+  type = 'SSHKey'
+}) => {
   const [validationMetadata, setValidationMetadata] = useState<ValidationMetadata>()
   const [finishStatus, setFinishStatus] = useState<Status | undefined>()
   const { getString } = useStrings()
@@ -33,13 +39,13 @@ const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeMo
           <Formik<ValidationMetadata>
             onSubmit={formData => {
               setValidationMetadata({
-                type: 'SSHKey',
+                type,
                 host: formData.host
               })
             }}
             formName="sshVerifyConnectionForm"
             initialValues={{
-              type: 'SSHKey',
+              type,
               host: ''
             }}
             validationSchema={Yup.object().shape({

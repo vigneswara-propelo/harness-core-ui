@@ -55,7 +55,7 @@ const CreateSSHCredWizard: React.FC<CreateSSHCredWizardProps & SSHCredSharedObj>
         isEdit={isEdit}
         params={params}
       />
-      <StepVerify name={getString('platform.secrets.stepTitleVerify')} closeModal={props.hideModal} />
+      <StepVerify name={getString('platform.secrets.stepTitleVerify')} closeModal={props.hideModal} type="SSHKey" />
     </StepWizard>
   )
 }

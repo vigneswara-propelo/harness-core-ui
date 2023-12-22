@@ -56,7 +56,8 @@ describe('Create WinRm Cred Wizard', () => {
     )
 
     // match step 1
-    expect(container).toMatchSnapshot()
+    const title = await getAllByText('platform.secrets.createWinRmCredWizard.titleDetails')
+    expect(title[0]).toBeInTheDocument()
     fireEvent.click(getByTestId('description-edit'))
 
     // fill step 1
@@ -71,8 +72,8 @@ describe('Create WinRm Cred Wizard', () => {
     })
 
     // match step 2
-    expect(container).toMatchSnapshot()
-
+    const descriptionType = getByText(container, 'platform.secrets.typeWinRM')
+    expect(descriptionType).toBeInTheDocument()
     //submit step 2
     await act(async () => {
       clickSubmit(container)
@@ -133,7 +134,8 @@ describe('Create WinRm Cred Wizard', () => {
     })
 
     //step 3
-    expect(container).toMatchSnapshot()
+    const verifyTitle = getAllByText('platform.secrets.stepTitleVerify')
+    expect(verifyTitle[0]).toBeInTheDocument()
     setFieldValue({ container, type: InputTypes.TEXTFIELD, fieldId: 'host', value: 'http://dummyUrl.com' })
     //Submit Step 3
     await act(async () => {

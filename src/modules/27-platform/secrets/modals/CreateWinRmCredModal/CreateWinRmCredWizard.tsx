@@ -13,7 +13,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
 import StepWinRmDetails from './views/StepDetails'
 import StepAuthentication from './views/StepAuthentication'
-import StepVerify from './views/StepVerify'
+import StepVerify from '../CreateSSHCredModal/views/StepVerify'
 
 import type { DetailsForm } from './views/StepDetails'
 import type { WinRmConfigFormData } from './views/StepAuthentication'
@@ -48,7 +48,11 @@ const CreateWinRmCredWizard: React.FC<CreateWinRmCredWizardProps & WinRmCredShar
     >
       <StepWinRmDetails name={getString('platform.secrets.createWinRmCredWizard.titleDetails')} {...props} />
       <StepAuthentication name={getString('configuration')} onSuccess={props.onSuccess} isEdit={isEdit} />
-      <StepVerify name={getString('platform.secrets.stepTitleVerify')} closeModal={props.hideModal} />
+      <StepVerify
+        name={getString('platform.secrets.stepTitleVerify')}
+        closeModal={props.hideModal}
+        type={'WinRmCredentials'}
+      />
     </StepWizard>
   )
 }

@@ -9,5 +9,6 @@
 declare const styles: {
   readonly formData: string
   readonly spinnerContainer: string
+  readonly sshConnectionContainer: string
 }
 export default styles

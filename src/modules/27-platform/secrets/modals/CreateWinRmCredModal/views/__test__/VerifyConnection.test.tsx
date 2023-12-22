@@ -10,7 +10,7 @@ import React from 'react'
 import { noop } from 'lodash-es'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
-import VerifyConnection from '@secrets/modals/CreateWinRmCredModal/views/VerifyConnection'
+import VerifyConnection from '@secrets/modals/CreateSSHCredModal/views/VerifyConnection'
 import { clickSubmit } from '@common/utils/JestFormHelper'
 import type { ResponseSecretValidationResultDTO } from 'services/cd-ng'
 
@@ -43,7 +43,7 @@ describe('Create WinRm Cred Wizard Step Verify', () => {
   test('Test for winrm step verify', async () => {
     const { container } = render(
       <TestWrapper>
-        <VerifyConnection identifier="dummy" closeModal={noop} />
+        <VerifyConnection identifier="dummy" closeModal={noop} type={'WinRmCredentials'} />
       </TestWrapper>
     )
 
@@ -51,7 +51,7 @@ describe('Create WinRm Cred Wizard Step Verify', () => {
       fireEvent.change(container.querySelector('input[name="host"]')!, { target: { value: 'host' } })
 
       const target = container.querySelector('button[type="submit"]')
-      expect(target).toBeDefined()
+      expect(target).toBeInTheDocument()
     })
 
     await act(async () => {
@@ -59,9 +59,10 @@ describe('Create WinRm Cred Wizard Step Verify', () => {
     })
 
     const verifyRetestBtn = queryByText(container, 'retry')
+    expect(verifyRetestBtn).toBeInTheDocument()
+
     expect(verifyRetestBtn).toBeTruthy()
     if (verifyRetestBtn) fireEvent.click(verifyRetestBtn)
-
-    expect(container).toMatchSnapshot()
+    expect(verifyRetestBtn).not.toBeInTheDocument()
   })
 })

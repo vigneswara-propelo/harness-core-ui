@@ -11,7 +11,7 @@ import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, Classes } from '@blueprintjs/core'
 import cx from 'classnames'
-import type { SecretDTOV2 } from 'services/cd-ng'
+import type { SecretDTOV2, SecretValidationMetaData } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import VerifyConnection from './views/VerifyConnection'
 import css from './useCreateSSHCredModal.module.scss'
@@ -21,7 +21,11 @@ export interface UseVerifyModalReturn {
   closeVerifyModal: () => void
 }
 
-export const useVerifyModal = (): UseVerifyModalReturn => {
+export interface UseVerifyModalProps {
+  type: SecretValidationMetaData['type']
+}
+
+export const useVerifyModal = ({ type }: UseVerifyModalProps): UseVerifyModalReturn => {
   const [data, setData] = useState<SecretDTOV2>()
   const { getString } = useStrings()
 
@@ -31,7 +35,12 @@ export const useVerifyModal = (): UseVerifyModalReturn => {
         <Text margin={{ bottom: 'xlarge' }} font={{ size: 'medium' }} color={Color.BLACK}>
           {getString('platform.secrets.createSSHCredWizard.btnVerifyConnection')}
         </Text>
-        <VerifyConnection identifier={data?.identifier as string} closeModal={hideModal} showFinishBtn={true} />
+        <VerifyConnection
+          identifier={data?.identifier as string}
+          closeModal={hideModal}
+          showFinishBtn={true}
+          type={type}
+        />
         <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={hideModal} className={css.crossIcon} />
       </Dialog>
     ),
