@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import { AllowedTypes, Container, FormInput, useToaster } from '@harness/uicore'
 import React, { useEffect, useMemo } from 'react'
 import type { InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
 import { useGetAllMonitoredServicesWithTimeSeriesHealthSources } from 'services/cv'
@@ -34,6 +35,7 @@ export default function ConfiguredRunTimeMonitoredService(props: ConfiguredRunTi
   const { projectIdentifier, orgIdentifier, accountId } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const queryParams = useMemo(() => {
     return {
@@ -82,7 +84,10 @@ export default function ConfiguredRunTimeMonitoredService(props: ConfiguredRunTi
           useValue
           placeholder={monitoredServicesLoading ? getString('loading') : 'Select Monitored Service'}
           selectItems={monitoredServicesOptions}
-          multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+          multiTypeInputProps={{
+            ...getMultiTypeInputProps(expressions, allowableTypes),
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
         />
       </Container>
     </Card>

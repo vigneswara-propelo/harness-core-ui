@@ -22,6 +22,7 @@ import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import SelectHealthSourceServices from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices'
@@ -69,6 +70,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
@@ -228,6 +230,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                     label={''}
                     multiTextInputProps={{
                       expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       allowableTypes: getAllowedTypeForCompleteMetricPath({
                         appDTier: formikValues?.appDTier,
                         appdApplication: formikValues?.appdApplication,

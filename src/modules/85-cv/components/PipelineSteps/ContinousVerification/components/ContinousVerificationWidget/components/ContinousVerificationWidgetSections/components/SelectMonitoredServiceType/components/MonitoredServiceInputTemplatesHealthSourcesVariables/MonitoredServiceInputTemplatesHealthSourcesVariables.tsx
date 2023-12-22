@@ -7,6 +7,7 @@
 
 import { Card, FormInput, AllowedTypes, Text } from '@harness/uicore'
 import React from 'react'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { MonitoredServiceTemplateVariable } from '@cv/components/PipelineSteps/ContinousVerification/types'
@@ -25,6 +26,7 @@ export default function MonitoredServiceInputTemplatesHealthSourcesVariables(
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { allowableTypes, healthSourcesVariables } = props
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <>
@@ -41,7 +43,8 @@ export default function MonitoredServiceInputTemplatesHealthSourcesVariables(
                 label={variable?.name}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
             )

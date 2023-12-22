@@ -10,7 +10,7 @@ import { AllowedTypes, FormInput, Layout, MultiTypeInputType, SelectOption, Text
 import type { FormikProps } from 'formik'
 import type { UseStringsReturn } from 'framework/strings'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import { FeatureFlag } from '@common/featureFlags'
 import { getDurationOptions } from '@cv/components/PipelineSteps/ContinousVerification/utils'
@@ -52,6 +52,7 @@ export function VerificationSensitivity(props: BaseFieldProps): JSX.Element {
   const { zIndex, label, name, expressions, formik, isSimpleDropdown, allowableTypes } = props
   const style: CSSProperties = useMemo(() => ({ zIndex: zIndex ?? 10 }), [zIndex]) as CSSProperties
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   if (!isSimpleDropdown) {
     return (
       <FormInput.MultiTypeInput
@@ -59,7 +60,10 @@ export function VerificationSensitivity(props: BaseFieldProps): JSX.Element {
         style={style}
         label={label ? label : getString('sensitivity')}
         selectItems={getVerificationSensitivityOptions(getString)}
-        multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+        multiTypeInputProps={{
+          ...getMultiTypeInputProps(expressions, allowableTypes),
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+        }}
       />
     )
   } else {
@@ -82,6 +86,7 @@ export function Duration(props: BaseFieldProps): JSX.Element {
   const { zIndex, label, name, expressions, formik, isSimpleDropdown, allowableTypes } = props
   const style: CSSProperties = useMemo(() => ({ zIndex: zIndex ?? 8 }), [zIndex]) as CSSProperties
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   if (!isSimpleDropdown) {
     return (
       <FormInput.MultiTypeInput
@@ -89,7 +94,10 @@ export function Duration(props: BaseFieldProps): JSX.Element {
         style={style}
         label={label ? label : getString('duration')}
         selectItems={selectProps.items}
-        multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+        multiTypeInputProps={{
+          ...getMultiTypeInputProps(expressions, allowableTypes),
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+        }}
       />
     )
   } else {
@@ -120,6 +128,7 @@ export function TrafficSplit(props: BaseFieldProps): JSX.Element {
   const { zIndex, label, name, expressions, formik, isSimpleDropdown } = props
   const style: CSSProperties = useMemo(() => ({ zIndex: zIndex ?? 6 }), [zIndex]) as CSSProperties
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   if (!isSimpleDropdown) {
     return (
       <FormInput.MultiTypeInput
@@ -129,7 +138,7 @@ export function TrafficSplit(props: BaseFieldProps): JSX.Element {
         selectItems={selectProps.items}
         multiTypeInputProps={
           expressions
-            ? { expressions }
+            ? { expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }
             : {
                 allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
               }
@@ -178,6 +187,7 @@ export function Baseline(props: BaseFieldProps): JSX.Element {
 
 export function BaselineSelect(props: BaseFieldProps): JSX.Element {
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const SRM_ENABLE_BASELINE_BASED_VERIFICATION = useFeatureFlag(FeatureFlag.SRM_ENABLE_BASELINE_BASED_VERIFICATION)
 
@@ -191,7 +201,10 @@ export function BaselineSelect(props: BaseFieldProps): JSX.Element {
           style={style}
           label={label ?? getString('platform.connectors.cdng.baseline')}
           selectItems={getDefaultBaselineOptions(getString, SRM_ENABLE_BASELINE_BASED_VERIFICATION)}
-          multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+          multiTypeInputProps={{
+            ...getMultiTypeInputProps(expressions, allowableTypes),
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
         />
         <Text margin={{ bottom: 'medium' }} icon="info-messaging">
           {getString('cv.verifyStep.baselineInputInfo')}

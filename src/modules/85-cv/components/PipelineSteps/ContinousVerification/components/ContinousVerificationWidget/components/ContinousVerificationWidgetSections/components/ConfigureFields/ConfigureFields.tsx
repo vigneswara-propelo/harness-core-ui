@@ -9,6 +9,7 @@ import React, { useEffect } from 'react'
 import { FormInput, AllowedTypes } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import { defaultDeploymentTag, VerificationTypes } from './constants'
@@ -28,6 +29,7 @@ export default function ConfigureFields(props: {
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   useEffect(() => {
     if (!isValidNodeFilteringType(formValues?.spec?.type)) {
@@ -146,7 +148,11 @@ export default function ConfigureFields(props: {
         <FormInput.MultiTextInput
           label={getString('platform.connectors.cdng.artifactTag')}
           name="spec.spec.deploymentTag"
-          multiTextInputProps={{ expressions, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
         />
       </div>
       {canShowFailOnNoAnalysisCheckbox && (

@@ -15,6 +15,7 @@ import {
   RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { HealthSourceServices } from './SelectHealthSourceServices.constant'
 import { RiskProfile } from './components/RiskProfile/RiskProfile'
@@ -40,6 +41,7 @@ export default function SelectHealthSourceServices({
   showServiceInstanceNames
 }: SelectHealthSourceServicesProps): JSX.Element {
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { sli, deploymentVerification, serviceHealth } = fieldNames
 
@@ -93,6 +95,7 @@ export default function SelectHealthSourceServices({
               }}
               multiTextInputProps={{
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 value: values.serviceInstanceMetricPath,
                 multitypeInputValue: metricPathMultiType,
                 defaultValue: RUNTIME_INPUT_VALUE,

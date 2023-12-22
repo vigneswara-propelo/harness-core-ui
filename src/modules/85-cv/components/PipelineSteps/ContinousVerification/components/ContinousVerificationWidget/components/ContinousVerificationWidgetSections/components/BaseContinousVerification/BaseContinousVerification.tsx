@@ -12,6 +12,7 @@ import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
@@ -28,6 +29,7 @@ export default function BaseContinousVerification(props: {
   const { isNewStep = true, stepViewType, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <Card>
       <>
@@ -43,7 +45,12 @@ export default function BaseContinousVerification(props: {
           <FormMultiTypeDurationField
             name="timeout"
             label={getString('pipelineSteps.timeoutLabel')}
-            multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+            multiTypeDurationProps={{
+              enableConfigureOptions: true,
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
         </div>
       </>

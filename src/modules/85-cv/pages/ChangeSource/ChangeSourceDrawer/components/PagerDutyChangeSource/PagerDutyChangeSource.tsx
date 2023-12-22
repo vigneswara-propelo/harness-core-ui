@@ -24,6 +24,7 @@ import { useStrings } from 'framework/strings'
 import { useGetServicesFromPagerDuty } from 'services/cv'
 import { useToaster } from '@common/exports'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
@@ -58,6 +59,7 @@ export default function PageDutyChangeSource({
     getMultiTypeFromValue(formik?.values?.spec.pagerDutyServiceId)
   )
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const {
     data: pagerdutyServices,
@@ -183,7 +185,7 @@ export default function PageDutyChangeSource({
                   : getString('cv.changeSource.PageDuty.selectPagerDutyService')
               }
               enableConfigureOptions={false}
-              multiTypeProps={{ expressions }}
+              multiTypeProps={{ expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}
               orgIdentifier={orgIdentifier}
@@ -222,6 +224,7 @@ export default function PageDutyChangeSource({
               multiTypeInputProps={{
                 expressions,
                 multitypeInputValue: serviceType,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes:
                   isConnectorRuntimeOrExpression || connectorType === MultiTypeInputType.EXPRESSION
                     ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]

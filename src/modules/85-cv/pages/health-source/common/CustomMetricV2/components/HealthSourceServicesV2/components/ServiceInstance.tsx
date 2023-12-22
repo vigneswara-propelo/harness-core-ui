@@ -1,6 +1,7 @@
 import React from 'react'
 import { useFormikContext } from 'formik'
 import { FormInput, Layout, RUNTIME_INPUT_VALUE, MultiTypeInputType } from '@harness/uicore'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { ServiceInstanceLabel } from '@cv/pages/health-source/common/ServiceInstanceLabel/ServiceInstanceLabel'
 import type { CommonCustomMetricPropertyType } from '../../../CustomMetric.types'
@@ -8,6 +9,7 @@ import useCustomMetricV2HelperContext from '../../../hooks/useCustomMetricV2Help
 
 export default function ServiceInstance<T extends CommonCustomMetricPropertyType>(): JSX.Element {
   const { values: formValues } = useFormikContext<T>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { getString } = useStrings()
 
@@ -35,6 +37,7 @@ export default function ServiceInstance<T extends CommonCustomMetricPropertyType
       label={optionalServiceInstancePathLabel}
       multiTextInputProps={{
         expressions,
+        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
         defaultValue: RUNTIME_INPUT_VALUE,
         allowableTypes: isConnectorRuntimeOrExpression
           ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]

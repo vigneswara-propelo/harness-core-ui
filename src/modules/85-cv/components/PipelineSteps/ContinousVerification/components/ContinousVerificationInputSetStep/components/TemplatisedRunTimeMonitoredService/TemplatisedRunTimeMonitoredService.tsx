@@ -23,6 +23,7 @@ import {
   setCommaSeperatedList,
   showQueriesText
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { HealthSourceTypes, UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getLabelByName } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
@@ -52,6 +53,7 @@ export default function TemplatisedRunTimeMonitoredService(
   const { serviceRef, environmentRef } = monitoredService?.spec?.templateInputs || {}
   const areRunTimeVariablesPresent = healthSourcesVariables?.some(variable => checkIfRunTimeInput(variable?.value))
   const { setFieldValue: onChange } = useFormikContext<{ serviceRef: string; environmentRef: string }>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <Layout.Vertical>
@@ -100,7 +102,11 @@ export default function TemplatisedRunTimeMonitoredService(
                         })}
                         disabled={!sourceType}
                         setRefValue
-                        multiTypeProps={{ allowableTypes, expressions }}
+                        multiTypeProps={{
+                          allowableTypes,
+                          expressions,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         type={sourceType as ConnectorInfoDTO['type']}
                         enableConfigureOptions={false}
                       />
@@ -114,7 +120,8 @@ export default function TemplatisedRunTimeMonitoredService(
                           label={getLabelByName(input.name, getString, sourceType as HealthSourceTypes)}
                           multiTextInputProps={{
                             expressions,
-                            allowableTypes
+                            allowableTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                         />
                       </>
@@ -150,7 +157,8 @@ export default function TemplatisedRunTimeMonitoredService(
                               }}
                               multiTextInputProps={{
                                 expressions,
-                                allowableTypes
+                                allowableTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                             />
                           )
@@ -162,7 +170,8 @@ export default function TemplatisedRunTimeMonitoredService(
                               label={getLabelByName(input.name, getString, sourceType as HealthSourceTypes)}
                               multiTextInputProps={{
                                 expressions,
-                                allowableTypes
+                                allowableTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                             />
                           )
@@ -193,7 +202,8 @@ export default function TemplatisedRunTimeMonitoredService(
                   label={variable?.name}
                   multiTextInputProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
               )

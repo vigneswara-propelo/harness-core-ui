@@ -5,6 +5,7 @@ import { useStrings } from 'framework/strings'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   checkIfRunTimeInput,
   isConfiguredMonitoredServiceRunTime
@@ -34,6 +35,7 @@ export default function AnalyzeDeploymentImpactInputSetStep(
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { monitoredService, duration } = template?.spec || {}
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const renderRunTimeMonitoredService = (): JSX.Element => {
     const type = monitoredService?.type ?? MONITORED_SERVICE_TYPE.DEFAULT
@@ -64,7 +66,8 @@ export default function AnalyzeDeploymentImpactInputSetStep(
               useValue
               multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={readonly}
             />
@@ -80,7 +83,8 @@ export default function AnalyzeDeploymentImpactInputSetStep(
               multiTypeDurationProps={{
                 expressions,
                 enableConfigureOptions: false,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           </Container>

@@ -13,6 +13,7 @@ import type {
   CommonCustomMetricFormikInterface,
   FieldMapping
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { useStrings } from 'framework/strings'
 import { FIELD_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
@@ -46,6 +47,7 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
   const fixedValues = field?.fixedValues
   const shouldFetchDropdownOptions =
     !(isTemplate && isTemplateSupportEnabled && isConnectorRuntimeOrExpression) && !fixedValues
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { mutate: fetchParamValues, loading } = useGetParamValues({
     accountIdentifier: accountId,
@@ -102,6 +104,7 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
                 data-testid={identifier}
                 multiTypeInputProps={{
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   /**
                    * Ignoring TS and ESLint as selectProps in MultiTypeInput requesting
                    * for all the select component props
@@ -141,6 +144,7 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
                 data-testid={identifier}
                 multiTextInputProps={{
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   allowableTypes: isConnectorRuntimeOrExpression
                     ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
                     : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]

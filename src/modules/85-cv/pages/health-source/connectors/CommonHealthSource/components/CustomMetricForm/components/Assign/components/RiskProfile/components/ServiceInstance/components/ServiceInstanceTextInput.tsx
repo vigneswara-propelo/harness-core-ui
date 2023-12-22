@@ -7,6 +7,7 @@ import { useCommonHealthSource } from '@cv/pages/health-source/connectors/Common
 import { getIsConnectorRuntimeOrExpression } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 
 interface ServiceInstanceTextInputProps {
   serviceInstanceField?: string
@@ -21,6 +22,7 @@ export function ServiceInstanceTextInput({
   const { setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
   const { isTemplate, expressions, sourceData } = useContext(SetupSourceTabsContext)
   const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [metricInstanceMultiType, setMetricPathMultiType] = useState<MultiTypeInputType>(() =>
     getMultiTypeFromValue(serviceInstanceField)
@@ -44,6 +46,7 @@ export function ServiceInstanceTextInput({
       multiTextInputProps={{
         value: serviceInstanceField,
         expressions,
+        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
         multitypeInputValue: metricInstanceMultiType,
         allowableTypes:
           isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression

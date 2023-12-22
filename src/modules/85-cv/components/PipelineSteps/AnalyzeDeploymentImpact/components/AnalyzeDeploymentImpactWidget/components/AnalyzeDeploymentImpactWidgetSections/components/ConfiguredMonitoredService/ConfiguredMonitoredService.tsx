@@ -18,6 +18,7 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
 import type { RowData } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { getMonitoredServiceRef } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { getMultiTypeInputProps } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { AnalyzeDeploymentImpactData } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.types'
@@ -113,6 +114,7 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
   })
 
   const monitoredService = monitoredServiceData?.data?.monitoredService
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const shouldFetchMonitoredServiceDetails = useMemo(() => {
     //when monitoredServiceData is selected from the dropdown
@@ -231,7 +233,10 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
                   monitoredServicesLoading ? getString('loading') : getString('cv.slos.selectMonitoredService')
                 }
                 selectItems={monitoredServicesOptions}
-                multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+                multiTypeInputProps={{
+                  ...getMultiTypeInputProps(expressions, allowableTypes),
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
               />
               {!monitoredService?.enabled && (
                 <Container className={css.msDisabledWarning}>

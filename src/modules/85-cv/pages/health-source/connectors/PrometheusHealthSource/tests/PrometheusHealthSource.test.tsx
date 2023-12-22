@@ -10,7 +10,6 @@ import { clone } from 'lodash-es'
 import { Container } from '@harness/uicore'
 import { fireEvent, render, waitFor, act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import * as cvService from 'services/cv'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
@@ -29,8 +28,6 @@ import {
   MockManualQueryDataForIdentifierCheck,
   MockManualQueryDataWithoutIdentifier
 } from './PrometheusHealthSource.mock'
-
-jest.mock('@common/hooks/useFeatureFlag')
 
 jest.mock('../components/PrometheusQueryViewer/PrometheusQueryViewer', () => ({
   PrometheusQueryViewer: function MockComponent(props: any) {
@@ -88,7 +85,6 @@ jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
 
 describe('Unit tests for PrometheusHealthSource', () => {
   beforeAll(() => {
-    jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
     jest.spyOn(cvService, 'useGetLabelNames').mockReturnValue({ data: { data: [] } } as any)
     jest.spyOn(cvService, 'useGetMetricNames').mockReturnValue({ data: { data: [] } } as any)
     jest.spyOn(cvService, 'useGetRiskCategoryForCustomHealthMetric').mockReturnValue({ data: [] } as any)
@@ -242,8 +238,6 @@ describe('Unit tests for PrometheusHealthSource', () => {
 
   describe('Metric thresholds', () => {
     test('should render metric thresholds', async () => {
-      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
-
       render(<WrapperComponent data={mockDataWitCVEnabled} onSubmit={jest.fn()} />)
 
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
@@ -329,7 +323,6 @@ describe('Unit tests for PrometheusHealthSource', () => {
     })
 
     test('should not render metric thresholds when feature flag is turned off', () => {
-      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
       render(<WrapperComponent data={MockManualQueryData} onSubmit={jest.fn()} />)
 
       expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
@@ -337,7 +330,6 @@ describe('Unit tests for PrometheusHealthSource', () => {
     })
 
     test('should not render metric thresholds there is not custom metric', () => {
-      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
       render(<WrapperComponent data={emptyCustomMetricData} onSubmit={jest.fn()} />)
 
       expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()

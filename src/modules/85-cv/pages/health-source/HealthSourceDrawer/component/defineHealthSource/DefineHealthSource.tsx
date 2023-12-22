@@ -26,7 +26,7 @@ import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { HealthSourcesType } from '@cv/constants'
 import { BGColorWrapper } from '@cv/pages/health-source/common/StyledComponents'
@@ -85,6 +85,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isLokiEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_GRAFANA_LOKI_LOGS)
   const isAzureLogsEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_AZURE_LOGS)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [productInfo, setProductInfo] = useState<{
     updatedProduct: SelectOption | null
@@ -162,7 +163,11 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
               ? getSourceTypeForConnector(currentHealthSource)
               : healthSourceTypeMapping(sourceType)) as ConnectorInfoDTO['type']
           }
-          multiTypeProps={{ expressions, allowableTypes: AllMultiTypeInputTypesForStep }}
+          multiTypeProps={{
+            expressions,
+            allowableTypes: AllMultiTypeInputTypesForStep,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           onChange={(value: any) => {
             const connectorValue =
               value?.scope && value?.scope !== 'project'

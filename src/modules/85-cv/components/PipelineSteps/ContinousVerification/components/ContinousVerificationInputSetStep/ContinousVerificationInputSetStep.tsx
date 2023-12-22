@@ -17,7 +17,7 @@ import type { InputSetPathProps, PipelineType } from '@common/interfaces/RouteIn
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useGetPipeline } from 'services/pipeline-ng'
 import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { spec } from '../../types'
@@ -51,6 +51,7 @@ export function ContinousVerificationInputSetStep(
   >()
 
   const SRM_ENABLE_BASELINE_BASED_VERIFICATION = useFeatureFlag(FeatureFlag.SRM_ENABLE_BASELINE_BASED_VERIFICATION)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -153,7 +154,8 @@ export function ContinousVerificationInputSetStep(
               useValue
               multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={readonly}
             />
@@ -169,7 +171,8 @@ export function ContinousVerificationInputSetStep(
               useValue
               multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={readonly}
             />
@@ -185,7 +188,8 @@ export function ContinousVerificationInputSetStep(
               useValue
               multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={readonly}
             />
@@ -201,7 +205,8 @@ export function ContinousVerificationInputSetStep(
               useValue
               multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={readonly}
             />
@@ -215,7 +220,8 @@ export function ContinousVerificationInputSetStep(
               name={`${prefix}spec.spec.deploymentTag`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={readonly}
             />
@@ -231,7 +237,8 @@ export function ContinousVerificationInputSetStep(
               multiTypeDurationProps={{
                 expressions,
                 enableConfigureOptions: false,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           </Container>
@@ -245,7 +252,8 @@ export function ContinousVerificationInputSetStep(
               placeholder={getString('cv.verifyStep.controlNodePlaceholder')}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={readonly}
             />
@@ -259,7 +267,8 @@ export function ContinousVerificationInputSetStep(
               name={`${prefix}spec.spec.testNodeRegExPattern`}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               disabled={readonly}
             />

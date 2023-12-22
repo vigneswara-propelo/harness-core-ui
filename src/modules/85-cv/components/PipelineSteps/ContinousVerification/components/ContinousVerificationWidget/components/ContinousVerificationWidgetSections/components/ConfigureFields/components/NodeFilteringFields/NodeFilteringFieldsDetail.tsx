@@ -25,7 +25,8 @@ export default function NodeFilteringFieldsDetail({ allowableTypes }: NodeFilter
 
   const {
     CV_UI_DISPLAY_NODE_REGEX_FILTER: isRegexNodeFilterFFEnabled,
-    CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: isFilterFromCDEnabled
+    CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: isFilterFromCDEnabled,
+    NG_EXPRESSIONS_NEW_INPUT_ELEMENT
   } = useFeatureFlags()
 
   const canShowRegexFields = isRegexNodeFilterFFEnabled && verificationType !== VerificationTypes.Auto
@@ -71,7 +72,11 @@ export default function NodeFilteringFieldsDetail({ allowableTypes }: NodeFilter
               tooltipProps={{ dataTooltipId: 'controlNodeRegexFilterInput' }}
               name="spec.spec.controlNodeRegExPattern"
               placeholder={getString('cv.verifyStep.controlNodePlaceholder')}
-              multiTextInputProps={{ expressions, allowableTypes }}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
           </div>
 
@@ -81,7 +86,11 @@ export default function NodeFilteringFieldsDetail({ allowableTypes }: NodeFilter
               tooltipProps={{ dataTooltipId: 'testNodeRegexFilterInput' }}
               name="spec.spec.testNodeRegExPattern"
               placeholder={getString('cv.verifyStep.testNodePlaceholder')}
-              multiTextInputProps={{ expressions, allowableTypes }}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
             />
           </div>
         </>

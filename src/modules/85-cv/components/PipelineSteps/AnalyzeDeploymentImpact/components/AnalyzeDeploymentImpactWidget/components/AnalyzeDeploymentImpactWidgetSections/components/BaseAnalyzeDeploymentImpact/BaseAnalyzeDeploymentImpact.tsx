@@ -12,6 +12,7 @@ import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import Card from '@cv/components/Card/Card'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getMultiTypeInputProps } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
@@ -26,6 +27,7 @@ export default function BaseAnalyzeDeploymentImpact(props: {
   const { isNewStep, stepViewType, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <Card>
       <>
@@ -43,7 +45,10 @@ export default function BaseAnalyzeDeploymentImpact(props: {
             data-testid="duration"
             label={getString('cv.analyzeDeploymentImpact.duration')}
             selectItems={ANALYSIS_DURATION_OPTIONS}
-            multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+            multiTypeInputProps={{
+              ...getMultiTypeInputProps(expressions, allowableTypes),
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             useValue
           />
         </Container>
@@ -51,7 +56,12 @@ export default function BaseAnalyzeDeploymentImpact(props: {
           <FormMultiTypeDurationField
             name="timeout"
             label={getString('pipelineSteps.timeoutLabel')}
-            multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+            multiTypeDurationProps={{
+              enableConfigureOptions: true,
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
         </Container>
       </>

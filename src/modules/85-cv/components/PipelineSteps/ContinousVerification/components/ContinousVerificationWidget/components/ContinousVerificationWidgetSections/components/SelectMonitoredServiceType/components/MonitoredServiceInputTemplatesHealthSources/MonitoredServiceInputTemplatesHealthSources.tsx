@@ -16,6 +16,7 @@ import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInt
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { TemplateInputs } from '@cv/components/PipelineSteps/ContinousVerification/types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   enrichHealthSourceWithVersionForHealthsourceType,
   getMetricDefinitionData,
@@ -44,6 +45,7 @@ export default function MonitoredServiceInputTemplatesHealthSources(
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { allowableTypes, healthSources } = props
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <>
@@ -83,7 +85,11 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                         })}
                         disabled={!sourceType}
                         setRefValue
-                        multiTypeProps={{ allowableTypes, expressions }}
+                        multiTypeProps={{
+                          allowableTypes,
+                          expressions,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         type={sourceType as ConnectorInfoDTO['type']}
                         enableConfigureOptions={false}
                       />
@@ -96,7 +102,8 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                         label={getLabelByName(input.name, getString, sourceType as HealthSourceTypes)}
                         multiTextInputProps={{
                           expressions,
-                          allowableTypes
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                       />
                     )
@@ -131,7 +138,8 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                               }
                               multiTextInputProps={{
                                 expressions,
-                                allowableTypes
+                                allowableTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                             />
                           )
@@ -143,7 +151,8 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                               label={getLabelByName(input.name, getString, sourceType as HealthSourceTypes)}
                               multiTextInputProps={{
                                 expressions,
-                                allowableTypes
+                                allowableTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                             />
                           )

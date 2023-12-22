@@ -11,7 +11,6 @@ import { fireEvent, render, waitFor, act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { fillAtForm, InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { Connectors } from '@platform/connectors/constants'
-import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import routes from '@common/RouteDefinitions'
@@ -41,7 +40,6 @@ const createModeProps: TestWrapperProps = {
 }
 
 jest.mock('uuid')
-jest.mock('@common/hooks/useFeatureFlag')
 
 const onNextMock = jest.fn().mockResolvedValue(jest.fn())
 const onPrevious = jest.fn().mockResolvedValue(jest.fn())
@@ -72,7 +70,6 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
 describe('Unit tests for createAppd monitoring source', () => {
   const refetchMock = jest.fn()
 
-  beforeEach(() => jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true))
   beforeAll(() => {
     jest
       .spyOn(cvServices, 'useGetAppDynamicsTiers')

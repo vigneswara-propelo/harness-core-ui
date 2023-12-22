@@ -22,6 +22,7 @@ import {
 } from 'services/cv'
 import { getMonitoredServiceOptions } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import VerifyStepHealthSourceTable from '@cv/pages/health-source/HealthSourceTable/VerifyStepHealthSourceTable'
@@ -58,6 +59,7 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
   const { expressions } = useVariablesExpression()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [healthSourcesList, setHealthSourcesList] = useState<RowData[]>([])
   const [monitoredServiceInfo, setMonitoredServiceInfo] = useState({
     identifier: '',
@@ -203,7 +205,10 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
             useValue
             placeholder={monitoredServicesLoading ? getString('loading') : 'Select Monitored Service'}
             selectItems={monitoredServicesOptions}
-            multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+            multiTypeInputProps={{
+              ...getMultiTypeInputProps(expressions, allowableTypes),
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
         </div>
         {renderConfiguredMonitoredService()}
