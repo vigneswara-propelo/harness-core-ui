@@ -68,7 +68,7 @@ function MultiTypeDateTimePickerFixedTypeComponent(props: {
         contentEditable={false}
         timePrecision="minute"
         dateProps={{
-          timePickerProps: { useAmPm: true },
+          timePickerProps: { useAmPm: true, selectAllOnFocus: true },
           highlightCurrentDay: true,
           maxDate: moment().add(5, 'year').toDate(),
           ...dateProps
