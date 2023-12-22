@@ -29,6 +29,7 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getScopeAppendedToIdentifier } from '@modules/10-common/utils/StringUtils'
+import { ClusterResponse } from 'services/cd-ng'
 
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import { useGetClustersData } from '../DeployEnvironmentEntityStep/DeployCluster/useGetClustersData'
@@ -134,7 +135,6 @@ export default function DeployClusterEntityInputStep({
         )
       }
     }
-
     // update identifiers in state when deployToAll is true. This sets the clustersData
     if (deployToAllClusters === true) {
       const newIdentifiers = clustersList.map(clusterInList => clusterInList.clusterRef)
@@ -184,6 +184,24 @@ export default function DeployClusterEntityInputStep({
       setClusterIdentifiers(getClusterIdentifiers())
       formik.setValues(newFormikValues)
     }
+  }
+
+  function handleClusterChangeForSelectedVal(values: ClusterResponse[]): void {
+    const filterValues = values.filter(val => val.clusterRef)
+    const newValues = filterValues.map(val => ({
+      identifier: val.clusterRef,
+      agentIdentifier: val.agentIdentifier as string
+    }))
+
+    const newFormikValues = { ...formik.values }
+
+    set(newFormikValues, `gitOpsClusters`, newValues)
+    if (!isBoolean(deployToAllClusters)) {
+      set(newFormikValues, pathForDeployToAll, false)
+    }
+
+    setClusterIdentifiers(getClusterIdentifiers())
+    formik.setValues(newFormikValues)
   }
 
   const fieldLabel = defaultTo(get(formik.values, 'gitOpsClusters'), []).length
@@ -237,6 +255,9 @@ export default function DeployClusterEntityInputStep({
             name={isMultipleCluster ? `gitOpsClusters` : 'clusters'}
             selectedData={selectedClusterData}
             disabled={inputSetData?.readonly || loading}
+            setSelectedClusters={(values: ClusterResponse[]) => {
+              handleClusterChangeForSelectedVal(values)
+            }}
           />
         ) : null}
         {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}

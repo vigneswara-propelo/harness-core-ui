@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
@@ -38,6 +38,7 @@ const GitOpsCluster = (props: {
   headerText?: string
   selectedData?: ClusterOption[]
   disabled?: boolean
+  setSelectedClusters?: any
 }): React.ReactElement => {
   const [showSelectClusterModal, setShowClusterModal] = React.useState(false)
   const { showLinkedClusters = true } = props
@@ -56,6 +57,12 @@ const GitOpsCluster = (props: {
       environmentIdentifier: defaultTo(get(props, 'envRef'), '')
     }
   })
+
+  useEffect(() => {
+    if (!loading && data?.data?.content?.length === 1 && props.setSelectedClusters && !props?.selectedData?.length) {
+      props.setSelectedClusters(data?.data?.content)
+    }
+  }, [data, loading])
 
   const { getString } = useStrings()
 

@@ -24,6 +24,7 @@ import { Intent } from '@harness/design-system'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { useStrings } from 'framework/strings'
 import GitOpsCluster from '@modules/75-cd/components/EnvironmentsV2/EnvironmentDetails/GitOpsCluster/GitOpsCluster'
+import { ClusterResponse } from 'services/cd-ng'
 
 import ClusterEntitiesList from '../ClusterEntitiesList/ClusterEntitiesList'
 import type { ClusterItem, ClusterOption, DeployEnvironmentEntityFormState } from '../types'
@@ -58,10 +59,10 @@ export function getAllFixedClusters(
 export function getSelectedClustersFromOptions(items: ClusterOption[] | any): ClusterOption[] {
   if (Array.isArray(items)) {
     const selItems: ClusterOption[] = items.map(item => ({
-      value: item.value || item.identifier,
+      value: item.value || item.identifier || item.clusterRef,
       agentIdentifier: item.agentIdentifier,
-      clusterRef: item.value,
-      name: item.identifier
+      name: item.identifier || item.clusterRef,
+      clusterRef: item.value
     }))
     return selItems
   }
@@ -87,7 +88,6 @@ export default function DeployCluster({
   const uniquePathForClusters = React.useRef(`_pseudo_field_${uuid()}`)
   // State
   const [selectedClusters, setSelectedClusters] = useState(getAllFixedClusters(initialValues, environmentIdentifier))
-
   const isFixed =
     getMultiTypeFromValue(
       isMultiCluster ? (values.clusters?.[environmentIdentifier] as SelectOption[]) : values.cluster
@@ -95,9 +95,7 @@ export default function DeployCluster({
 
   React.useEffect(() => {
     // update clusters in formik
-    /* istanbul ignore else */
-
-    if (values && selectedClusters.length > 0) {
+    if (values && selectedClusters.length > 1) {
       if (values.clusters && Array.isArray(values.clusters?.[environmentIdentifier])) {
         setValues({
           ...values,
@@ -110,6 +108,18 @@ export default function DeployCluster({
       if (readonly && isValueRuntimeInput(initialValues.environments)) {
         setFieldValue(`${uniquePathForClusters.current}`, RUNTIME_INPUT_VALUE)
       }
+    } else if (
+      selectedClusters.length === 1 &&
+      !isValueRuntimeInput(values.clusters?.[environmentIdentifier] as string)
+    ) {
+      setValues({
+        ...values,
+        // set value of unique path created to handle clusters if some clusters are already selected, else select All
+        [uniquePathForClusters.current]: selectedClusters,
+        clusters: {
+          [environmentIdentifier]: [...selectedClusters]
+        }
+      })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -180,6 +190,20 @@ export default function DeployCluster({
           selectedData={selectedClusters}
           name={isMultiCluster ? getName(environmentIdentifier) : 'clusters'}
           disabled={readonly}
+          setSelectedClusters={(val: ClusterResponse[]) => {
+            const isRunTime = isValueRuntimeInput(values.clusters?.[environmentIdentifier] as string)
+
+            if (!isRunTime) {
+              const formattedVal = val?.map(item => ({
+                identifier: item.clusterRef,
+                agentIdentifier: item.agentIdentifier,
+                value: item.clusterRef,
+                clusterRef: item.clusterRef
+              }))
+              setFieldValue(`clusters.['${environmentIdentifier}']`, formattedVal)
+              setSelectedClusters(getSelectedClustersFromOptions(formattedVal))
+            }
+          }}
         />
       </Layout.Vertical>
       {isFixed && !isEmpty(selectedClusters) && (

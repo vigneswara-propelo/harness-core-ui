@@ -1166,6 +1166,7 @@ export interface StringsMap {
   'common.selectAnotherScope': string
   'common.selectBranch': string
   'common.selectDefaultExperience': string
+  'common.selectLinkedCluster': string
   'common.selectModules': string
   'common.selectName': string
   'common.selectNameManually': string

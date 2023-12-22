@@ -95,32 +95,34 @@ jest.mock('services/cd-ng', () => ({
   ),
   useGetClusterList: jest.fn().mockReturnValue({
     data: {
-      content: [
-        {
-          clusterRef: 'cluster22',
-          orgIdentifier: 'default',
-          projectIdentifier: 'MeenaSyncStep',
-          agentIdentifier: 'syncstepqaagent',
-          accountIdentifier: '1bvyLackQK-Hapk25-Ry4w',
-          envRef: 'env1',
-          linkedAt: 1699386562826,
-          scope: 'PROJECT',
-          name: 'cluster22',
-          tags: {}
-        },
-        {
-          clusterRef: 'cls',
-          orgIdentifier: 'default',
-          projectIdentifier: 'MeenaSyncStep',
-          agentIdentifier: 'account.logtest',
-          accountIdentifier: '1bvyLackQK-Hapk25-Ry4w',
-          envRef: 'env1',
-          linkedAt: 1699386562825,
-          scope: 'PROJECT',
-          name: 'cls',
-          tags: {}
-        }
-      ]
+      data: {
+        content: [
+          {
+            clusterRef: 'cluster22',
+            orgIdentifier: 'default',
+            projectIdentifier: 'MeenaSyncStep',
+            agentIdentifier: 'syncstepqaagent',
+            accountIdentifier: '1bvyLackQK-Hapk25-Ry4w',
+            envRef: 'env1',
+            linkedAt: 1699386562826,
+            scope: 'PROJECT',
+            name: 'cluster22',
+            tags: {}
+          },
+          {
+            clusterRef: 'cls',
+            orgIdentifier: 'default',
+            projectIdentifier: 'MeenaSyncStep',
+            agentIdentifier: 'account.logtest',
+            accountIdentifier: '1bvyLackQK-Hapk25-Ry4w',
+            envRef: 'env1',
+            linkedAt: 1699386562825,
+            scope: 'PROJECT',
+            name: 'cls',
+            tags: {}
+          }
+        ]
+      }
     },
     refetch: jest.fn()
   } as any)

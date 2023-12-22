@@ -138,6 +138,6 @@ describe('GitOps Cluster tests', () => {
       fireEvent.click(getByText(container, 'Select GitOps Clusters')!)
     })
     const form = findDialogContainer()
-    expect(getByText(form!, 'common.entityReferenceTitle')).toBeVisible()
+    expect(getByText(form!, 'common.selectLinkedCluster')).toBeVisible()
   })
 })

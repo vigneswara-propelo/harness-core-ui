@@ -53,6 +53,7 @@ export interface ReferenceSelectDialogTitleProps {
   isNewConnectorLabelVisible?: boolean
   title?: string
   isSortingEnabled?: boolean
+  showSortString?: boolean
   disclaimerMessage?: JSX.Element
 }
 export interface ReferenceSelectProps<T extends MinimalObject>
@@ -83,6 +84,7 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
   showProjectScopedEntities?: boolean
+  title?: string
   showOrgScopedEntities?: boolean
 }
 
@@ -97,6 +99,7 @@ export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProp
     isSortingEnabled,
     disclaimerMessage
   } = props
+
   return (
     <Layout.Horizontal flex={{ distribution: 'space-between' }}>
       <Layout.Vertical spacing="xsmall">
@@ -272,7 +275,9 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
           createNewHandler,
           createNewBtnComponent,
           isNewConnectorLabelVisible,
-          isSortingEnabled: Boolean(props.sortProps)
+          isSortingEnabled: Boolean(props.sortProps),
+          title: props.title,
+          showSortString: props?.showSortString || true
         })}
       >
         <div className={cx(css.contentContainer)}>

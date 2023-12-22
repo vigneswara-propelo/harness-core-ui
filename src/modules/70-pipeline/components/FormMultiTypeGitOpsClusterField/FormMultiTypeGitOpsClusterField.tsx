@@ -220,6 +220,7 @@ export function FormMultiTypeGitOpsClusterField(props: EntityGroupProps): React.
               disabled: disabled,
               disableCollapse: true,
               width: 300,
+              title: getString('common.selectLinkedCluster'),
 
               onMultiSelectChange: handleMultiSelectChange,
               isMultiSelect: isMultiSelect,

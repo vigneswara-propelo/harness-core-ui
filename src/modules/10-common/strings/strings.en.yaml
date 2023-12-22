@@ -908,6 +908,7 @@ byTag: By Tag
 types: Types
 file: File
 entityReferenceTitle: 'Create or Select an Existing {{compName}}'
+selectLinkedCluster: 'Select a Linked Cluster'
 entityReferenceSubTitle: 'Choose {{compName}} based on the scope'
 noConnectorAvailable: No Existing Connectors available
 lastConnectedOn: Last connected on

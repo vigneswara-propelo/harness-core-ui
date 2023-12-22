@@ -61,6 +61,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   const [awsStatuses, setAwsStates] = useState<MultiSelectOption[]>([])
   const [capabilities, setCapabilities] = useState<MultiSelectOption[]>([])
   const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   let capabilityMap = defaultTo(
     get(initialValues, 'spec.configuration.capabilities'),
     get(allValues, 'spec.configuration.capabilities')
