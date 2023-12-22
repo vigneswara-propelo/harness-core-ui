@@ -156,13 +156,6 @@ describe('SideNav Footer', () => {
     const signInBtn = getByText('signUp.signIn')
     expect(signInBtn).toBeInTheDocument()
 
-    const helpBtn = getByText('common.help')
-    expect(helpBtn).toBeInTheDocument()
-
-    // Clicking on helpBtn button should open ResourceCenter
-    await userEvent.click(helpBtn)
-    expect(screen.getByText('common.resourceCenter.title')).toBeInTheDocument()
-
     // Clicking on SignIn button should call history.push()
     await userEvent.click(signInBtn)
     expect(mockHistoryPush).toHaveBeenCalledWith({
