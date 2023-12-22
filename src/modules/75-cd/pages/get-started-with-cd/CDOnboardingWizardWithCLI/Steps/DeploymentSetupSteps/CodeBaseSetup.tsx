@@ -8,11 +8,13 @@
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
+import { useParams } from 'react-router-dom'
 import { Button, ButtonSize, ButtonVariation, Label, Layout, Text, TextInput } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { PipelineType, ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import { String, useStrings } from 'framework/strings'
 import CommandBlock from '@modules/10-common/CommandBlock/CommandBlock'
-import { getCommandStrWithNewline } from '../../utils'
+import { getCommandStrWithNewline, getProjAndOrgId } from '../../utils'
 import { PipelineSetupState } from '../../types'
 import TextWithIndex from './TextWithIndex'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
@@ -21,8 +23,10 @@ export interface CodeBaseSetupProps {
   state: PipelineSetupState
   onUpdate: (data: PipelineSetupState) => void
 }
+
 export default function CodeBaseSetup({ state, onUpdate }: CodeBaseSetupProps): JSX.Element {
   const { getString } = useStrings()
+
   return (
     <>
       <Text color={Color.BLACK} className={css.commandGap}>
@@ -66,6 +70,8 @@ export default function CodeBaseSetup({ state, onUpdate }: CodeBaseSetupProps): 
 
 export function GitPatSetup({ onUpdate, state }: CodeBaseSetupProps): JSX.Element {
   const { getString } = useStrings()
+  const { orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
+
   return (
     <>
       <TextWithIndex index="5. " className={css.commandGap}>
@@ -112,7 +118,8 @@ export function GitPatSetup({ onUpdate, state }: CodeBaseSetupProps): JSX.Elemen
                 state.githubPat ||
                 getString(
                   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitpatPlaceholder'
-                )
+                ),
+              ...getProjAndOrgId(projectIdentifier, orgIdentifier)
             }
           )}
           downloadFileProps={{ downloadFileName: 'harness-cli-clone-codebase', downloadFileExtension: 'xdf' }}

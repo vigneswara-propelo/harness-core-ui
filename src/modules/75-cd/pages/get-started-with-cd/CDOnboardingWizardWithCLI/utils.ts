@@ -32,7 +32,8 @@ interface GetCommandsParam {
   agentId?: string
 }
 export const getCommandStrWithNewline = (cmd: string[]): string => cmd.join(' \n')
-
+const DEFAULT_ORG = 'default'
+const DEFAULT_PROJECT_ID = 'default_project'
 export const getCommandsByDeploymentType = ({
   getString,
   dirPath,
@@ -592,6 +593,12 @@ export const getTraditionalAppsPipelineCommands = ({
     type: dirPath,
     pipeline: pipelineFileName || strategy?.pipelineName
   })
+}
+export const getProjAndOrgId = (projectIdentifier: string, orgIdentifier: string) => {
+  return {
+    projId: projectIdentifier && projectIdentifier !== DEFAULT_PROJECT_ID ? ` --project-id ${projectIdentifier}` : null,
+    orgId: orgIdentifier && orgIdentifier !== DEFAULT_ORG ? ` --org-id ${orgIdentifier}` : null
+  }
 }
 export const getBranchingProps = (
   state: StepsProgress,

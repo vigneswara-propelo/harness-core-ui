@@ -7,11 +7,13 @@
 
 import React from 'react'
 import { Layout } from '@harness/uicore'
-
+import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
+import { PipelineType, ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import { CDOnboardingSteps, PipelineSetupState, WhereAndHowToDeployType } from '../../types'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
 import { DEPLOYMENT_TYPE_TO_DIR_MAP, DEPLOYMENT_TYPE_TO_FILE_MAPS } from '../../Constants'
+import { getProjAndOrgId } from '../../utils'
 import CodeBaseSetup, { GitPatSetup } from './CodeBaseSetup'
 import CommandRow from './CommandRow'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
@@ -31,6 +33,8 @@ export default function K8sCommands({
     ? DEPLOYMENT_TYPE_TO_DIR_MAP[artifactSubType]
     : DEPLOYMENT_TYPE_TO_DIR_MAP[deploymentData?.artifactType?.id as string]
   const { service, infrastructure, env } = DEPLOYMENT_TYPE_TO_FILE_MAPS[artifactSubType as string] || {}
+  const { orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
+
   return (
     <Layout.Vertical className={css.deploymentSteps}>
       <Layout.Vertical margin={{ bottom: 'xlarge' }}>
@@ -46,7 +50,8 @@ export default function K8sCommands({
                 getString(
                   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitusernamePlaceholder'
                 ),
-              type: dirPath
+              type: dirPath,
+              ...getProjAndOrgId(projectIdentifier, orgIdentifier)
             }
           )}
           title={
@@ -75,7 +80,8 @@ export default function K8sCommands({
               delegateName: (
                 stepsProgress?.[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY]?.stepData as WhereAndHowToDeployType
               )?.delegateName,
-              type: dirPath
+              type: dirPath,
+              ...getProjAndOrgId(projectIdentifier, orgIdentifier)
             }
           )}
           title={
@@ -101,7 +107,11 @@ export default function K8sCommands({
           classname={css.commandGap}
           commandSnippet={getString(
             'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createsvccmd',
-            { type: dirPath, service: service || 'service' }
+            {
+              type: dirPath,
+              service: service || 'service',
+              ...getProjAndOrgId(projectIdentifier, orgIdentifier)
+            }
           )}
           title={
             <>
@@ -126,7 +136,11 @@ export default function K8sCommands({
           classname={css.commandGap}
           commandSnippet={getString(
             'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createenvcmd',
-            { type: dirPath, environment: env || 'environment' }
+            {
+              type: dirPath,
+              environment: env || 'environment',
+              ...getProjAndOrgId(projectIdentifier, orgIdentifier)
+            }
           )}
           title={
             <>
@@ -151,7 +165,11 @@ export default function K8sCommands({
           classname={css.commandGap}
           commandSnippet={getString(
             'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createinfracmd',
-            { type: dirPath, infrastructureDefinition: infrastructure || 'infrastructure-definition' }
+            {
+              type: dirPath,
+              infrastructureDefinition: infrastructure || 'infrastructure-definition',
+              ...getProjAndOrgId(projectIdentifier, orgIdentifier)
+            }
           )}
           title={
             <>

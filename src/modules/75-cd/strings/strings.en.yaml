@@ -885,13 +885,13 @@ getStartedWithCD:
             cddir: cd harnesscd-example-apps
             logincmd: 'harness login --api-key {{apiKey}} --account-id {{accId}}'
             downloadedFileApplycmd: 'helm install gitops-agent ./gitops-agent.tgz --namespace harness-gitops --create-namespace'
-            createsecret: 'harness secret  --token {{gitPat}} apply'
+            createsecret: 'harness secret  --token {{gitPat}} apply{{projId}}{{orgjId}}'
             k8s:
-              createGithubcon: 'harness connector --file {{{type}}}/harnesscd-pipeline/github-connector.yml apply --git-user {{gitUser}} '
-              createk8scon: 'harness connector --file {{{type}}}/harnesscd-pipeline/kubernetes-connector.yml apply --delegate-name {{delegateName}}'
-              createsvccmd: harness service --file {{{type}}}/harnesscd-pipeline/{{service}}.yml apply
-              createenvcmd: harness environment --file {{{type}}}/harnesscd-pipeline/{{environment}}.yml apply
-              createinfracmd: harness infrastructure  --file {{{type}}}/harnesscd-pipeline/{{infrastructureDefinition}}.yml apply
+              createGithubcon: 'harness connector --file {{{type}}}/harnesscd-pipeline/github-connector.yml apply --git-user {{gitUser}}{{projId}}{{orgjId}}'
+              createk8scon: 'harness connector --file {{{type}}}/harnesscd-pipeline/kubernetes-connector.yml apply --delegate-name {{delegateName}}{{projId}}{{orgjId}}'
+              createsvccmd: harness service --file {{{type}}}/harnesscd-pipeline/{{service}}.yml apply{{projId}}{{orgjId}}
+              createenvcmd: harness environment --file {{{type}}}/harnesscd-pipeline/{{environment}}.yml apply{{projId}}{{orgjId}}
+              createinfracmd: harness infrastructure  --file {{{type}}}/harnesscd-pipeline/{{infrastructureDefinition}}.yml apply{{projId}}{{orgjId}}
             serverless:
               gcp:
                 createGcpSecret: 'harness secret --file {{{secret}}} apply --secret-type {{cloudType}}'
