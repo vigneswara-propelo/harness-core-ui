@@ -9,7 +9,7 @@ import React from 'react'
 import { set } from 'lodash-es'
 import { ModalDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import ExecutionGraph, {
   ExecutionGraphAddStepEvent,
@@ -79,7 +79,9 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
     tempStages.push(
       stagesCollection.getStage(
         StageType.SECURITY,
-        licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
+        licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE ||
+          (licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+            isFreePlan(licenseInformation, ModuleName.CI)),
         getString
       )?.props as PipelineStageProps
     )

@@ -19,7 +19,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
@@ -224,7 +224,9 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
         />
       ) : null}
 
-      {licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+      {(licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE ||
+        (licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+          isFreePlan(licenseInformation, ModuleName.CI))) &&
       project.modules?.includes(ModuleName.STO) ? (
         <Menu.Item
           text={

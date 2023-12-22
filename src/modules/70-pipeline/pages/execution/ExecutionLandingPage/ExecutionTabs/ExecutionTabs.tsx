@@ -22,7 +22,9 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
+import { ModuleName } from 'framework/types/ModuleName'
 import { useIsPrivateAccess } from 'framework/hooks/usePublicAccess'
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
@@ -71,7 +73,9 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const { view } = useQueryParams<ExecutionQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<ExecutionQueryParams>()
   const { licenseInformation } = useLicenseStore()
-  const isSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
+  const isSecurityEnabled =
+    licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE ||
+    (licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE && isFreePlan(licenseInformation, ModuleName.CI))
   const isErrorTrackingEnabled = licenseInformation['CET']?.status === 'ACTIVE'
   const isIACMEnabled = useFeatureFlag(FeatureFlag.IACM_ENABLED)
   const isIACMCostEstimationEnabled = useFeatureFlag(FeatureFlag.IACM_COST_ESTIMATION)

@@ -44,7 +44,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { getPipelineStages } from '@pipeline/components/PipelineStudio/PipelineStagesUtils'
 import type { PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
 import type { Module } from '@common/interfaces/RouteInterfaces'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
@@ -1063,7 +1063,10 @@ export const TemplateProvider: React.FC<{
       isCIEnabled: licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE,
       isCDEnabled: shouldVisible,
       isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
-      isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
+      isSTOEnabled:
+        licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE ||
+        (licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+          isFreePlan(licenseInformation, ModuleName.CI)),
       isApprovalStageEnabled: true,
       isIACMEnabled: IACM_ENABLED
     })

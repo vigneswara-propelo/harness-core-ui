@@ -27,7 +27,7 @@ import {
   ResponseModuleLicenseDTO
 } from 'services/cd-ng'
 import ModuleSelectionFactory from '@projects-orgs/factories/ModuleSelectionFactory'
-import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { handleUpdateLicenseStore, isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
@@ -291,7 +291,10 @@ export const useModuleSelectModal = ({
       name: ModuleName.CV
     })
   }
-  if (licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE) {
+  if (
+    licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE ||
+    (licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE && isFreePlan(licenseInformation, ModuleName.CI))
+  ) {
     infoCards.push({
       name: ModuleName.STO
     })

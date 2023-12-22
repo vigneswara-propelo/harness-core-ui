@@ -10,7 +10,7 @@ import { Layout, Icon, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
@@ -36,7 +36,9 @@ const DefaultRenderer: React.FC = () => {
         {licenseInformation['CHAOS']?.status === LICENSE_STATE_VALUES.ACTIVE ? (
           <Icon name="chaos-main" size={20} />
         ) : null}
-        {licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE ? (
+        {licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE ||
+        (licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+          isFreePlan(licenseInformation, ModuleName.CI)) ? (
           <Icon name="sto-color-filled" size={20} />
         ) : null}
         {licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE ? (

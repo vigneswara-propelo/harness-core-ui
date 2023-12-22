@@ -35,7 +35,9 @@ import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
+import { ModuleName } from 'framework/types/ModuleName'
 import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
@@ -307,7 +309,11 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   />
                 </div>
               ) : null}
-              {licenseInformation['STO']?.status === 'ACTIVE' && HAS_STO && stoInfo ? (
+              {(licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE ||
+                (licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+                  isFreePlan(licenseInformation, ModuleName.CI))) &&
+              HAS_STO &&
+              stoInfo ? (
                 <div className={css.moduleData}>
                   <Icon name={stoInfo.icon} size={20} className={css.moduleIcon} />
                   {React.createElement<ExecutionCardInfoProps<PipelineExecutionSummary>>(stoInfo.component, {

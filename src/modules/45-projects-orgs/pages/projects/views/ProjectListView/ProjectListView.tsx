@@ -23,7 +23,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE_OPTIONS } from '@common/constants/Pagination'
@@ -110,7 +110,12 @@ const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) 
       icons.push(<Icon name={getModuleIcon(ModuleName.CV)} size={20} key={ModuleName.CV} />)
     }
 
-    if (licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE && modules?.includes(ModuleName.STO)) {
+    if (
+      (licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE ||
+        (licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+          isFreePlan(licenseInformation, ModuleName.CI))) &&
+      modules?.includes(ModuleName.STO)
+    ) {
       icons.push(<Icon name={getModuleIcon(ModuleName.STO)} size={20} key={ModuleName.STO} />)
     }
 
