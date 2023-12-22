@@ -177,7 +177,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
       identifiersFilter,
       connectorTypeContext
     },
-    [name, onSuccess, value, identifiersFilter],
+    [name, onSuccess, value, identifiersFilter, type],
     value
   )
   const hasError = errorCheck(name, formik)
