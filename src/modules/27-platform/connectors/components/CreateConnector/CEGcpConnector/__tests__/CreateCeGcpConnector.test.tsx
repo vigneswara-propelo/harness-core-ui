@@ -158,7 +158,7 @@ describe('Create Secret Manager Wizard', () => {
 
     // Choose requirements Step
     expect(getAllByText(container, 'platform.connectors.ceGcp.chooseRequirements.description')[0]).toBeDefined()
-    const optimizationCard = container.querySelectorAll('.bp3-card')[2]
+    const optimizationCard = getByText('common.ce.autostopping')
     expect(optimizationCard).toBeDefined()
     act(() => {
       fireEvent.click(optimizationCard)

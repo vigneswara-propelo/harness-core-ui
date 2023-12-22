@@ -9,14 +9,17 @@
 declare const styles: {
   readonly bigQueryPage: string
   readonly buttonPanel: string
+  readonly cardCtn: string
   readonly cardsGrid: string
   readonly command: string
   readonly commandsContainer: string
   readonly connectorExistBox: string
   readonly dataFields: string
   readonly defaultCard: string
+  readonly emptyState: string
   readonly existingCurTable: string
   readonly extention: string
+  readonly featureDetailsCtn: string
   readonly gcpConnector: string
   readonly grantPermissionSteps: string
   readonly gray: string

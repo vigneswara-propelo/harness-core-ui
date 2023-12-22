@@ -5,106 +5,155 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useLayoutEffect, useRef } from 'react'
+import React, { useMemo, useState } from 'react'
 import { defaultTo, times } from 'lodash-es'
-import { Button, CardSelect, Heading, Layout, StepProps, Text } from '@harness/uicore'
+import { Button, Container, Heading, Layout, StepProps, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { StringKeys, useStrings } from 'framework/strings'
-import {
-  useSelectCards,
-  RequirementCard,
-  CardData,
-  FeaturesString
-} from '@platform/connectors/common/RequirementCard/RequirementCard'
+import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
+import { useSelectCards, CardData } from '@platform/connectors/common/RequirementCard/RequirementCard'
+import EmptyState from '@connectors/components/CreateConnector/CENGAwsConnector/images/empty-state.svg'
 import type { GcpCloudCostConnector } from 'services/ce'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions, ConnectorTypes } from '@common/constants/TrackingConstants'
 import type { CEGcpConnectorDTO } from './OverviewStep'
+import { FeatureCard, FeatureDetails, Features } from '../../CENGAwsConnector/steps/CrossAccountRoleStep1'
 import css from '../CreateCeGcpConnector.module.scss'
 
 const ChooseRequirements: React.FC<StepProps<CEGcpConnectorDTO>> = ({ prevStepData, nextStep, previousStep }) => {
   const { getString } = useStrings()
-  const featuresEnabled = prevStepData?.spec?.featuresEnabled || []
+  const featuresEnabled = (prevStepData?.spec?.featuresEnabled || []) as Features[]
+  const isGovernanceEnabled = useFeatureFlag(FeatureFlag.CCM_ENABLE_GCP_CLOUD_ASSET_GOVERNANCE_UI)
 
-  const featureCards = useRef<CardData[]>([
-    {
-      icon: 'ce-visibility',
-      text: getString('platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
-      value: 'BILLING',
-      heading: getString('platform.connectors.costVisibility'),
-      prefix: getString('platform.connectors.ceGcp.gcp').toUpperCase(),
-      isDefaultSelected: true,
-      features: times(5, i =>
-        getString(`platform.connectors.ceGcp.chooseRequirements.cardDetails.billing.feat${i + 1}` as StringKeys)
-      ),
-      footer: getString('platform.connectors.ceGcp.chooseRequirements.cardDetails.billing.footer')
-    },
-    {
-      icon: 'ce-visibility',
-      text: getString('platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
-      value: 'VISIBILITY',
-      heading: getString('platform.connectors.ceAws.crossAccountRoleStep1.visible.heading'),
-      prefix: getString('platform.connectors.ceGcp.gcp'),
-      isDefaultSelected: false,
-      features: times(2, i =>
-        getString(`platform.connectors.ceGcp.chooseRequirements.cardDetails.visibility.feat${i + 1}` as StringKeys)
-      ),
-      footer: (
-        <>
-          {getString('platform.connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
-          <a
-            href="https://docs.harness.io/article/kxnsritjls-set-up-cost-visibility-for-gcp"
-            target="_blank"
-            rel="noreferrer"
-            onClick={e => e.stopPropagation()}
-          >
-            {getString('permissions').toLowerCase()}
-          </a>{' '}
-          {getString('platform.connectors.ceGcp.chooseRequirements.cardDetails.optimization.footer')}
-        </>
-      )
-    },
-    {
-      icon: 'nav-settings',
-      text: getString('platform.connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
-      value: 'OPTIMIZATION',
-      heading: getString('common.ce.autostopping'),
-      prefix: getString('platform.connectors.ceGcp.chooseRequirements.cardDetails.optimization.prefix'),
-      isDefaultSelected: false,
-      features: times(4, i =>
-        getString(`platform.connectors.ceGcp.chooseRequirements.cardDetails.optimization.feat${i + 1}` as StringKeys)
-      ),
-      footer: (
-        <>
-          {getString('platform.connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
-          <a
-            href="https://docs.harness.io/article/kxnsritjls-set-up-cost-visibility-for-gcp"
-            target="_blank"
-            rel="noreferrer"
-            onClick={e => e.stopPropagation()}
-          >
-            {getString('permissions').toLowerCase()}
-          </a>{' '}
-          {getString('platform.connectors.ceGcp.chooseRequirements.cardDetails.optimization.footer')}
-        </>
-      )
+  const featureCards = useMemo(() => {
+    const cardsArr = [
+      {
+        icon: 'ce-visibility',
+        text: getString('platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        value: Features.BILLING,
+        heading: getString('platform.connectors.costVisibility'),
+        desc: (
+          <Text font={{ variation: FontVariation.SMALL_BOLD }}>{getString('platform.connectors.costVisibility')}</Text>
+        ),
+        prefix: getString('platform.connectors.ceGcp.gcp').toUpperCase(),
+        features: times(5, i =>
+          getString(`platform.connectors.ceGcp.chooseRequirements.cardDetails.billing.feat${i + 1}` as StringKeys)
+        ),
+        footer: getString('platform.connectors.ceGcp.chooseRequirements.cardDetails.billing.footer')
+      },
+      {
+        icon: 'ce-visibility',
+        text: getString('platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        value: Features.VISIBILITY,
+        heading: getString('platform.connectors.ceAws.crossAccountRoleStep1.visible.heading'),
+        desc: (
+          <>
+            {getString('common.resourceLabel')}{' '}
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+              {getString('platform.connectors.ceAzure.chooseRequirements.visibility.heading')}
+            </Text>
+          </>
+        ),
+        prefix: getString('platform.connectors.ceGcp.gcp').toUpperCase(),
+        features: times(2, i =>
+          getString(`platform.connectors.ceGcp.chooseRequirements.cardDetails.visibility.feat${i + 1}` as StringKeys)
+        ),
+        footer: (
+          <>
+            {getString('platform.connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
+            <a
+              href="https://docs.harness.io/article/kxnsritjls-set-up-cost-visibility-for-gcp"
+              target="_blank"
+              rel="noreferrer"
+              onClick={e => e.stopPropagation()}
+            >
+              {getString('permissions').toLowerCase()}
+            </a>{' '}
+            {getString('platform.connectors.ceGcp.chooseRequirements.cardDetails.optimization.footer')}
+          </>
+        )
+      },
+      {
+        icon: 'nav-settings',
+        text: getString('platform.connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
+        value: Features.OPTIMIZATION,
+        heading: getString('common.ce.autostopping'),
+        desc: (
+          <>
+            {getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.prefix')}{' '}
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+              {getString('common.ce.autostopping')}
+            </Text>
+          </>
+        ),
+        prefix: getString('platform.connectors.ceGcp.chooseRequirements.cardDetails.optimization.prefix').toUpperCase(),
+        features: times(4, i =>
+          getString(`platform.connectors.ceGcp.chooseRequirements.cardDetails.optimization.feat${i + 1}` as StringKeys)
+        ),
+        footer: (
+          <>
+            {getString('platform.connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
+            <a
+              href="https://docs.harness.io/article/kxnsritjls-set-up-cost-visibility-for-gcp"
+              target="_blank"
+              rel="noreferrer"
+              onClick={e => e.stopPropagation()}
+            >
+              {getString('permissions').toLowerCase()}
+            </a>{' '}
+            {getString('platform.connectors.ceGcp.chooseRequirements.cardDetails.optimization.footer')}
+          </>
+        )
+      }
+    ]
+
+    if (isGovernanceEnabled) {
+      cardsArr.push({
+        icon: 'nav-settings',
+        text: getString('platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        value: Features.GOVERNANCE,
+        heading: getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.header'),
+        desc: (
+          <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+            {getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.header')}
+          </Text>
+        ),
+        prefix: getString('platform.connectors.ceGcp.gcp').toUpperCase(),
+        features: [
+          getString('platform.connectors.ceGcp.chooseRequirements.cardDetails.assetManagement.feat1'),
+          getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.feat2')
+        ],
+        footer: (
+          <>
+            {getString('platform.connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
+            <a
+              href="https://docs.harness.io/article/kxnsritjls-set-up-cost-visibility-for-gcp"
+              target="_blank"
+              rel="noreferrer"
+              onClick={e => e.stopPropagation()}
+            >
+              {getString('permissions').toLowerCase()}
+            </a>{' '}
+            {getString('platform.connectors.ceGcp.chooseRequirements.cardDetails.optimization.footer')}
+          </>
+        )
+      })
     }
-  ]).current
+
+    return cardsArr as CardData[]
+  }, [isGovernanceEnabled])
 
   const { selectedCards, setSelectedCards } = useSelectCards({ featuresEnabled, featureCards })
 
-  useLayoutEffect(() => {
-    const defaultSelectedCard = document.querySelector('.bp3-card.Card--selected')
-    if (defaultSelectedCard) {
-      defaultSelectedCard.classList.add(css.defaultCard)
-    }
-  }, [])
+  const [featureDetails, setFeatureDetails] = useState<CardData>()
 
   const handleSubmit = () => {
     trackEvent(ConnectorActions.ChooseRequirementsSubmit, {
       category: Category.CONNECTOR,
       connector_type: ConnectorTypes.CEGcp
     })
-    let features: FeaturesString[] = selectedCards.map(card => card.value)
+    let features: Features[] = selectedCards.map(card => card.value)
     if (!prevStepData?.includeBilling) {
       features = features.filter(item => item !== 'BILLING')
     }
@@ -126,7 +175,7 @@ const ChooseRequirements: React.FC<StepProps<CEGcpConnectorDTO>> = ({ prevStepDa
   }
 
   const handleCardSelection = (item: CardData) => {
-    if (!item.isDefaultSelected) {
+    if (item.value !== Features.BILLING) {
       const sc = [...selectedCards]
       const index = sc.indexOf(item)
       if (index > -1) {
@@ -156,17 +205,32 @@ const ChooseRequirements: React.FC<StepProps<CEGcpConnectorDTO>> = ({ prevStepDa
       <Layout.Vertical spacing={'medium'}>
         <Text font={{ italic: true }}>{getString('platform.connectors.ceGcp.chooseRequirements.info')}</Text>
         <div>
-          <CardSelect
-            data={featureCards}
-            selected={selectedCards}
-            multi={true}
-            className={css.cardsGrid}
-            onChange={item => {
-              handleCardSelection(item)
-            }}
-            cornerSelected={true}
-            renderItem={item => <RequirementCard {...item} />}
-          />
+          <Layout.Horizontal margin={{ top: 'large' }}>
+            <Container padding={{ top: 'small' }}>
+              {featureCards.map(card => (
+                <FeatureCard
+                  key={card.value}
+                  feature={card}
+                  handleCardSelection={() => handleCardSelection(card)}
+                  isDefault={Features.BILLING === card.value}
+                  isSelected={selectedCards.some(selectedCard => selectedCard.value === card.value)}
+                  setFeatureDetails={() => setFeatureDetails(card)}
+                />
+              ))}
+            </Container>
+            <Layout.Vertical spacing="xlarge" className={css.featureDetailsCtn}>
+              {featureDetails ? (
+                <FeatureDetails feature={featureDetails} />
+              ) : (
+                <Layout.Vertical spacing="medium" className={css.emptyState}>
+                  <img src={EmptyState} width={110} />
+                  <Text font={{ variation: FontVariation.TINY, align: 'center' }} width={100} color={Color.GREY_600}>
+                    {getString('platform.connectors.ceAws.crossAccountRoleStep1.hoverOver')}
+                  </Text>
+                </Layout.Vertical>
+              )}
+            </Layout.Vertical>
+          </Layout.Horizontal>
           <Layout.Horizontal className={css.buttonPanel} spacing="small">
             <Button text={getString('previous')} icon="chevron-left" onClick={handleprev}></Button>
             <Button

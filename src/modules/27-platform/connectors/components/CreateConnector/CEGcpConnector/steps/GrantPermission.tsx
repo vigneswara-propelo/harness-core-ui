@@ -119,6 +119,7 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO> & GrantPermissionPr
   const renderAdditionalSteps = () => {
     const optimizationEnabled = props.prevStepData?.spec.featuresEnabled?.includes('OPTIMIZATION')
     const inventoryEnabled = props.prevStepData?.spec.featuresEnabled?.includes('VISIBILITY')
+    const governanceEnabled = props.prevStepData?.spec.featuresEnabled?.includes('GOVERNANCE')
     return optimizationEnabled && inventoryEnabled ? (
       <>
         <li>
@@ -146,6 +147,18 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO> & GrantPermissionPr
               otherRole: inventoryEnabled ? getString('platform.connectors.ceGcp.grantPermission.inventory.step2') : ''
             })}
           </div>
+        </li>
+      </>
+    ) : !optimizationEnabled && !inventoryEnabled && governanceEnabled ? (
+      <>
+        <li>
+          <div>{getString('platform.connectors.ceGcp.grantPermission.optimization.step1')}</div>
+        </li>
+        <li>
+          <div>{getString('platform.connectors.ceGcp.grantPermission.optimization.step2', { serviceAccount })}</div>
+        </li>
+        <li>
+          <div>{getString('platform.connectors.ceGcp.grantPermission.optimization.step4')}</div>
         </li>
       </>
     ) : optimizationEnabled && !inventoryEnabled ? (

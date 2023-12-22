@@ -7,40 +7,30 @@
 
 import React, { useState } from 'react'
 import { Container, Icon, IconName, Layout, Text } from '@harness/uicore'
+import { Features } from '../../components/CreateConnector/CENGAwsConnector/steps/CrossAccountRoleStep1'
 import css from './RequirementCard.module.scss'
-
-export enum Features {
-  VISIBILITY,
-  OPTIMIZATION,
-  BILLING,
-  GOVERNANCE,
-  COMMITMENT_ORCHESTRATOR,
-  CLUSTER_ORCHESTRATOR
-}
-
-export type FeaturesString = keyof typeof Features
 
 export interface CardData {
   icon: IconName
   text: string
-  value: FeaturesString
+  value: Features
   heading: string
+  desc: React.ReactNode
   prefix: string
   features: string[]
   footer: React.ReactNode
-  isDefaultSelected: boolean
 }
 
 interface UseSelectCardsProps {
   featureCards: CardData[]
-  featuresEnabled: FeaturesString[]
+  featuresEnabled: Features[]
 }
 
 export const useSelectCards = ({ featureCards, featuresEnabled }: UseSelectCardsProps) => {
   const [selectedCards, setSelectedCards] = useState<CardData[]>(() => {
-    const initialSelectedCards = featureCards.filter(c => c.isDefaultSelected)
+    const initialSelectedCards = featureCards.filter(c => c.value === Features.BILLING)
     for (const fe of featuresEnabled) {
-      const card = featureCards.find(c => c.value === fe && !c.isDefaultSelected)
+      const card = featureCards.find(c => c.value === fe && !(c.value === Features.BILLING))
       if (card) {
         initialSelectedCards.push(card)
       }

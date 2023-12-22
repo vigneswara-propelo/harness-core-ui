@@ -1849,6 +1849,8 @@ connectors:
           feat3: '{{$.platform.connectors.ceAzure.chooseRequirements.optimization.feat3}}'
           feat4: '{{$.platform.connectors.ceAzure.chooseRequirements.optimization.feat4}}'
           footer: 'to service account'
+        assetManagement:
+          feat1: Asset Management (VMs, disks, GCS, BQ)
     grantPermission:
       heading: 'Grant Permissions'
       bigQueryButtonText: 'Open BigQuery Page'
@@ -1863,6 +1865,7 @@ connectors:
         step1: 'Navigate to IAM & Admin  in the GCP console'
         step2: 'Search for the service account: {{serviceAccount}}'
         step3: 'Click on Edit Principal and add Editor {{otherRole}} role available in the Basic category'
+        step4: 'Click on Edit Principal and add Viewer (roles/viewer) {{otherRole}} role available in the Basic category (To perform automated actions, grant additional permissions as required)'
       inventory:
         computeEngine: 'Compute Engine'
         step1: 'apis in your gcp project'

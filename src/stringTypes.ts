@@ -2679,6 +2679,7 @@ export interface StringsMap {
   'platform.connectors.ceGcp.billingExtention.step5': string
   'platform.connectors.ceGcp.billingExtention.step6': string
   'platform.connectors.ceGcp.billingExtention.step7': string
+  'platform.connectors.ceGcp.chooseRequirements.cardDetails.assetManagement.feat1': string
   'platform.connectors.ceGcp.chooseRequirements.cardDetails.billing.feat1': string
   'platform.connectors.ceGcp.chooseRequirements.cardDetails.billing.feat2': string
   'platform.connectors.ceGcp.chooseRequirements.cardDetails.billing.feat3': string
@@ -2712,6 +2713,7 @@ export interface StringsMap {
   'platform.connectors.ceGcp.grantPermission.optimization.step1': string
   'platform.connectors.ceGcp.grantPermission.optimization.step2': string
   'platform.connectors.ceGcp.grantPermission.optimization.step3': string
+  'platform.connectors.ceGcp.grantPermission.optimization.step4': string
   'platform.connectors.ceGcp.grantPermission.step1': string
   'platform.connectors.ceGcp.grantPermission.step2': string
   'platform.connectors.ceGcp.grantPermission.step3': string
