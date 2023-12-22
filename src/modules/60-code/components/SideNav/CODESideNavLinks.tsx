@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
 import { get } from 'lodash-es'
 import { useParams, matchPath, useLocation } from 'react-router-dom'
 import type { match } from 'react-router-dom'
 import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
+import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import { Scope } from 'framework/types/types'
 import { useStrings } from 'framework/strings'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
@@ -54,7 +56,8 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
   })
   const repoName = get(matchedRouteInfo, 'params.repoName', '')
   const gitRef = get(matchedRouteInfo, 'params.gitRef', get(matchedRouteInfo, 'params.commitRef', ''))
-
+  const { sideNavState } = useLayoutV2()
+  const isCollapsed = sideNavState === SIDE_NAV_STATE.COLLAPSED
   return (
     <SideNav.Main>
       {repoName ? (
@@ -68,7 +71,10 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
           />
           <SideNav.Scope scope={[Scope.PROJECT]}>
             <SideNav.Link
-              className={css.link}
+              className={cx(css.link, {
+                [css.expanded]: !isCollapsed,
+                [css.collapsed]: isCollapsed
+              })}
               data-code-repo-section="files"
               icon="code-file"
               label={getString('common.files')}
@@ -80,7 +86,10 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
             />
 
             <SideNav.Link
-              className={css.link}
+              className={cx(css.link, {
+                [css.expanded]: !isCollapsed,
+                [css.collapsed]: isCollapsed
+              })}
               data-code-repo-section="commits"
               icon="git-commit"
               label={getString('commits')}
@@ -92,7 +101,10 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
             />
 
             <SideNav.Link
-              className={css.link}
+              className={cx(css.link, {
+                [css.expanded]: !isCollapsed,
+                [css.collapsed]: isCollapsed
+              })}
               icon="git-branch"
               label={getString('code.branches')}
               to={routes.toCODEBranches({
@@ -102,7 +114,10 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
             />
 
             <SideNav.Link
-              className={css.link}
+              className={cx(css.link, {
+                [css.expanded]: !isCollapsed,
+                [css.collapsed]: isCollapsed
+              })}
               icon="code-tag"
               label={getString('tagsLabel')}
               to={routes.toCODETags({
@@ -112,7 +127,10 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
             />
 
             <SideNav.Link
-              className={css.link}
+              className={cx(css.link, {
+                [css.expanded]: !isCollapsed,
+                [css.collapsed]: isCollapsed
+              })}
               icon="git-pull"
               label={getString('code.pullRequests')}
               to={routes.toCODEPullRequests({
@@ -123,7 +141,10 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
             />
 
             <SideNav.Link
-              className={css.link}
+              className={cx(css.link, {
+                [css.expanded]: !isCollapsed,
+                [css.collapsed]: isCollapsed
+              })}
               icon="code-webhook"
               label={getString('common.webhooks')}
               to={routes.toCODEWebhooks({
@@ -133,7 +154,10 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
             />
 
             <SideNav.Link
-              className={css.link}
+              className={cx(css.link, {
+                [css.expanded]: !isCollapsed,
+                [css.collapsed]: isCollapsed
+              })}
               icon="main-search"
               label={getString('search')}
               to={routes.toCODERepositorySearch({
@@ -145,7 +169,10 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
             />
 
             <SideNav.Link
-              className={css.link}
+              className={cx(css.link, {
+                [css.expanded]: !isCollapsed,
+                [css.collapsed]: isCollapsed
+              })}
               icon="setting"
               label={getString('settingsLabel')}
               to={routes.toCODESettings({
@@ -158,14 +185,27 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
         <SideNav.Section>
           <SideNav.Scope scope={[Scope.PROJECT]}>
             <SideNav.Link
+              className={cx(css.link, {
+                [css.expanded]: !isCollapsed,
+                [css.collapsed]: isCollapsed
+              })}
               label={getString('repositories')}
+              icon="code-repo"
               data-code-nav-version="2"
               to={routes.toCODERepositories({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
               isActive={() => matchedRouteKey === 'toCODERepositories' && !location.pathname.endsWith('/settings')}
             />
             <SideNav.Link
               exact
+              className={cx(css.link, {
+                [css.expanded]: !isCollapsed,
+                [css.collapsed]: isCollapsed
+              })}
               label={getString('search')}
+              icon="search"
+              iconProps={{
+                size: 16
+              }}
               data-code-nav-version="2"
               to={routes.toCODEProjectSearch({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
             />
