@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Formik } from '@harness/uicore'
-import { isEqual, noop } from 'lodash-es'
+import { cloneDeep, isEqual, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { StrategyConfig } from 'services/cd-ng'
 import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
@@ -34,7 +34,7 @@ export function LoopingStrategy({
   useDeepCompareEffect(() => {
     if (!isEqual(stage?.strategy, formikRef?.current?.values?.strategy)) {
       formikRef.current?.setValues({
-        strategy: stage?.strategy
+        strategy: cloneDeep(stage?.strategy)
       })
     }
   }, [stage?.strategy])
