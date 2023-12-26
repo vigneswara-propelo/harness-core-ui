@@ -57,6 +57,7 @@ import { getErrorsList } from '@pipeline/utils/errorUtils'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import routes from '@common/RouteDefinitions'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isNewTemplate } from '../TemplateStudioUtils'
 import css from './SaveTemplatePopover.module.scss'
 
@@ -109,6 +110,7 @@ function SaveTemplatePopover(
   const history = useHistory()
   const [savedComment, setSavedComment] = React.useState('')
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
+  const { CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
@@ -256,7 +258,8 @@ function SaveTemplatePopover(
   const { saveAndPublish } = useSaveTemplate({
     onSuccessCallback: nextCallback,
     showOPAErrorModal,
-    setGovernanceMetadata
+    setGovernanceMetadata,
+    isY1: CDS_YAML_SIMPLIFICATION
   })
 
   const triggerSave = async (latestTemplate: NGTemplateInfoConfig, comment?: string) => {

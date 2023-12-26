@@ -177,7 +177,6 @@ infrastructureText: Infrastructure
 infrastructureTypeText: Infrastructure Type
 update: Update
 visual: VISUAL
-yaml: YAML
 invalidYaml: YAML is invalid. Please fix the issues to proceed.
 editDetails: Edit Details
 verificationJobs: Verification Jobs

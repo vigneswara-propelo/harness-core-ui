@@ -73,12 +73,26 @@ export interface TemplateContextMetadata {
   ) => Promise<void>
   showOPAErrorModal: ShowModal
   setGovernanceMetadata: React.Dispatch<React.SetStateAction<GovernanceMetadata | undefined>>
+  isY1?: boolean
 }
 
+interface SaveAndPublishTemplateArgs {
+  latestTemplate: NGTemplateInfoConfig
+  comments?: string
+  isEdit?: boolean
+  updatedGitDetails?: SaveToGitFormInterface
+  lastObject?: LastRemoteObjectId
+  storeMetadata?: StoreMetadata
+  saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
+  saveAsNewVersionOfExistingTemplate?: boolean
+  isGitSyncOrRemoteTemplate?: boolean
+  isY1?: boolean
+}
 export function useSaveTemplate({
   onSuccessCallback,
   showOPAErrorModal,
-  setGovernanceMetadata
+  setGovernanceMetadata,
+  isY1
 }: TemplateContextMetadata): UseSaveTemplateReturnType {
   const { templateIdentifier, projectIdentifier, orgIdentifier, accountId } = useParams<
     TemplateStudioPathProps & ModulePathParams
@@ -151,17 +165,19 @@ export function useSaveTemplate({
     }
   }
 
-  const saveAndPublishTemplate = async (
-    latestTemplate: NGTemplateInfoConfig,
-    comments?: string,
-    isEdit = false,
-    updatedGitDetails?: SaveToGitFormInterface,
-    lastObject?: LastRemoteObjectId,
-    storeMetadata?: StoreMetadata,
-    saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE,
-    saveAsNewVersionOfExistingTemplate?: boolean,
-    isGitSyncOrRemoteTemplate?: boolean
-  ): Promise<UseSaveSuccessResponse> => {
+  const saveAndPublishTemplate = async (args: SaveAndPublishTemplateArgs): Promise<UseSaveSuccessResponse> => {
+    const {
+      latestTemplate,
+      comments,
+      isEdit = false,
+      updatedGitDetails,
+      lastObject,
+      storeMetadata,
+      saveAsType,
+      saveAsNewVersionOfExistingTemplate,
+      isGitSyncOrRemoteTemplate
+    } = args
+
     if (isEdit) {
       return updateExistingLabel(latestTemplate, comments, updatedGitDetails, lastObject, storeMetadata, saveAsType)
     } else {
@@ -227,17 +243,18 @@ export function useSaveTemplate({
     lastCommitId = '',
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
-    const response = await saveAndPublishTemplate(
-      payload?.template as NGTemplateInfoConfig,
-      '',
+    const response = await saveAndPublishTemplate({
+      latestTemplate: payload?.template as NGTemplateInfoConfig,
+      comments: '',
       isEdit,
-      omit(updatedGitDetails, 'name', 'identifier'),
-      templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId, lastCommitId } : {},
+      updatedGitDetails: omit(updatedGitDetails, 'name', 'identifier'),
+      lastObject: templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId, lastCommitId } : {},
       storeMetadata,
-      payload?.saveAsType,
-      undefined,
-      true
-    )
+      saveAsType: payload?.saveAsType,
+      saveAsNewVersionOfExistingTemplate: undefined,
+      isGitSyncOrRemoteTemplate: true,
+      isY1
+    })
     return response
   }
 
@@ -307,17 +324,17 @@ export function useSaveTemplate({
       return Promise.resolve({ status: 'SUCCESS' })
     }
 
-    return saveAndPublishTemplate(
-      updatedTemplate,
-      comment,
+    return saveAndPublishTemplate({
+      latestTemplate: updatedTemplate,
+      comments: comment,
       isEdit,
-      undefined,
-      undefined,
+      updatedGitDetails: undefined,
+      lastObject: undefined,
       storeMetadata,
       saveAsType,
       saveAsNewVersionOfExistingTemplate,
       isGitSyncOrRemoteTemplate
-    )
+    })
   }
 
   return {

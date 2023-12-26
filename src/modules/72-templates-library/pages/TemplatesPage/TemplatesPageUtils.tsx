@@ -18,6 +18,9 @@ import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPagina
 import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { YamlVersion } from '@modules/70-pipeline/common/hooks/useYamlVersion'
+import { StepTypeY1ToIconMap } from '@modules/70-pipeline/y1/utils/steps-mapping'
+import { StageTypeY1ToIconMap } from '@modules/70-pipeline/y1/utils/stage-mapping'
 
 export enum Sort {
   DESC = 'DESC',
@@ -58,7 +61,8 @@ export const getTypeForTemplate = (
 
 export const getIconForTemplate = (
   getString: UseStringsReturn['getString'],
-  template?: NGTemplateInfoConfigWithGitDetails | TemplateSummaryResponse
+  template?: NGTemplateInfoConfigWithGitDetails | TemplateSummaryResponse,
+  yamlVersion: YamlVersion = '0'
 ): IconName | undefined => {
   const templateType =
     (template as TemplateSummaryResponse)?.templateEntityType || (template as NGTemplateInfoConfigWithGitDetails)?.type
@@ -66,10 +70,12 @@ export const getIconForTemplate = (
     (template as TemplateSummaryResponse)?.childType || get(template as NGTemplateInfoConfigWithGitDetails, 'spec.type')
   switch (templateType) {
     case TemplateType.Step:
-      return factory.getStepIcon(childType)
+      return yamlVersion === '1' ? StepTypeY1ToIconMap[childType] : factory.getStepIcon(childType)
     case TemplateType.StepGroup:
     case TemplateType.Stage:
-      return stagesCollection.getStageAttributes(childType, getString)?.icon
+      return yamlVersion === '1'
+        ? StageTypeY1ToIconMap[childType]
+        : stagesCollection.getStageAttributes(childType, getString)?.icon
     default:
       return templateFactory.getTemplateIcon(templateType)
   }

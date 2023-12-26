@@ -54,7 +54,7 @@ import {
   EntityCachedCopyHandle
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import { useYamlVersion } from '@pipeline/common/hooks/useYamlVersion'
-import { VersionTag } from '@pipeline/common/components/VersionTag/VersionTag'
+import { YamlVersionBadge } from '@pipeline/common/components/YamlVersionBadge/YamlVersionBadge'
 import { usePipelineContextY1 } from '../PipelineContext/PipelineContextY1'
 import { DefaultNewPipelineId, DrawerTypesY1 } from '../PipelineContext/PipelineActionsY1'
 import { SavePipelineHandleY1, SavePipelinePopoverY1WithRef } from './SavePipelinePopover/SavePipelinePopoverY1'
@@ -121,7 +121,6 @@ export function PipelineCanvasHeaderY1(props: PipelineCanvasHeaderProps): React.
   const savePipelineHandleRef = React.useRef<SavePipelineHandleY1 | null>(null)
   const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
-  const version = `v${yamlVersion}`
   const updateEntity = React.useCallback(async (entityYaml: string) => {
     await savePipelineHandleRef.current?.updatePipeline(entityYaml)
     setOutOfSync(false)
@@ -314,11 +313,11 @@ export function PipelineCanvasHeaderY1(props: PipelineCanvasHeaderProps): React.
             >
               <div className={css.pipelineMetadataContainer}>
                 <Layout.Horizontal className={css.pipelineNameContainer}>
+                  <YamlVersionBadge version={yamlVersion} minimal border className={css.yamlVersionBadge} />
                   <Icon className={css.pipelineIcon} padding={{ right: 'small' }} name="pipeline" size={32} />
                   <Text className={css.pipelineName} lineClamp={1}>
                     {pipelineMetadata?.name}
                   </Text>
-                  <VersionTag version={version} />
                   {!isEmpty(tags) && tags && (
                     <Container className={css.tagsContainer} padding={{ left: 'small' }}>
                       <TagsPopover tags={tags} />

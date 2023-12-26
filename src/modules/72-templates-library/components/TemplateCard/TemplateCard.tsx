@@ -25,6 +25,9 @@ import { ScopeBadge } from '@common/components/ScopeBadge/ScopeBadge'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { YamlVersionBadge } from '@pipeline/common/components/YamlVersionBadge/YamlVersionBadge'
+import { YamlVersion } from '@modules/70-pipeline/common/hooks/useYamlVersion'
 import { TemplateColor } from './TemplateColor/TemplateColor'
 import css from './TemplateCard.module.scss'
 
@@ -53,6 +56,7 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
     onOpenMoveResource,
     reloadTemplates
   } = props
+  const { CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()
   const isTemplateRemote = (template as NGTemplateInfoConfigWithGitDetails)?.storeType === StoreType.REMOTE
 
@@ -73,7 +77,11 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
     : (template as TemplateSummaryResponse)?.gitDetails?.branch ||
       (template as NGTemplateInfoConfigWithGitDetails)?.branch
 
-  const templateIconName = getIconForTemplate(getString, template)
+  const templateIconName = getIconForTemplate(
+    getString,
+    template,
+    (template as { yamlVersion: YamlVersion })?.yamlVersion
+  )
   const templateIconUrl = template.icon
 
   const gitSyncRepoName = (!loadingRepos && getRepoDetailsByIndentifier(repoIdentifier, gitSyncRepos)?.name) || ''
@@ -83,7 +91,10 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
 
   return (
     <Container className={cx(css.container, { [css.bordered]: !!onSelect }, { [css.selected]: !!isSelected })}>
-      <Card className={css.templateCard} onClick={() => onSelect?.(template)}>
+      <Card
+        className={cx(css.templateCard, { [css.templateCardEnlarged]: CDS_YAML_SIMPLIFICATION })}
+        onClick={() => onSelect?.(template)}
+      >
         {!showMenu ? (
           <TemplateListCardContextMenu
             template={template}
@@ -136,9 +147,16 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
             {getString('idLabel', { id: template.identifier })}
           </Text>
         </Container>
-        <Container>
-          <ScopeBadge data={template} />
-        </Container>
+        {!CDS_YAML_SIMPLIFICATION ? (
+          <Container>
+            <ScopeBadge data={template} />
+          </Container>
+        ) : (
+          <Container flex={{ justifyContent: 'start' }} style={{ columnGap: '4px' }}>
+            <ScopeBadge data={template} />
+            <YamlVersionBadge version={(template as { yamlVersion: YamlVersion }).yamlVersion} />
+          </Container>
+        )}
         {!!template.tags && !isEmpty(template.tags) && <TemplateTags tags={template.tags} />}
         <Container height={1} background={Color.GREY_100} />
         {isGitTemplate && (

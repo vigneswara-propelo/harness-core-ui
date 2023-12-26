@@ -28,7 +28,7 @@ import {
   RecentExecutionsCell,
   LastModifiedCell,
   RunPipelineCell,
-  VersionCell
+  YamlVersionCell
 } from './PipelineListCells'
 import { getRouteProps } from '../PipelineListUtils'
 import css from './PipelineListTable.module.scss'
@@ -91,9 +91,9 @@ export function PipelineListTable({
         serverSortProps: getServerSortProps('name')
       },
       CDS_YAML_SIMPLIFICATION && {
-        Header: getString('version'),
+        Header: getString('common.yaml'),
         accessor: 'yamlVersion',
-        Cell: VersionCell,
+        Cell: YamlVersionCell,
         disableSortBy: true
       },
       {

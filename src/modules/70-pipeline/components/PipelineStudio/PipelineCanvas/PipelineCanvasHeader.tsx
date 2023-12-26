@@ -55,6 +55,9 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useQueryParams } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getGitProviderCards } from '@modules/10-common/components/GitProviderSelect/GitProviderSelect'
+import { YamlVersionBadge } from '@pipeline/common/components/YamlVersionBadge/YamlVersionBadge'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useYamlVersion } from '@pipeline/common/hooks/useYamlVersion'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -119,6 +122,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     modules
   } = state
   const params = useParams<PipelineType<PipelinePathProps> & GitQueryParams>()
+  const { yamlVersion } = useYamlVersion()
   const { branch, repoName, connectorRef } = useQueryParams<GitQueryParams & RunPipelineQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const { isYamlEditable } = pipelineView
@@ -126,6 +130,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
   const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
+  const { CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
 
   const updateEntity = React.useCallback(async (entityYaml: string) => {
     await savePipelineHandleRef.current?.updatePipeline(entityYaml)
@@ -312,6 +317,9 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
             >
               <div className={css.pipelineMetadataContainer}>
                 <Layout.Horizontal className={css.pipelineNameContainer}>
+                  {CDS_YAML_SIMPLIFICATION && (
+                    <YamlVersionBadge version={yamlVersion} minimal border className={css.yamlVersionBadge} />
+                  )}
                   <Icon className={css.pipelineIcon} padding={{ right: 'small' }} name="pipeline" size={32} />
                   <Text className={css.pipelineName} lineClamp={1}>
                     {pipeline?.name}

@@ -20,7 +20,7 @@ import {
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { isEmpty, isNil } from 'lodash-es'
 import { Dialog, Spinner } from '@blueprintjs/core'
 import classNames from 'classnames'
@@ -59,6 +59,10 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
+import { TemplateMetadataForRouter } from '@templates-library/pages/TemplatesPage/views/NewTemplatePopover/useCreateTemplateModalY1'
+import { YamlVersionBadge } from '@pipeline/common/components/YamlVersionBadge/YamlVersionBadge'
+import { useTemplateLoaderContext } from '@templates-library/common/components/TemplateStudio/TemplateLoaderContext/TemplateLoaderContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './TemplateStudioSubHeaderLeftView.module.scss'
 
 /**
@@ -130,6 +134,9 @@ export function TemplateStudioSubHeaderLeftView(
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
+  const { state: routerState } = useLocation<Optional<TemplateMetadataForRouter>>()
+  const { yamlVersion } = useTemplateLoaderContext()
+  const { CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
 
   const { mutate: updateStableTemplate, loading: updateStableTemplateLoading } = useUpdateStableTemplate({
     templateIdentifier: template.identifier,
@@ -272,7 +279,7 @@ export function TemplateStudioSubHeaderLeftView(
   }, [versions])
 
   React.useEffect(() => {
-    if (template.identifier === DefaultNewTemplateId && !isEmpty(template.type)) {
+    if (template.identifier === DefaultNewTemplateId && !isEmpty(template.type) && isEmpty(routerState?.data)) {
       hideConfigModal()
       setModalProps({
         initialValues: template,
@@ -289,11 +296,20 @@ export function TemplateStudioSubHeaderLeftView(
     }
   }, [template.identifier, showConfigModal, template.type, onSubmit])
 
+  React.useEffect(() => {
+    if (routerState?.data && routerState?.extraInfo) {
+      onSubmit(routerState.data, routerState.extraInfo)
+    }
+  }, [])
+
   return (
     <Container className={css.subHeaderLeftView}>
       <Layout.Horizontal spacing={'medium'} padding={{ right: 'medium' }} flex={{ alignItems: 'center' }}>
         <Container>
           <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
+            {CDS_YAML_SIMPLIFICATION && (
+              <YamlVersionBadge version={yamlVersion} minimal border className={css.yamlVersionBadge} />
+            )}
             <Icon name="template-library" size={20} />
             <Text
               className={classNames(css.templateName, {

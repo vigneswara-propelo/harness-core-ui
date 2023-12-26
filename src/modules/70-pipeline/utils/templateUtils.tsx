@@ -91,6 +91,10 @@ export const getTemplateNameWithLabel = (template?: TemplateSummaryResponse): st
   return `${template?.name} (${defaultTo(template?.versionLabel, 'Stable')})`
 }
 
+export const getTemplateNameWithLabelFromMetadata = (metadata: { name?: string; versionLabel?: string }): string => {
+  return `${metadata?.name} (${defaultTo(metadata?.versionLabel, 'Stable')})`
+}
+
 export const getScopeBasedTemplateRef = (template: TemplateSummaryResponse): string => {
   const templateIdentifier = defaultTo(template.identifier, '')
   const scope = getScopeFromDTO(template)

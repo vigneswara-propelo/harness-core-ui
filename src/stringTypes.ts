@@ -1580,6 +1580,7 @@ export interface StringsMap {
   'common.without': string
   'common.workflow': string
   'common.xAndY': string
+  'common.yaml': string
   'common.yamlDiffView.originalYamlLabel': string
   'common.yamlDiffView.refreshedYamlLabel': string
   'common.yearly': string
@@ -14869,10 +14870,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   workingDirectory: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  yaml: string
   /**
    * @deprecated migrate this string to module level file
    */

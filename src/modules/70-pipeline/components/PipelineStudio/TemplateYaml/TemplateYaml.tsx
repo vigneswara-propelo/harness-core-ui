@@ -13,10 +13,14 @@ import { Color } from '@harness/design-system'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { YamlVersion } from '@pipeline/common/hooks/useYamlVersion'
+import { YamlVersionBadge } from '@pipeline/common/components/YamlVersionBadge/YamlVersionBadge'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './TemplateYaml.module.scss'
 
 export interface TemplateYamlProps {
   templateYaml: string
+  yamlVersion?: YamlVersion
   withoutHeader?: boolean
   overrideEditorOptions?: MonacoEditorProps['options']
 }
@@ -37,10 +41,12 @@ const DEFAULT_EDITOR_OPTIONS = {
 
 export function TemplateYaml({
   templateYaml,
+  yamlVersion = '0',
   withoutHeader = false,
   overrideEditorOptions
 }: TemplateYamlProps): React.ReactElement {
   const [height, setHeight] = React.useState<number>()
+  const { CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
 
   const editorOptions = useMemo(
     () =>
@@ -63,10 +69,13 @@ export function TemplateYaml({
             padding={{ top: 'large', right: 'xxlarge', bottom: 'large', left: 'xxlarge' }}
             border={{ bottom: true }}
             background={Color.WHITE}
+            flex={{ align: 'center-center', justifyContent: 'left' }}
+            style={{ columnGap: '8px' }}
           >
-            <Text font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_800}>
+            <Text inline font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_800}>
               template.yaml
             </Text>
+            {CDS_YAML_SIMPLIFICATION && <YamlVersionBadge version={yamlVersion} minimal border />}
           </Container>
         ) : null}
         <Container style={{ flexGrow: 1 }}>

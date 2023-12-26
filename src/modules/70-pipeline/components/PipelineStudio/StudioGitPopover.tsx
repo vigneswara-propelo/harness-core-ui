@@ -29,7 +29,7 @@ interface StudioGitPopoverProps {
   gitDetails: EntityGitDetails
   identifier: string
   isReadonly: boolean
-  entityData: PipelineInfoConfig | NGTemplateInfoConfig
+  entityData?: PipelineInfoConfig | NGTemplateInfoConfig
   onGitBranchChange: (selectedFilter: GitFilterScope) => void
   entityType: string
   connectorRef?: string

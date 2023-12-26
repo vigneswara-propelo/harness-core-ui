@@ -5,39 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { merge, cloneDeep, defaultTo, maxBy } from 'lodash-es'
+import React, { useCallback } from 'react'
+import { merge } from 'lodash-es'
 import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
-import { parse } from 'yaml'
 import type { Color } from '@harness/design-system'
-import SessionToken from 'framework/utils/SessionToken'
-import { loggerFor } from 'framework/logging/logging'
 import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
-import {
-  CacheResponseMetadata,
-  EntityGitDetails,
-  EntityValidityDetails,
-  ErrorNodeSummary,
-  getTemplateListPromise,
-  GetTemplateListQueryParams,
-  getTemplateMetadataListPromise,
-  getTemplatePromise,
-  GetTemplateQueryParams,
-  NGTemplateInfoConfig,
-  TemplateMetadataSummaryResponse,
-  TemplateResponse,
-  TemplateSummaryResponse
-} from 'services/template-ng'
-import type { Error } from 'services/template-ng'
+import { EntityGitDetails, NGTemplateInfoConfig } from 'services/template-ng'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
 import type { PermissionCheck } from 'services/rbac'
-import { DefaultNewTemplateId, DefaultNewVersionLabel, DefaultTemplate } from 'framework/Templates/templates'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -50,720 +29,21 @@ import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import useThunkReducer from '@modules/10-common/hooks/useThunkReducer'
+import { useIDBContext } from '@modules/10-common/components/IDBContext/IDBContext'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
-import { ActionReturnType, compareTemplates, TemplateContextActions } from './TemplateActions'
+import { TemplateContextActions } from './TemplateActions'
 import { isNewTemplate } from '../TemplateStudioUtils'
-const logger = loggerFor(ModuleName.TEMPLATES)
-
-const DBInitializationFailed = 'DB Creation retry exceeded.'
-const DBNotFoundErrorMessage = 'There was no DB found'
-
-let IdbTemplate: IDBPDatabase | undefined
-const IdbTemplateStoreName = 'template-cache'
-export const TemplateDBName = 'template-db'
-const KeyPath = 'identifier'
-
-interface TemplatePayload {
-  identifier: string
-  template?: NGTemplateInfoConfig
-  originalTemplate?: NGTemplateInfoConfig
-  isUpdated: boolean
-  versions?: string[]
-  stableVersion?: string
-  gitDetails?: EntityGitDetails
-  storeMetadata?: StoreMetadata
-  entityValidityDetails?: EntityValidityDetails
-  cacheResponseMetadata?: CacheResponseMetadata
-  templateYaml?: string
-  lastPublishedVersion?: string
-  templateInputsErrorNodeSummary?: ErrorNodeSummary
-  connectorRef?: string
-  storeType?: 'INLINE' | 'REMOTE'
-}
-
-const getId = (
-  accountIdentifier: string,
-  orgIdentifier: string,
-  projectIdentifier: string,
-  templateIdentifier: string,
-  versionLabel: string,
-  repoIdentifier = /* istanbul ignore next */ '',
-  branch = /* istanbul ignore next */ ''
-): string =>
-  `${accountIdentifier}_${orgIdentifier}_${projectIdentifier}_${templateIdentifier}_${encodeURIComponent(
-    versionLabel
-  )}_${repoIdentifier}_${branch}`
-
-export interface FetchTemplateBoundProps {
-  dispatch: React.Dispatch<ActionReturnType>
-  queryParams: GetTemplateQueryParams
-  templateIdentifier: string
-  versionLabel?: string
-  gitDetails: EntityGitDetails
-  templateType: string
-  isGitCacheEnabled?: boolean
-  isDBInitializationFailed?: boolean
-}
-
-export interface FetchTemplateUnboundProps {
-  forceFetch?: boolean
-  forceUpdate?: boolean
-  signal?: AbortSignal
-  repoIdentifier?: string
-  repoName?: string
-  branch?: string
-  loadFromCache?: boolean
-}
-
-const getTemplateYaml = (
-  queryParams: GetTemplateQueryParams,
-  templateIdentifier: string,
-  isGitCacheEnabled: boolean,
-  loadFromCache: boolean,
-  signal?: AbortSignal
-): Promise<TemplateResponse> => {
-  return getTemplatePromise(
-    {
-      queryParams,
-      templateIdentifier,
-      requestOptions: { headers: { ...(isGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {}) } }
-    },
-    signal
-  )
-    .then(response => {
-      if (response.status === 'SUCCESS' && response.data) {
-        return response.data
-      }
-      throw response
-    })
-    .catch(error => {
-      throw error
-    })
-}
-
-const getTemplateMetadata = (
-  queryParams: GetTemplateListQueryParams,
-  identifier: string,
-  signal?: AbortSignal
-): Promise<TemplateMetadataSummaryResponse[]> => {
-  return getTemplateMetadataListPromise(
-    {
-      queryParams,
-      body: {
-        filterType: 'Template',
-        templateIdentifiers: [identifier]
-      }
-    },
-    signal
-  )
-    .then(response => {
-      if (response.status === 'SUCCESS' && response.data?.content) {
-        return response.data?.content
-      }
-      throw new Error()
-    })
-    .catch(error => {
-      throw new Error(error)
-    })
-}
-
-const getTemplatesByIdentifier = (
-  queryParams: GetTemplateListQueryParams,
-  identifier: string,
-  signal?: AbortSignal
-): Promise<TemplateSummaryResponse[]> => {
-  return getTemplateListPromise(
-    {
-      queryParams,
-      body: {
-        filterType: 'Template',
-        templateIdentifiers: [identifier]
-      }
-    },
-    signal
-  )
-    .then(response => {
-      if (response.status === 'SUCCESS' && response.data?.content) {
-        return response.data?.content
-      }
-      throw new Error()
-    })
-    .catch(error => {
-      throw new Error(error)
-    })
-}
-
-interface DispatchTemplateSuccessArgs {
-  dispatch: React.Dispatch<ActionReturnType>
-  data: TemplatePayload | undefined
-  forceUpdate: boolean
-  template: NGTemplateInfoConfig
-  templateYamlStr: string
-  versions: string[]
-  templateWithGitDetails: TemplateSummaryResponse | TemplateResponse | undefined
-  id: string
-  stableVersion: string | undefined
-  lastPublishedVersion: string | undefined
-}
-const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promise<void> => {
-  const {
-    dispatch,
-    data,
-    forceUpdate,
-    template,
-    templateYamlStr,
-    versions,
-    templateWithGitDetails,
-    id,
-    stableVersion,
-    lastPublishedVersion
-  } = args
-  const storeMetadata = {
-    connectorRef: (templateWithGitDetails as TemplateResponse)?.connectorRef,
-    storeType: (templateWithGitDetails as TemplateResponse)?.storeType,
-    repoName: templateWithGitDetails?.gitDetails?.repoName,
-    branch: templateWithGitDetails?.gitDetails?.branch,
-    filePath: templateWithGitDetails?.gitDetails?.filePath
-  }
-  if (data && !forceUpdate) {
-    dispatch(
-      TemplateContextActions.success({
-        error: '',
-        template: data.template,
-        originalTemplate: cloneDeep(template),
-        isBETemplateUpdated: data.cacheResponseMetadata?.isSyncEnabled
-          ? false
-          : compareTemplates(template, data.originalTemplate),
-        isUpdated: compareTemplates(template, data.template),
-        versions: versions,
-        lastPublishedVersion,
-        stableVersion: data.stableVersion,
-        gitDetails: templateWithGitDetails?.gitDetails ?? defaultTo(data?.gitDetails, {}),
-        entityValidityDetails: defaultTo(
-          templateWithGitDetails?.entityValidityDetails,
-          defaultTo(data?.entityValidityDetails, {})
-        ),
-        cacheResponseMetadata: (templateWithGitDetails as TemplateResponse)?.cacheResponseMetadata,
-        storeMetadata,
-        templateYaml: data?.templateYaml,
-        templateYamlError: undefined
-      })
-    )
-    dispatch(TemplateContextActions.initialized())
-  } else if (IdbTemplate) {
-    const payload: TemplatePayload = {
-      [KeyPath]: id,
-      template: template,
-      originalTemplate: cloneDeep(template),
-      isUpdated: false,
-      versions: versions,
-      lastPublishedVersion,
-      stableVersion: stableVersion,
-      gitDetails: templateWithGitDetails?.gitDetails ?? defaultTo(data?.gitDetails, {}),
-      storeMetadata,
-      entityValidityDetails: defaultTo(
-        templateWithGitDetails?.entityValidityDetails,
-        defaultTo(data?.entityValidityDetails, {})
-      ),
-      cacheResponseMetadata: (templateWithGitDetails as TemplateResponse)?.cacheResponseMetadata,
-      templateYaml: templateYamlStr
-    }
-    await IdbTemplate.put(IdbTemplateStoreName, payload)
-    dispatch(
-      TemplateContextActions.success({
-        error: '',
-        template: template,
-        originalTemplate: cloneDeep(template),
-        isBETemplateUpdated: false,
-        isUpdated: false,
-        versions: versions,
-        lastPublishedVersion,
-        stableVersion: stableVersion,
-        gitDetails: payload.gitDetails,
-        storeMetadata: payload.storeMetadata,
-        entityValidityDetails: payload.entityValidityDetails,
-        cacheResponseMetadata: payload.cacheResponseMetadata,
-        templateYaml: payload.templateYaml,
-        templateYamlError: undefined
-      })
-    )
-    dispatch(TemplateContextActions.initialized())
-  } else {
-    dispatch(
-      TemplateContextActions.success({
-        error: '',
-        template: template,
-        originalTemplate: cloneDeep(template),
-        isBETemplateUpdated: false,
-        isUpdated: false,
-        versions: versions,
-        lastPublishedVersion,
-        stableVersion: stableVersion,
-        gitDetails: templateWithGitDetails?.gitDetails ?? {},
-        storeMetadata,
-        entityValidityDetails: defaultTo(templateWithGitDetails?.entityValidityDetails, {}),
-        cacheResponseMetadata: (templateWithGitDetails as TemplateResponse)?.cacheResponseMetadata,
-        templateYaml: templateYamlStr,
-        templateYamlError: undefined
-      })
-    )
-    dispatch(TemplateContextActions.initialized())
-  }
-}
-
-const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTemplateUnboundProps): Promise<void> => {
-  const {
-    dispatch,
-    queryParams,
-    templateIdentifier,
-    versionLabel = '',
-    gitDetails,
-    templateType,
-    isGitCacheEnabled,
-    isDBInitializationFailed
-  } = props
-  const { forceFetch = false, forceUpdate = false, signal, repoName, branch, loadFromCache = true } = params
-  let id = getId(
-    queryParams.accountIdentifier,
-    defaultTo(queryParams.orgIdentifier, ''),
-    defaultTo(queryParams.projectIdentifier, ''),
-    templateIdentifier,
-    versionLabel,
-    defaultTo(repoName, ''),
-    defaultTo(gitDetails.branch, '')
-  )
-  if (IdbTemplate || isDBInitializationFailed) {
-    dispatch(TemplateContextActions.fetching())
-    let data: TemplatePayload | undefined
-    try {
-      data = await IdbTemplate?.get(IdbTemplateStoreName, id)
-    } catch (_) {
-      logger.info(DBNotFoundErrorMessage)
-    }
-    let templateMetadata: TemplateMetadataSummaryResponse[] = []
-    if ((!data || forceFetch) && !isNewTemplate(templateIdentifier)) {
-      try {
-        templateMetadata = await getTemplateMetadata(
-          {
-            ...queryParams,
-            templateListType: TemplateListType.All,
-            size: 100,
-            ...(repoName && branch ? { repoName, branch } : {})
-          },
-          templateIdentifier,
-          signal
-        )
-
-        const versions: string[] = templateMetadata.map(item => defaultTo(item.versionLabel, ''))
-        const stableVersion = templateMetadata.find(item => item.stableTemplate)?.versionLabel
-        const lastPublishedVersion = maxBy(templateMetadata, 'createdAt')?.versionLabel
-        const storeType = templateMetadata.at(0)?.storeType
-        const loadFromFallbackBranch = !branch && !queryParams.branch && storeType === 'REMOTE'
-
-        const templateWithGitDetails = await getTemplateYaml(
-          {
-            ...queryParams,
-            versionLabel,
-            ...(repoName && branch ? { repoName, branch } : {}),
-            ...(loadFromFallbackBranch && { loadFromFallbackBranch: true })
-          },
-          templateIdentifier,
-          !!isGitCacheEnabled,
-          loadFromCache,
-          signal
-        )
-
-        id = getId(
-          queryParams.accountIdentifier,
-          defaultTo(queryParams.orgIdentifier, ''),
-          defaultTo(queryParams.projectIdentifier, ''),
-          templateIdentifier,
-          versionLabel,
-          defaultTo(repoName, templateWithGitDetails?.gitDetails?.repoName ?? ''),
-          defaultTo(gitDetails.branch, templateWithGitDetails?.gitDetails?.branch ?? '')
-        )
-        try {
-          data = await IdbTemplate?.get(IdbTemplateStoreName, id)
-        } catch (_) {
-          logger.info(DBNotFoundErrorMessage)
-        }
-        let template: NGTemplateInfoConfig
-        const templateYamlStr = defaultTo(templateWithGitDetails?.yaml, '')
-        try {
-          template = defaultTo(parse(templateYamlStr)?.template, {})
-        } catch (e) {
-          // It is assumed that execution will come here, if there are only syntatical errors in yaml string
-          /* istanbul ignore next */
-          template = {
-            name: defaultTo(templateWithGitDetails?.name, ''),
-            identifier: defaultTo(templateWithGitDetails?.identifier, ''),
-            type: defaultTo(templateWithGitDetails?.childType, 'Step') as 'Step' | 'Stage',
-            versionLabel: defaultTo(templateWithGitDetails?.versionLabel, ''),
-            spec: {}
-          }
-        }
-
-        dispatchTemplateSuccess({
-          dispatch,
-          data,
-          forceUpdate: forceUpdate || !!templateWithGitDetails.cacheResponseMetadata?.isSyncEnabled,
-          id,
-          stableVersion,
-          lastPublishedVersion,
-          template,
-          templateWithGitDetails,
-          templateYamlStr,
-          versions
-        })
-      } catch (error) {
-        if (
-          (error as Error).code === 'INVALID_REQUEST' ||
-          (error as Error).code === 'HINT' ||
-          (error as Error).code === 'EXPLANATION' ||
-          (error as Error).code === 'SCM_BAD_REQUEST'
-        ) {
-          const template = templateMetadata.find(item => item.versionLabel === versionLabel)
-          const versions: string[] = templateMetadata.map(item => defaultTo(item.versionLabel, ''))
-          const stableVersion = templateMetadata.find(item => item.stableTemplate)?.versionLabel
-          const lastPublishedVersion = maxBy(templateMetadata, 'createdAt')?.versionLabel
-          const storeMetadata = {
-            connectorRef: (template as TemplateResponse)?.connectorRef,
-            storeType: (template as TemplateResponse)?.storeType,
-            repoName: template?.gitDetails?.repoName,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            branch: (error as any)?.metadata?.branch ?? gitDetails?.branch,
-            filePath: template?.gitDetails?.filePath
-          }
-          if (template?.templateEntityType)
-            dispatch(
-              TemplateContextActions.error({
-                template: {
-                  ...(template as NGTemplateInfoConfig),
-                  type: template?.templateEntityType
-                },
-                stableVersion,
-                lastPublishedVersion,
-                storeMetadata,
-                gitDetails: {
-                  repoName: storeMetadata.repoName,
-                  filePath: storeMetadata.filePath,
-                  branch: storeMetadata.branch,
-                  fileUrl: template.gitDetails?.fileUrl
-                },
-                versions,
-                templateYamlError: error as Error,
-                cacheResponseMetadata: undefined
-              })
-            )
-        } else if ((error as Error).code === 'RESOURCE_NOT_FOUND_EXCEPTION') {
-          dispatch(
-            TemplateContextActions.error({
-              templateYamlError: error as Error
-            })
-          )
-        }
-        dispatch(TemplateContextActions.initialized())
-        logger.info('Failed to fetch template')
-      }
-    } else {
-      dispatch(
-        TemplateContextActions.success({
-          error: '',
-          template: defaultTo(data?.template, {
-            ...DefaultTemplate,
-            type: templateType as NGTemplateInfoConfig['type'],
-            projectIdentifier: queryParams.projectIdentifier,
-            orgIdentifier: queryParams.orgIdentifier
-          }),
-          originalTemplate: defaultTo(
-            cloneDeep(data?.template),
-            cloneDeep({
-              ...DefaultTemplate,
-              type: templateType as NGTemplateInfoConfig['type'],
-              projectIdentifier: queryParams.projectIdentifier,
-              orgIdentifier: queryParams.orgIdentifier
-            })
-          ),
-          isUpdated: true,
-          isBETemplateUpdated: false,
-          versions: [DefaultNewVersionLabel],
-          stableVersion: DefaultNewVersionLabel,
-          gitDetails: defaultTo(data?.gitDetails, {}),
-          storeMetadata: {
-            connectorRef: data?.connectorRef,
-            storeType: data?.storeType,
-            repoName: data?.gitDetails?.repoName,
-            branch: data?.gitDetails?.branch,
-            filePath: data?.gitDetails?.filePath
-          },
-          entityValidityDetails: defaultTo(data?.entityValidityDetails, {}),
-          cacheResponseMetadata: data?.cacheResponseMetadata,
-          templateYaml: defaultTo(data?.templateYaml, '')
-        })
-      )
-      dispatch(TemplateContextActions.initialized())
-    }
-  } else {
-    dispatch(TemplateContextActions.success({ error: 'DB is not initialized' }))
-  }
-}
-
-const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTemplateUnboundProps): Promise<void> => {
-  const {
-    dispatch,
-    queryParams,
-    templateIdentifier,
-    versionLabel = '',
-    gitDetails,
-    templateType,
-    isDBInitializationFailed
-  } = props
-  const { forceFetch = false, forceUpdate = false, signal, repoIdentifier, branch } = params
-  let id = getId(
-    queryParams.accountIdentifier,
-    defaultTo(queryParams.orgIdentifier, ''),
-    defaultTo(queryParams.projectIdentifier, ''),
-    templateIdentifier,
-    versionLabel,
-    defaultTo(gitDetails.repoIdentifier, ''),
-    defaultTo(gitDetails.branch, '')
-  )
-  if (IdbTemplate || isDBInitializationFailed) {
-    dispatch(TemplateContextActions.fetching())
-    let data: TemplatePayload | undefined
-    try {
-      data = await IdbTemplate?.get(IdbTemplateStoreName, id)
-    } catch (_) {
-      logger.info(DBNotFoundErrorMessage)
-    }
-    if ((!data || forceFetch) && !isNewTemplate(templateIdentifier)) {
-      try {
-        const templatesList: TemplateSummaryResponse[] = await getTemplatesByIdentifier(
-          {
-            ...queryParams,
-            templateListType: TemplateListType.All,
-            ...(repoIdentifier && branch ? { repoIdentifier, branch } : {})
-          },
-          templateIdentifier,
-          signal
-        )
-
-        const versions: string[] = templatesList.map(item => defaultTo(item.versionLabel, ''))
-        const defaultVersion = defaultTo(templatesList.find(item => item.stableTemplate)?.versionLabel, '')
-        const selectedVersion = versions.includes(versionLabel) ? versionLabel : defaultVersion
-        const stableVersion = templatesList.find(item => item.stableTemplate)?.versionLabel
-        const lastPublishedVersion = maxBy(templatesList, 'createdAt')?.versionLabel
-        const templateWithGitDetails = templatesList.find(item => item.versionLabel === selectedVersion)
-        id = getId(
-          queryParams.accountIdentifier,
-          defaultTo(queryParams.orgIdentifier, ''),
-          defaultTo(queryParams.projectIdentifier, ''),
-          templateIdentifier,
-          versionLabel,
-          defaultTo(gitDetails.repoIdentifier, templateWithGitDetails?.gitDetails?.repoIdentifier ?? ''),
-          defaultTo(gitDetails.branch, templateWithGitDetails?.gitDetails?.branch ?? '')
-        )
-        try {
-          data = await IdbTemplate?.get(IdbTemplateStoreName, id)
-        } catch (_) {
-          logger.info(DBNotFoundErrorMessage)
-        }
-        let template: NGTemplateInfoConfig
-        const templateYamlStr = defaultTo(templateWithGitDetails?.yaml, '')
-        try {
-          template = defaultTo(parse(templateYamlStr)?.template, {})
-        } catch (e) {
-          // It is assumed that execution will come here, if there are only syntatical errors in yaml string
-          /* istanbul ignore next */
-          template = {
-            name: defaultTo(templateWithGitDetails?.name, ''),
-            identifier: defaultTo(templateWithGitDetails?.identifier, ''),
-            type: defaultTo(templateWithGitDetails?.childType, 'Step') as 'Step' | 'Stage',
-            versionLabel: defaultTo(templateWithGitDetails?.versionLabel, ''),
-            spec: {}
-          }
-        }
-
-        dispatchTemplateSuccess({
-          dispatch,
-          data,
-          forceUpdate,
-          id,
-          stableVersion,
-          lastPublishedVersion,
-          template,
-          templateWithGitDetails,
-          templateYamlStr,
-          versions
-        })
-      } catch (_) {
-        logger.info('Failed to fetch template list')
-      }
-    } else {
-      dispatch(
-        TemplateContextActions.success({
-          error: '',
-          template: defaultTo(data?.template, {
-            ...DefaultTemplate,
-            type: templateType as NGTemplateInfoConfig['type'],
-            projectIdentifier: queryParams.projectIdentifier,
-            orgIdentifier: queryParams.orgIdentifier
-          }),
-          originalTemplate: defaultTo(
-            cloneDeep(data?.template),
-            cloneDeep({
-              ...DefaultTemplate,
-              type: templateType as NGTemplateInfoConfig['type'],
-              projectIdentifier: queryParams.projectIdentifier,
-              orgIdentifier: queryParams.orgIdentifier
-            })
-          ),
-          isUpdated: true,
-          isBETemplateUpdated: false,
-          versions: [DefaultNewVersionLabel],
-          stableVersion: DefaultNewVersionLabel,
-          gitDetails: defaultTo(data?.gitDetails, {}),
-          entityValidityDetails: defaultTo(data?.entityValidityDetails, {}),
-          cacheResponseMetadata: data?.cacheResponseMetadata,
-          templateYaml: defaultTo(data?.templateYaml, '')
-        })
-      )
-      dispatch(TemplateContextActions.initialized())
-    }
-  } else {
-    dispatch(TemplateContextActions.success({ error: 'DB is not initialized' }))
-  }
-}
-
-interface UpdateTemplateArgs {
-  dispatch: React.Dispatch<ActionReturnType>
-  queryParams: GetTemplateQueryParams
-  identifier: string
-  versionLabel?: string
-  originalTemplate: NGTemplateInfoConfig
-  versions: string[]
-  stableVersion: string
-  gitDetails?: EntityGitDetails
-  template: NGTemplateInfoConfig
-}
-
-const _updateTemplate = async (
-  args: UpdateTemplateArgs,
-  templateArg: NGTemplateInfoConfig | ((p: NGTemplateInfoConfig) => NGTemplateInfoConfig)
-): Promise<void> => {
-  const {
-    dispatch,
-    queryParams,
-    identifier,
-    versionLabel = '',
-    originalTemplate,
-    versions,
-    stableVersion,
-    gitDetails,
-    template: latestTemplate
-  } = args
-  const id = getId(
-    queryParams.accountIdentifier,
-    queryParams.orgIdentifier || '',
-    queryParams.projectIdentifier || '',
-    identifier,
-    versionLabel,
-    defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier ?? ''),
-    defaultTo(gitDetails?.branch, '')
-  )
-
-  let template = templateArg
-
-  if (typeof templateArg === 'function') {
-    try {
-      const dbTemplate = await IdbTemplate?.get(IdbTemplateStoreName, id)
-      if (dbTemplate?.template) {
-        template = templateArg(dbTemplate.template)
-      } else {
-        throw new Error(DBNotFoundErrorMessage) //'Template does not exist in the db'
-      }
-    } catch (_) {
-      template = templateArg(latestTemplate)
-      logger.info(DBNotFoundErrorMessage)
-    }
-  }
-  const isUpdated = compareTemplates(originalTemplate, template as NGTemplateInfoConfig)
-  const payload: TemplatePayload = {
-    [KeyPath]: id,
-    template: template as NGTemplateInfoConfig,
-    originalTemplate,
-    versions,
-    stableVersion,
-    isUpdated,
-    gitDetails
-  }
-  try {
-    await IdbTemplate?.put(IdbTemplateStoreName, payload)
-  } catch (_) {
-    logger.info(DBNotFoundErrorMessage)
-  }
-  dispatch(TemplateContextActions.success({ error: '', template: template as NGTemplateInfoConfig, isUpdated }))
-}
-
-const cleanUpDBRefs = (): void => {
-  if (IdbTemplate) {
-    IdbTemplate.close()
-    IdbTemplate = undefined
-  }
-}
-
-const _initializeDb = async (dispatch: React.Dispatch<ActionReturnType>, version: number, trial = 0): Promise<void> => {
-  if (!IdbTemplate) {
-    try {
-      // show loading spinner during idb initialization to prevent rendering default/initial state on mount
-      // isLoading is set to false after fetching template (_fetchTemplate)
-      dispatch(TemplateContextActions.setLoading(true))
-      IdbTemplate = await openDB(TemplateDBName, version, {
-        upgrade(db) {
-          if (db.objectStoreNames.contains(IdbTemplateStoreName)) {
-            try {
-              db.deleteObjectStore(IdbTemplateStoreName)
-            } catch (_) {
-              // logger.error('There was no DB found')
-              dispatch(TemplateContextActions.error({ error: DBNotFoundErrorMessage }))
-            }
-          }
-          const objectStore = db.createObjectStore(IdbTemplateStoreName, { keyPath: KeyPath, autoIncrement: false })
-          objectStore.createIndex(KeyPath, KeyPath, { unique: true })
-        },
-        async blocked() {
-          cleanUpDBRefs()
-        },
-        async blocking() {
-          cleanUpDBRefs()
-        }
-      })
-      dispatch(TemplateContextActions.dbInitialized())
-    } catch (e) {
-      logger.info('DB downgraded, deleting and re creating the DB')
-
-      try {
-        await deleteDB(TemplateDBName)
-      } catch (_) {
-        // ignore
-      }
-      IdbTemplate = undefined
-
-      ++trial
-
-      if (trial < 5) {
-        await _initializeDb(dispatch, version, trial)
-      } else {
-        logger.error(DBInitializationFailed)
-        // continue loading if initialization failed, isLoading is set to false after fetching template
-        dispatch(TemplateContextActions.error({ error: DBInitializationFailed, isLoading: true }))
-        dispatch(TemplateContextActions.setDBInitializationFailed(true))
-      }
-    }
-  } else {
-    dispatch(TemplateContextActions.dbInitialized())
-  }
-}
+import {
+  deleteTemplateCacheAction,
+  FetchTemplateUnboundProps,
+  fetchTemplateV1Action,
+  fetchTemplateV2Action,
+  updateGitDetailsAction,
+  updateStoreMetadataAction,
+  updateTemplateAction
+} from './TemplateAsyncActions'
+import { TemplatePayload } from './types'
 
 export interface TemplateAttributes {
   type: string
@@ -789,114 +69,6 @@ export interface TemplateContextInterface {
   renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
   /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
   setIntermittentLoading: (isIntermittentLoading: boolean) => void
-}
-
-const _deleteTemplateCache = async (
-  queryParams: GetTemplateQueryParams,
-  identifier: string,
-  versionLabel?: string,
-  gitDetails?: EntityGitDetails
-): Promise<void> => {
-  if (IdbTemplate) {
-    const id = getId(
-      queryParams.accountIdentifier,
-      queryParams.orgIdentifier || /* istanbul ignore next */ '',
-      queryParams.projectIdentifier || /* istanbul ignore next */ '',
-      identifier,
-      defaultTo(versionLabel, ''),
-      defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier ?? ''),
-      defaultTo(gitDetails?.branch, '')
-    )
-    await IdbTemplate.delete(IdbTemplateStoreName, id)
-  }
-
-  // due to async operation, IdbPipeline may be undefined
-  if (IdbTemplate) {
-    const defaultId = getId(
-      queryParams.accountIdentifier,
-      queryParams.orgIdentifier || /* istanbul ignore next */ '',
-      queryParams.projectIdentifier || /* istanbul ignore next */ '',
-      DefaultNewTemplateId,
-      DefaultNewVersionLabel,
-      defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier ?? ''),
-      defaultTo(gitDetails?.branch, '')
-    )
-    await IdbTemplate.delete(IdbTemplateStoreName, defaultId)
-  }
-}
-interface UpdateGitDetailsArgs {
-  dispatch: React.Dispatch<ActionReturnType>
-  queryParams: GetTemplateQueryParams
-  identifier: string
-  versionLabel?: string
-  originalTemplate: NGTemplateInfoConfig
-  template: NGTemplateInfoConfig
-  versions: string[]
-  stableVersion: string
-}
-
-const _updateStoreMetadata = async (
-  args: UpdateGitDetailsArgs,
-  storeMetadata: StoreMetadata,
-  gitDetails?: EntityGitDetails
-): Promise<void> => {
-  const { dispatch, queryParams, identifier, originalTemplate, template, versionLabel } = args
-  await _deleteTemplateCache(queryParams, identifier, versionLabel, {})
-  const id = getId(
-    queryParams.accountIdentifier,
-    defaultTo(queryParams.orgIdentifier, ''),
-    defaultTo(queryParams.projectIdentifier, ''),
-    identifier,
-    defaultTo(versionLabel, ''),
-    defaultTo(gitDetails?.repoName, ''),
-    defaultTo(gitDetails?.branch, '')
-  )
-  const isUpdated = compareTemplates(originalTemplate, template)
-  try {
-    if (IdbTemplate) {
-      const payload: TemplatePayload = {
-        [KeyPath]: id,
-        template,
-        originalTemplate,
-        isUpdated,
-        storeMetadata,
-        gitDetails
-      }
-      await IdbTemplate.put(IdbTemplateStoreName, payload)
-    }
-    dispatch(TemplateContextActions.success({ error: '', template, isUpdated, storeMetadata, gitDetails }))
-  } catch (_) {
-    logger.info(DBNotFoundErrorMessage)
-    dispatch(TemplateContextActions.success({ error: '', template, isUpdated, storeMetadata, gitDetails }))
-  }
-}
-
-const _updateGitDetails = async (args: UpdateGitDetailsArgs, gitDetails: EntityGitDetails): Promise<void> => {
-  const { dispatch, queryParams, identifier, originalTemplate, template, versionLabel } = args
-  await _deleteTemplateCache(queryParams, identifier, versionLabel, {})
-
-  const id = getId(
-    queryParams.accountIdentifier,
-    defaultTo(queryParams.orgIdentifier, ''),
-    defaultTo(queryParams.projectIdentifier, ''),
-    identifier,
-    defaultTo(versionLabel, ''),
-    defaultTo(gitDetails.repoIdentifier, ''),
-    defaultTo(gitDetails.branch, '')
-  )
-
-  const isUpdated = compareTemplates(originalTemplate, template)
-  if (IdbTemplate) {
-    const payload: TemplatePayload = {
-      [KeyPath]: id,
-      template,
-      originalTemplate,
-      isUpdated,
-      gitDetails
-    }
-    await IdbTemplate.put(IdbTemplateStoreName, payload)
-  }
-  dispatch(TemplateContextActions.success({ error: '', template, isUpdated, gitDetails }))
 }
 
 export const TemplateContext = React.createContext<TemplateContextInterface>({
@@ -928,9 +100,14 @@ export const TemplateProvider: React.FC<{
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const { IACM_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
-  const abortControllerRef = React.useRef<AbortController | null>(null)
-  const isMounted = React.useRef(false)
-  const [state, dispatch] = React.useReducer(
+
+  const {
+    idb,
+    initializationFailed: idbInitializationFailed,
+    initialized: idbInitialized
+  } = useIDBContext<TemplatePayload>()
+
+  const [state, dispatch] = useThunkReducer(
     TemplateReducer,
     merge(
       {
@@ -946,73 +123,125 @@ export const TemplateProvider: React.FC<{
       { ...initialState, template: { ...initialState.template, identifier: templateIdentifier } }
     )
   )
+
   const [view, setView] = useLocalStorage<SelectedView>(
     'pipeline_studio_view',
     state.entityValidityDetails.valid === false ? SelectedView.YAML : SelectedView.VISUAL
   )
-  state.templateIdentifier = templateIdentifier
-  const fetchTemplateV1 = _fetchTemplateV1.bind(null, {
-    dispatch,
-    queryParams,
-    templateIdentifier,
-    versionLabel,
-    gitDetails: {
-      repoIdentifier,
-      branch
+
+  // state.templateIdentifier = templateIdentifier
+
+  const fetchTemplate = useCallback(
+    async (fetchProps: FetchTemplateUnboundProps) => {
+      return supportingTemplatesGitx
+        ? dispatch(
+            fetchTemplateV2Action(
+              {
+                queryParams,
+                templateIdentifier,
+                versionLabel,
+                gitDetails: {
+                  branch
+                },
+                templateType,
+                isGitCacheEnabled: true,
+                isDBInitializationFailed: state.isDBInitialized ? false : state.isDBInitializationFailed
+              },
+              fetchProps,
+              { idb }
+            )
+          )
+        : dispatch(
+            fetchTemplateV1Action(
+              {
+                queryParams,
+                templateIdentifier,
+                versionLabel,
+                gitDetails: {
+                  repoIdentifier,
+                  branch
+                },
+                templateType,
+                isGitCacheEnabled: true,
+                isDBInitializationFailed: state.isDBInitialized ? false : state.isDBInitializationFailed
+              },
+              fetchProps,
+              { idb }
+            )
+          )
     },
-    templateType,
-    isGitCacheEnabled: true,
-    isDBInitializationFailed: state.isDBInitialized ? false : state.isDBInitializationFailed
-  })
+    [
+      dispatch,
+      idb,
+      supportingTemplatesGitx,
+      queryParams,
+      templateIdentifier,
+      versionLabel,
+      templateType,
+      state.isDBInitialized,
+      state.isDBInitializationFailed,
+      branch,
+      repoIdentifier
+    ]
+  )
 
-  const fetchTemplateV2 = _fetchTemplateV2.bind(null, {
-    dispatch,
-    queryParams,
-    templateIdentifier,
-    versionLabel,
-    gitDetails: {
-      branch
+  const updateTemplate = useCallback(
+    async (templateArg: NGTemplateInfoConfig | ((p: NGTemplateInfoConfig) => NGTemplateInfoConfig)) => {
+      return dispatch(
+        updateTemplateAction({
+          templateArg,
+          params: {
+            queryParams,
+            identifier: templateIdentifier,
+            versionLabel: versionLabel
+          },
+          utils: { idb }
+        })
+      )
     },
-    templateType,
-    isGitCacheEnabled: true,
-    isDBInitializationFailed: state.isDBInitialized ? false : state.isDBInitializationFailed
-  })
+    [dispatch, queryParams, templateIdentifier, versionLabel, idb]
+  )
 
-  const fetchTemplate = supportingTemplatesGitx ? fetchTemplateV2 : fetchTemplateV1
+  const updateGitDetails = useCallback(
+    async (gitDetails: EntityGitDetails) => {
+      return dispatch(
+        updateGitDetailsAction({
+          gitDetails,
+          params: {
+            queryParams,
+            identifier: templateIdentifier,
+            versionLabel: versionLabel
+          },
+          utils: { idb }
+        })
+      )
+    },
+    [dispatch, templateIdentifier, versionLabel, queryParams, idb]
+  )
 
-  const updateTemplate = _updateTemplate.bind(null, {
-    dispatch,
-    queryParams,
-    identifier: templateIdentifier,
-    versionLabel: versionLabel,
-    originalTemplate: state.originalTemplate,
-    versions: state.versions,
-    stableVersion: state.stableVersion,
-    gitDetails: state.gitDetails,
-    template: state.template
-  })
+  const updateStoreMetadata = useCallback(
+    async (storeMetadata: StoreMetadata, gitDetails?: EntityGitDetails) => {
+      return dispatch(
+        updateStoreMetadataAction({
+          args: {
+            queryParams,
+            identifier: templateIdentifier,
+            versionLabel: versionLabel
+          },
+          storeMetadata,
+          gitDetails,
+          utils: { idb }
+        })
+      )
+    },
+    [dispatch, templateIdentifier, versionLabel, queryParams, idb]
+  )
 
-  const updateGitDetails = _updateGitDetails.bind(null, {
-    dispatch,
-    queryParams,
-    identifier: templateIdentifier,
-    versionLabel: versionLabel,
-    originalTemplate: state.originalTemplate,
-    template: state.template,
-    versions: state.versions,
-    stableVersion: state.stableVersion
-  })
-
-  const updateStoreMetadata = _updateStoreMetadata.bind(null, {
-    dispatch,
-    queryParams,
-    identifier: templateIdentifier,
-    versionLabel: versionLabel,
-    originalTemplate: state.originalTemplate,
-    template: state.template,
-    versions: state.versions,
-    stableVersion: state.stableVersion
-  })
+  const deleteTemplateCache = useCallback(async (): Promise<void> => {
+    return dispatch(
+      deleteTemplateCacheAction({ queryParams, identifier: templateIdentifier, versionLabel, utils: { idb } })
+    )
+  }, [dispatch, queryParams, templateIdentifier, versionLabel, idb])
 
   const [isEdit] = usePermission(
     {
@@ -1038,24 +267,31 @@ export const TemplateProvider: React.FC<{
   )
 
   const isReadonly = !isEdit
-  const deleteTemplateCache = _deleteTemplateCache.bind(
-    null,
-    queryParams,
-    templateIdentifier,
-    versionLabel,
-    state.gitDetails
+
+  const setYamlHandler = React.useCallback(
+    (yamlHandler: YamlBuilderHandlerBinding) => {
+      dispatch(TemplateContextActions.setYamlHandler({ yamlHandler }))
+    },
+    [dispatch]
   )
-  const setYamlHandler = React.useCallback((yamlHandler: YamlBuilderHandlerBinding) => {
-    dispatch(TemplateContextActions.setYamlHandler({ yamlHandler }))
-  }, [])
-  const updateTemplateView = React.useCallback((data: TemplateViewData) => {
-    dispatch(TemplateContextActions.updateTemplateView({ templateView: data }))
-  }, [])
-  const setIntermittentLoading = React.useCallback((isIntermittentLoading: boolean) => {
-    dispatch(TemplateContextActions.setIntermittentLoading({ isIntermittentLoading }))
-  }, [])
+
+  const updateTemplateView = React.useCallback(
+    (data: TemplateViewData) => {
+      dispatch(TemplateContextActions.updateTemplateView({ templateView: data }))
+    },
+    [dispatch]
+  )
+
+  const setIntermittentLoading = React.useCallback(
+    (isIntermittentLoading: boolean) => {
+      dispatch(TemplateContextActions.setIntermittentLoading({ isIntermittentLoading }))
+    },
+    [dispatch]
+  )
+
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
-  const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) =>
+
+  const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>): React.ReactElement<PipelineStagesProps> =>
     getPipelineStages({
       args,
       getString,
@@ -1072,18 +308,26 @@ export const TemplateProvider: React.FC<{
     })
 
   React.useEffect(() => {
-    fetchTemplate({ forceFetch: true, forceUpdate: true })
+    // avoid initial call by checking isInitialized
+    if (state.isInitialized) {
+      fetchTemplate({ forceFetch: true, forceUpdate: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [templateIdentifier, versionLabel])
 
   React.useEffect(() => {
-    if (!isNewTemplate(templateIdentifier)) {
-      fetchTemplate({ forceFetch: true, forceUpdate: true })
+    // avoid initial call by checking isInitialized
+    if (state.isInitialized) {
+      if (!isNewTemplate(templateIdentifier)) {
+        fetchTemplate({ forceFetch: true, forceUpdate: true })
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [repoIdentifier, branch])
 
+  const abortControllerRef = React.useRef<AbortController | null>(null)
   React.useEffect(() => {
-    // fetch template after trying to initialize idb
-    if (state.isDBInitialized || state.isDBInitializationFailed) {
+    if (idbInitialized || idbInitializationFailed) {
       /* istanbul ignore next */
       abortControllerRef.current = new AbortController()
 
@@ -1098,18 +342,7 @@ export const TemplateProvider: React.FC<{
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.isDBInitialized, state.isDBInitializationFailed])
-
-  React.useEffect(() => {
-    isMounted.current = true
-    const time = SessionToken.getLastTokenSetTime()
-    _initializeDb(dispatch, time || +new Date())
-
-    return () => {
-      isMounted.current = false
-      cleanUpDBRefs()
-    }
-  }, [])
+  }, [idbInitializationFailed, idbInitialized])
 
   return (
     <TemplateContext.Provider

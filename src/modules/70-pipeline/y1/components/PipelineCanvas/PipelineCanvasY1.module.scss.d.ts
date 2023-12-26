@@ -41,5 +41,6 @@ declare const styles: {
   readonly unsavedChanges: string
   readonly validationContainer: string
   readonly visualYamlToggle: string
+  readonly yamlVersionBadge: string
 }
 export default styles

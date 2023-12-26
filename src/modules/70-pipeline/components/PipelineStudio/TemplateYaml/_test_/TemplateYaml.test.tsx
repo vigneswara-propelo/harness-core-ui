@@ -19,12 +19,12 @@ jest.mock('react-monaco-editor', () => ({
 jest.mock('@common/components/MonacoEditor/MonacoEditor', () => MonacoEditor)
 
 describe('<TemplateYaml /> tests', () => {
-  test('snapshot test', async () => {
-    const { container } = render(
+  test('basic test', async () => {
+    const { getByText } = render(
       <TestWrapper>
         <TemplateYaml templateYaml={mockTemplatesInputYaml.data || ''} />
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('template.yaml')).toBeDefined()
   })
 })

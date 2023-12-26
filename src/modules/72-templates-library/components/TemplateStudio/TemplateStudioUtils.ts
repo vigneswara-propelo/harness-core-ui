@@ -23,11 +23,11 @@ export function getContentAndTitleStringKeys(isYamlError: boolean): {
   }
 }
 
-export function isValidYaml(
+export function isValidYaml<T = NGTemplateInfoConfig>(
   yamlHandler: YamlBuilderHandlerBinding | undefined,
   showInvalidYamlError: (error: string) => void,
   getString: (key: StringKeys, vars?: Record<string, any>) => string,
-  updateTemplate: (template: NGTemplateInfoConfig) => Promise<void>
+  updateTemplate: (template: T) => Promise<void>
 ): boolean {
   // istanbul ignore else
   if (yamlHandler) {
@@ -65,4 +65,26 @@ export enum TemplateTypes {
   SecretManager = 'secretmanager',
   ArtifactSource = 'artifactsourcetemplate',
   StepGroup = 'stepgroup'
+}
+
+export enum TemplateTypesY1 {
+  step = 'step',
+  stage = 'stage',
+  pipeline = 'pipeline',
+  custom_deployment = 'customdeployment',
+  monitored_service = 'monitoredservice',
+  secret_manager = 'secretmanager',
+  artifact_source = 'artifactsourcetemplate',
+  stepgroup = 'stepgroup'
+}
+
+export const TemplateTypesUIToY1Map: Record<string, string> = {
+  Step: 'step',
+  Stage: 'stage',
+  Pipeline: 'pipeline',
+  CustomDeployment: 'custom_deployment',
+  MonitoredService: 'monitored_service',
+  SecretManager: 'secret_manager',
+  ArtifactSource: 'artifact_source_template',
+  StepGroup: 'group'
 }

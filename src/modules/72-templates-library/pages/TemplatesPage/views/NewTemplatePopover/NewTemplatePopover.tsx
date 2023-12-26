@@ -30,6 +30,7 @@ import { FeatureWarningTooltip } from '@common/components/FeatureWarning/Feature
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import useCreateTemplateModalY1 from './useCreateTemplateModalY1'
 import css from './NewTemplatePopover.module.scss'
 
 export interface NewTemplatePopoverWrapperProps {
@@ -48,6 +49,9 @@ function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopover
   })
   const { supportingTemplatesGitx } = useAppStore()
 
+  const { CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
+  const { openCreateTemplateModal } = useCreateTemplateModalY1()
+
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { enabled: templatesEnabled } = useFeature({
     featureRequest: {
@@ -63,6 +67,7 @@ function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopover
     ...rbacResourcePermission,
     permissions: [PermissionIdentifier.EDIT_TEMPLATE]
   })
+
   const goToTemplateStudio = React.useCallback(
     (templateType: TemplateType) => {
       history.push(
@@ -82,7 +87,10 @@ function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopover
   const getMenu = (): TemplateMenuItem[] => {
     const allowedTemplates = allowedTemplateTypes.map(templateType => {
       return merge(templateType, {
-        onClick: () => goToTemplateStudio(templateType.value as TemplateType)
+        onClick: () => {
+          const type = templateType.value as TemplateType
+          CDS_YAML_SIMPLIFICATION ? openCreateTemplateModal({ type }) : goToTemplateStudio(type)
+        }
       })
     })
 

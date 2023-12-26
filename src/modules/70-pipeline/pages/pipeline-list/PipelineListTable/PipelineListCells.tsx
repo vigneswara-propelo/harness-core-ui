@@ -55,7 +55,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import useEditGitMetadata from '@pipeline/components/MigrateResource/useEditGitMetadata'
-import { VersionTag } from '@pipeline/common/components/VersionTag/VersionTag'
+import { YamlVersionBadge } from '@pipeline/common/components/YamlVersionBadge/YamlVersionBadge'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
@@ -146,9 +146,8 @@ export const PipelineNameCell: CellType = ({ row }) => {
   )
 }
 
-export const VersionCell: CellType = ({ cell }) => {
-  const version = `v${cell.value}`
-  return <VersionTag version={version} />
+export const YamlVersionCell: CellType = ({ cell }) => {
+  return <YamlVersionBadge version={cell.value} minimal />
 }
 
 export const CodeSourceCell: CellType = ({ row }) => {

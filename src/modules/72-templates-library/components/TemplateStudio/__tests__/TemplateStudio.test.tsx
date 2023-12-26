@@ -9,9 +9,14 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import * as utils from '@templates-library/common/components/TemplateStudio/TemplateLoaderContext/utils'
 import * as TemplateContext from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, templatePathProps } from '@common/utils/routeUtils'
+import { YamlVersion } from '@modules/70-pipeline/common/hooks/useYamlVersion'
+
+const getYamlVersionSpy = jest.spyOn(utils, 'getYamlVersion')
+getYamlVersionSpy.mockImplementation(() => Promise.resolve(YamlVersion[0]))
 
 const TemplateProviderMock = jest
   .spyOn(TemplateContext, 'TemplateProvider')

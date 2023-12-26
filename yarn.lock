@@ -3024,10 +3024,10 @@
   resolved "https://registry.yarnpkg.com/@harnessio/react-ssca-manager-client/-/react-ssca-manager-client-0.18.0.tgz#1d53d47bbe683d96103db7f0b1d222f30346f36d"
   integrity sha512-8u+P2ZdaoWQ91hIRGC/T+3DZ4syupmKIBMj3VO0Y4Cw5nIpTlZZOv0j2GOvjElHis4bKRAHykPCNHqr8VVzs1A==
 
-"@harnessio/react-template-service-client@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@harnessio/react-template-service-client/-/react-template-service-client-0.1.0.tgz#17643efc46ca51084d5d041b5bafd684a8b51afc"
-  integrity sha512-8FJM/ZlAt4sGwAPEPJAL1k/urH7qyXsyOFbANOqyc7eFyw3JRA7vusGpbc7OG6TBUlYVsdc3PnAP/NlYLEvOQw==
+"@harnessio/react-template-service-client@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-template-service-client/-/react-template-service-client-0.2.0.tgz#f30d2e99221c307b4ead3d5b1175e525584a2020"
+  integrity sha512-lqM2IfABXPmDSwbDQCw3CTZOCCWvK1EI534zgUfV9wWGaq7lVYUD6lZE8reds18f8plu1lTav15GsLy/kDWnWw==
 
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"

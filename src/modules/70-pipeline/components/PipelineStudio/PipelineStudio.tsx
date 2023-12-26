@@ -40,6 +40,7 @@ import { PipelineStudioInternalY1 } from '@pipeline/y1/components/PipelineStudio
 import { getCDTrialDialog } from './CDTrial/useCDTrialModal'
 import { getCITrialDialog } from './CITrial/useCITrialModal'
 import { getPipelineStages } from './PipelineStagesUtils'
+import { YamlVersionSwitch } from './YamlVersionSwitch'
 import css from './PipelineStudio.module.scss'
 
 function PipelineStudioInner(): React.ReactElement {
@@ -99,7 +100,7 @@ function PipelineStudioInner(): React.ReactElement {
   const { getString } = useStrings()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
-    <VersionedProvider
+    <YamlVersionSwitch
       yamlVersion={yamlVersion}
       loading={
         <React.Fragment>
@@ -212,15 +213,4 @@ export default function PipelineStudio(): React.ReactElement {
       </PipelineLoaderProvider>
     </IDBProvider>
   )
-}
-
-interface VersionedProviderProps {
-  yamlVersion: '0' | '1' | undefined
-  loading: JSX.Element
-  v0: JSX.Element
-  v1: JSX.Element
-}
-
-function VersionedProvider({ yamlVersion, v0, v1, loading }: VersionedProviderProps): JSX.Element {
-  return yamlVersion === '0' ? v0 : yamlVersion === '1' ? v1 : loading
 }

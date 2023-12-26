@@ -59,6 +59,8 @@ import { useGetSettingsList } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
 import { getDefaultStoreType, getSettingValue } from '@default-settings/utils/utils'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
+import { YamlVersion } from '@pipeline/common/hooks/useYamlVersion'
+import VersionSelector from '@pipeline/components/CreatePipelineButton/VersionSelector/VersionSelector'
 import {
   DefaultNewTemplateId,
   DefaultNewVersionLabel,
@@ -91,6 +93,7 @@ export interface PromiseExtraArgs {
   disableCreatingNewBranch?: boolean
   saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
   saveAsNewVersionOfExistingTemplate?: boolean
+  yamlSyntax?: YamlVersion
 }
 
 export enum Intent {
@@ -113,11 +116,13 @@ export interface ModalProps {
   isGitXEnforced?: boolean
   onFailure?: (error: any, latestTemplate: NGTemplateInfoConfig) => void
   saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
+  canSelectVersion?: boolean
 }
 
 export interface TemplateConfigValues extends NGTemplateInfoConfigWithGitDetails {
   comment?: string
   iconFile?: File
+  yamlVersion?: YamlVersion
 }
 
 export interface NGTemplateInfoConfigWithGitDetails extends NGTemplateInfoConfig {
@@ -165,7 +170,8 @@ const BasicTemplateDetails = (
     lastPublishedVersion,
     onFailure,
     disableCreatingNewBranch,
-    saveAsType
+    saveAsType,
+    canSelectVersion
   } = props
   const pathParams = useParams<TemplateStudioPathProps>()
   const { orgIdentifier, projectIdentifier } = pathParams
@@ -264,6 +270,9 @@ const BasicTemplateDetails = (
           }
         }
         draft.iconFile = undefined
+        if (canSelectVersion) {
+          draft.yamlVersion = canSelectVersion ? '1' : '0'
+        }
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [initialValues, storeMetadata, gitDetails, saveAsType, isGitXEnforced]
@@ -302,7 +311,7 @@ const BasicTemplateDetails = (
         },
         isEmpty
       ) as StoreMetadata
-      const updateTemplate = omit(
+      const newTemplate = omit(
         values,
         'repo',
         'branch',
@@ -314,7 +323,7 @@ const BasicTemplateDetails = (
         'iconFile'
       )
 
-      promise(updateTemplate, {
+      promise(newTemplate, {
         isEdit: intent === Intent.EDIT,
         saveAsType,
         disableCreatingNewBranch,
@@ -324,7 +333,8 @@ const BasicTemplateDetails = (
         // Pass storeMetadata only if template is Remote Enabled & supportingTemplatesGitx
         ...(supportingTemplatesGitx && isInlineRemoteSelectionApplicable ? { storeMetadata: storeMetadataValues } : {}),
         ...(!isEmpty(values.comment?.trim()) && { comment: values.comment?.trim() }),
-        saveAsNewVersionOfExistingTemplate
+        saveAsNewVersionOfExistingTemplate,
+        yamlSyntax: values.yamlVersion
       })
         .then(response => {
           setLoading(false)
@@ -341,7 +351,7 @@ const BasicTemplateDetails = (
             setSaveAsNewVersionOfExistingTemplate(true)
             openTemplateAlreadyExistsDialog()
           } else {
-            onFailure?.(error, updateTemplate)
+            onFailure?.(error, newTemplate)
           }
         })
     },
@@ -522,6 +532,16 @@ const BasicTemplateDetails = (
                             disabled: disabledFields.includes(Fields.Tags) || isReadonly
                           }}
                         />
+
+                        {canSelectVersion && (
+                          <VersionSelector
+                            selectedVersion={defaultTo(formik.values?.yamlVersion, '1')}
+                            onChange={newYamlVersion => {
+                              formik.setFieldValue('yamlVersion', newYamlVersion)
+                            }}
+                            disabled={intent === Intent.EDIT}
+                          />
+                        )}
                         <FormInput.Text
                           name="versionLabel"
                           placeholder={getString('common.template.createNewModal.versionPlaceholder')}

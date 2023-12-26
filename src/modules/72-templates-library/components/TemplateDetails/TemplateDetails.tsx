@@ -71,6 +71,7 @@ import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { EntityCachedCopy } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { TemplateDetailsResponseWrapper } from '@pipeline/utils/templateUtils'
+import { YamlVersion } from '@modules/70-pipeline/common/hooks/useYamlVersion'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -479,7 +480,10 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   ) : !isEmpty(templateYamlErrorResponseMessages) ? (
     ErrorPanel
   ) : (
-    <TemplateYaml templateYaml={defaultTo(selectedTemplate?.yaml, '')} />
+    <TemplateYaml
+      templateYaml={defaultTo(selectedTemplate?.yaml, '')}
+      yamlVersion={selectedTemplate?.yamlVersion as YamlVersion}
+    />
   )
 
   return (
@@ -654,7 +658,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                               title={getString('pipeline.templateInputs')}
                               panel={TemplateInputsTabPanel}
                             />
-                            <Tab id={TemplateTabs.YAML} title={getString('yaml')} panel={TemplateYamlTabPanel} />
+                            <Tab id={TemplateTabs.YAML} title={getString('common.yaml')} panel={TemplateYamlTabPanel} />
                             <Tab
                               id={TemplateTabs.REFERENCEDBY}
                               title={getString('templatesLibrary.referencedBy')}

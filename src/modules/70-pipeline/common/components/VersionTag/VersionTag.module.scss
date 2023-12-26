@@ -1,5 +1,6 @@
 .versionTag:global(.bp3-tag) {
   background-color: var(--purple-50) !important;
+  border: 1px solid var(--purple-400) !important;
   color: var(--purple-800) !important;
-  border: none;
+  padding: 2px 10px;
 }

@@ -2046,7 +2046,7 @@ simplified: Simplified
 yamlVersion:
   v0: v0
   v1: v1
-chooseYamlSyntax: Choose a YAML Syntax
+chooseYamlSyntax: Specify YAML Version
 includeInfrastructureSelectors: Include Infrastructure Selectors
 slsaVerification: SLSA Verification
 slsaProvenance: SLSA Provenance

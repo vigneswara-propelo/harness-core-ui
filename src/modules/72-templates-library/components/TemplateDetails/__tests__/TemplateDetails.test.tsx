@@ -41,11 +41,6 @@ const TEST_PATH_PARAMS = {
 
 const useGetTemplateMock = jest.fn()
 
-jest.mock('@common/hooks', () => ({
-  ...(jest.requireActual('@common/hooks') as any),
-  useMutateAsGet: jest.fn().mockImplementation(() => mockTemplatesSuccessResponse)
-}))
-
 jest.mock('@templates-library/components/TemplateInputs/TemplateInputs', () => ({
   ...jest.requireActual('@templates-library/components/TemplateInputs/TemplateInputs'),
   TemplateInputs: () => {
@@ -94,6 +89,11 @@ function ComponentWrapper(props: TemplateDetailsProps): React.ReactElement {
 describe('<TemplateDetails /> git experience', () => {
   afterEach(() => {
     useGetTemplateMock.mockReset()
+  })
+  beforeEach(() => {
+    jest
+      .spyOn(commonHooks, 'useMutateAsGet')
+      .mockImplementation(jest.fn().mockReturnValue(mockTemplatesSuccessResponse))
   })
 
   test('Template GET API sends parent entity context in query params only when default behaviour is there', () => {
@@ -169,21 +169,39 @@ describe('<TemplateDetails /> tests', () => {
   beforeAll(() => {
     templateFactory.registerTemplate(new StepTemplate())
   })
+  beforeEach(() => {
+    jest
+      .spyOn(commonHooks, 'useMutateAsGet')
+      .mockImplementation(jest.fn().mockReturnValue(mockTemplatesSuccessResponse))
+  })
 
   const baseProps = {
     template: defaultTo(mockTemplates?.data?.content?.[0], {})
   }
-  test('should match snapshot', async () => {
-    const { container } = render(
+  test('should render component properly', async () => {
+    const { getByText } = render(
       <TestWrapper>
         <ComponentWrapper {...baseProps} />
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+
+    expect(getByText('manju-test-template-qq-12344')).toBeDefined()
+    expect(getByText('templatesLibrary.openInTemplateStudio')).toBeDefined()
+    expect(getByText('details')).toBeDefined()
+    expect(getByText('activityLog')).toBeDefined()
+    expect(getByText('Manual Approval')).toBeDefined()
+    expect(getByText('description')).toBeDefined()
+    expect(getByText('tagsLabel')).toBeDefined()
+    expect(getByText('Internal 1')).toBeDefined()
+    expect(getByText('BLUE')).toBeDefined()
+    expect(getByText('Tag A')).toBeDefined()
+    expect(getByText('pipeline.templateInputs')).toBeDefined()
+    expect(getByText('common.yaml')).toBeDefined()
+    expect(getByText('templatesLibrary.referencedBy')).toBeDefined()
   })
 
-  test('should match snapshot - when reference by tab is selected', async () => {
-    const { container, queryByText } = render(
+  test('should render no references when reference by tab is selected', async () => {
+    const { getByText, queryByText } = render(
       <TestWrapper>
         <ComponentWrapper {...baseProps} />
       </TestWrapper>
@@ -193,7 +211,7 @@ describe('<TemplateDetails /> tests', () => {
       fireEvent.click(queryByText('templatesLibrary.referencedBy')!)
     })
 
-    expect(container).toMatchSnapshot()
+    expect(getByText('common.noRefData')).toBeDefined()
   })
 
   test('should show selected version label', async () => {
@@ -242,11 +260,11 @@ describe('<TemplateDetails /> tests', () => {
     jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
       return { loading: false, error: 'Some error occurred', data: undefined, refetch: jest.fn() } as any
     })
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <ComponentWrapper {...baseProps} />
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('We cannot perform your request at the moment. Please try again.')).toBeDefined()
   })
 })

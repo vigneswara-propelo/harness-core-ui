@@ -15,6 +15,7 @@
       border: 1px solid var(--primary-7);
     }
   }
+
   .templateCard {
     display: block !important;
     &:global(.bp3-card) {
@@ -56,6 +57,11 @@
       position: absolute;
     }
   }
+  .templateCardEnlarged {
+    &:global(.bp3-card) {
+      width: 194px;
+    }
+  }
   .infoContainer {
     display: flex;
     flex-direction: column;
@@ -63,5 +69,12 @@
     .label {
       flex-shrink: 0;
     }
+  }
+
+  .versionLabel {
+    padding-bottom: var(--spacing-xsmall);
+    font-size: var(--font-size-xsmall) !important;
+    font-weight: 500 !important;
+    color: var(--grey-800);
   }
 }

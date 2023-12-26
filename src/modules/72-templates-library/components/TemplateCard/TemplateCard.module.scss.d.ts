@@ -15,6 +15,8 @@ declare const styles: {
   readonly selected: string
   readonly tag: string
   readonly templateCard: string
+  readonly templateCardEnlarged: string
   readonly version: string
+  readonly versionLabel: string
 }
 export default styles
