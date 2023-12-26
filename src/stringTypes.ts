@@ -4175,6 +4175,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.groupIdPlaceholder': string
   'pipeline.artifactsSelection.groupPlaceholder': string
   'pipeline.artifactsSelection.loadingArtifactPaths': string
+  'pipeline.artifactsSelection.loadingBuilds': string
   'pipeline.artifactsSelection.loadingDigest': string
   'pipeline.artifactsSelection.loadingRepository': string
   'pipeline.artifactsSelection.loadingTags': string

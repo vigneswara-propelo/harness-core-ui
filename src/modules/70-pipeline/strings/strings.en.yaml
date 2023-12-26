@@ -1058,6 +1058,7 @@ artifactsSelection:
   registryIdPlaceholder: Enter Registry ID
   customArtifactManualFill: Manually Enter an artifact version
   customArtifactScriptFill: Provide a script to dynamically pull the artifact location.
+  loadingBuilds: Loading Builds...
   artifactIdPlaceholder: Enter Artifact ID
   groupId: Group ID
   organizationPlaceholder: Enter Organization

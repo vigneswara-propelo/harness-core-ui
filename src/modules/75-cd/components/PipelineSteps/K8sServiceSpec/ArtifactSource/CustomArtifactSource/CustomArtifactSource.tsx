@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { defaultTo, get, isArray, memoize } from 'lodash-es'
 import cx from 'classnames'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
@@ -191,19 +191,22 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     )
   )
 
-  const selectItems = useMemo(() => {
-    return buildDetails?.data?.map((builds: BuildDetails) => ({
+  const buildDetailOptions = useMemo(() => {
+    if (fetchingBuilds) {
+      return [
+        {
+          label: getString('pipeline.artifactsSelection.loadingBuilds'),
+          value: getString('pipeline.artifactsSelection.loadingBuilds')
+        }
+      ]
+    }
+    const buildItems = buildDetails?.data?.map((builds: BuildDetails) => ({
       value: defaultTo(builds.number, ''),
       label: defaultTo(builds.number, '')
     }))
-  }, [buildDetails?.data])
 
-  const getBuildDetails = (): { label: string; value: string }[] => {
-    if (fetchingBuilds) {
-      return [{ label: 'Loading Builds...', value: 'Loading Builds...' }]
-    }
-    return defaultTo(selectItems, [])
-  }
+    return defaultTo(buildItems, [])
+  }, [buildDetails?.data, fetchingBuilds, getString]) as SelectOption[]
 
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
@@ -293,7 +296,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
 
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
             <SelectInputSetView
-              selectItems={getBuildDetails()}
+              selectItems={buildDetailOptions}
               label={getString('version')}
               name={`${path}.artifacts.${artifactPath}.spec.version`}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.version`)}
@@ -314,7 +317,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                     />
                   ),
                   itemRenderer: itemRenderer,
-                  items: getBuildDetails(),
+                  items: buildDetailOptions,
                   allowCreatingNewItems: true
                 },
                 onFocus: /* istanbul ignore next */ (e: React.FocusEvent<HTMLInputElement>) => {
