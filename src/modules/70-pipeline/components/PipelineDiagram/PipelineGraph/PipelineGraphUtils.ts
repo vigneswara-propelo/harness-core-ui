@@ -401,20 +401,15 @@ const getParallelNodeLinks = ({
   })
 }
 
-const getScaleToFitValue = (
-  elm: HTMLElement,
-  containerEl?: HTMLElement,
-  paddingHorizontal = 0,
-  paddingVertical = 20
-): number => {
+const getScaleToFitValue = (elm: HTMLElement, paddingHorizontal = 0, paddingVertical = 20): number => {
   const width = elm.scrollWidth
   const height = elm.scrollHeight
-  const container = containerEl ? containerEl : document.body
+  const container = document.body
   return (
     1 /
     Math.max(
-      width / (container.offsetWidth - paddingHorizontal),
-      height / (container.offsetHeight - container.offsetTop - paddingVertical)
+      width / (container.offsetWidth - container.offsetLeft * 2 - paddingHorizontal),
+      height / (container.offsetHeight - container.offsetTop * 2 - paddingVertical)
     )
   )
 }

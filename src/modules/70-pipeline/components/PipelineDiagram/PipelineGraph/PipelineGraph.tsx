@@ -35,7 +35,7 @@ import { Event } from '../Constants'
 import { useCanvasDrag } from '../hooks/useCanvasDrag'
 import css from './PipelineGraph.module.scss'
 
-const DEFAULT_POSITION: Position = { x: 30, y: 120 }
+const DEFAULT_POSITION: Position = { x: 30, y: 80 }
 export interface PipelineGraphProps {
   data: PipelineGraphState[]
   fireEvent: (event: any) => void
@@ -162,12 +162,7 @@ function PipelineGraph({
     setPosition(DEFAULT_POSITION)
 
     setGraphScale(
-      getScaleToFitValue(
-        graphRef.current as unknown as HTMLElement,
-        document.querySelector(parentSelector as string) as HTMLElement,
-        DEFAULT_POSITION.x,
-        DEFAULT_POSITION.y
-      )
+      getScaleToFitValue(graphRef.current as unknown as HTMLElement, DEFAULT_POSITION.x, DEFAULT_POSITION.y)
     )
     setDelayRender(true)
   }
