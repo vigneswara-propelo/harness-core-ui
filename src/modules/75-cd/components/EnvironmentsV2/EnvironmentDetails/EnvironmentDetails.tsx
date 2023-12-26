@@ -275,7 +275,7 @@ export default function EnvironmentDetails(): React.ReactElement {
         ...bodyWithoutYaml,
         yaml: yamlStringify({
           environment: sanitize(
-            { ...omit(values, 'repoName', 'connectorRef', 'filePath') },
+            { ...omit(values, 'repoName', 'connectorRef', 'filePath', 'storeType') },
             { removeEmptyObject: false, removeEmptyString: false }
           )
         })

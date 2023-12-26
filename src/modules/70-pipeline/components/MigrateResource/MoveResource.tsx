@@ -40,7 +40,12 @@ import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { yamlPathRegex } from '@common/utils/StringUtils'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import { ResponseServiceMoveConfigResponse, moveServiceConfigsPromise } from 'services/cd-ng'
+import {
+  MoveEnvironmentConfigsQueryParams,
+  ResponseServiceMoveConfigResponse,
+  moveEnvironmentConfigsPromise,
+  moveServiceConfigsPromise
+} from 'services/cd-ng'
 import {
   ExtraQueryParams,
   getDisableFields,
@@ -93,6 +98,8 @@ export default function MoveResource({
         return getString('common.pipeline')
       case ResourceType.SERVICE:
         return getString('service')
+      case ResourceType.ENVIRONMENT:
+        return getString('environment')
       default:
         return getString('common.resourceLabel')
     }
@@ -208,6 +215,33 @@ export default function MoveResource({
       .then(handleResponse)
       .catch(handleError)
   }
+  const moveEnvironment = (formValues: ModifiedInitialValuesType): void => {
+    const { identifier, connectorRef, repo, branch, filePath, commitMsg, baseBranch } = formValues
+    setIsLoading(true)
+    moveEnvironmentConfigsPromise({
+      environmentIdentifier: identifier,
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        connectorRef: typeof connectorRef === 'string' ? connectorRef : (connectorRef as any).value,
+        repoName: repo,
+        branch,
+        filePath,
+        moveConfigType: migrationType as MoveEnvironmentConfigsQueryParams['moveConfigType'],
+        ...(baseBranch ? { isNewBranch: true, baseBranch } : { isNewBranch: false }),
+        commitMsg
+      },
+      requestOptions: {
+        headers: {
+          'content-type': 'application/json'
+        }
+      },
+      body: undefined
+    })
+      .then(handleResponse)
+      .catch(handleError)
+  }
 
   const moveEntity = (formValues: ModifiedInitialValuesType): void => {
     switch (resourceType) {
@@ -219,6 +253,9 @@ export default function MoveResource({
         break
       case ResourceType.SERVICE:
         moveService(formValues)
+        break
+      case ResourceType.ENVIRONMENT:
+        moveEnvironment(formValues)
         break
     }
   }

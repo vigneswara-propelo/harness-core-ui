@@ -12,6 +12,7 @@ import { defaultTo, get, isEmpty } from 'lodash-es'
 import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Layout, TagsPopover, Text, Checkbox, useConfirmationDialog, Popover, Button, Icon } from '@harness/uicore'
 import { Intent, Color, FontVariation } from '@harness/design-system'
+import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
 
 import type { EnvironmentResponse, EnvironmentResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -25,6 +26,9 @@ import { EnvironmentType } from '@common/constants/EnvironmentType'
 
 import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import { CodeSourceWrapper } from '@modules/70-pipeline/components/CommonPipelineStages/PipelineStage/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import useMigrateResource from '@modules/70-pipeline/components/MigrateResource/useMigrateResource'
+import { MigrationType } from '@modules/70-pipeline/components/MigrateResource/MigrateUtils'
 import css from './EnvironmentsList.module.scss'
 
 interface EnvironmentRowColumn {
@@ -97,13 +101,16 @@ export function LastUpdatedBy({ lastModifiedAt }: EnvironmentResponse): React.Re
 export function EnvironmentMenu({
   environment,
   onEdit,
-  onDelete
+  onDelete,
+  reload
 }: {
   environment: EnvironmentResponseDTO
   onEdit: (identifier: string, environment: EnvironmentResponseDTO) => void
   onDelete: (environment: EnvironmentResponseDTO) => void
+  reload: () => void
 }): React.ReactElement {
   const [menuOpen, setMenuOpen] = React.useState(false)
+  const { CDS_ENV_GITX } = useFeatureFlags()
   const { getString } = useStrings()
 
   const { openDialog } = useConfirmationDialog({
@@ -121,6 +128,13 @@ export function EnvironmentMenu({
       setMenuOpen(false)
     }
   })
+  const { showMigrateResourceModal: showMoveResourceModal } = useMigrateResource({
+    resourceType: GitResourceType.ENVIRONMENT,
+    modalTitle: getString('common.moveEntitytoGit', { resourceType: getString('environment') }),
+    migrationType: MigrationType.INLINE_TO_REMOTE,
+    extraQueryParams: { name: environment.name, identifier: environment.identifier },
+    onSuccess: () => reload()
+  })
 
   const handleEdit = (event: React.MouseEvent): void => {
     event.stopPropagation()
@@ -131,6 +145,12 @@ export function EnvironmentMenu({
   const handleDelete = (event: React.MouseEvent): void => {
     event.stopPropagation()
     openDialog()
+    setMenuOpen(false)
+  }
+
+  const handleMoveInlineToRemote = (event: React.MouseEvent): void => {
+    event.stopPropagation()
+    showMoveResourceModal()
     setMenuOpen(false)
   }
 
@@ -179,6 +199,18 @@ export function EnvironmentMenu({
               permission: PermissionIdentifier.DELETE_ENVIRONMENT
             }}
           />
+          {CDS_ENV_GITX && environment.storeType !== StoreType.REMOTE && (
+            <RbacMenuItem
+              icon="git-merge"
+              text={getString('common.moveToGit')}
+              onClick={handleMoveInlineToRemote}
+              permission={{
+                ...resourceAndScope,
+                permission: PermissionIdentifier.EDIT_ENVIRONMENT
+              }}
+              data-testid="move-env-inline-remote"
+            />
+          )}
         </Menu>
       </Popover>
     </Layout.Horizontal>

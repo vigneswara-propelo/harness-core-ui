@@ -167,7 +167,8 @@ export default function EnvironmentsList({
         Cell: withEnvironment(EnvironmentMenu),
         actions: {
           onEdit: handleEnvEdit,
-          onDelete: handleEnvDelete
+          onDelete: handleEnvDelete,
+          reload: refetch
         }
       }
     ],
