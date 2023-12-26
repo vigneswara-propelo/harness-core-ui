@@ -187,16 +187,7 @@ export function ServiceOverridesProvider({
     })
       .then(() => {
         setCanCreateNewOrEdit(true)
-        refetchServiceOverridesList({
-          queryParams: {
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier,
-            type: serviceOverrideType,
-            page
-          },
-          body: svcOverridesRequestBody
-        })
+        refetchServiceOverridesList()
       })
       .catch(e => {
         setCanCreateNewOrEdit(true)
@@ -223,14 +214,7 @@ export function ServiceOverridesProvider({
         }
       })
         .then(() => {
-          refetchServiceOverridesList({
-            queryParams: {
-              ...commonQueryParams,
-              type: serviceOverrideType,
-              page
-            },
-            body: svcOverridesRequestBody
-          })
+          refetchServiceOverridesList()
           showSuccess('Successfully deleted service override with identifier: ' + overrideResponse?.identifier)
         })
         .catch(e => {
@@ -244,16 +228,7 @@ export function ServiceOverridesProvider({
         }
       })
         .then(() => {
-          refetchServiceOverridesList({
-            queryParams: {
-              accountIdentifier: accountId,
-              orgIdentifier,
-              projectIdentifier,
-              type: serviceOverrideType,
-              page
-            },
-            body: svcOverridesRequestBody
-          })
+          refetchServiceOverridesList()
           showSuccess('Successfully deleted service override')
         })
         .catch(e => {
@@ -289,16 +264,7 @@ export function ServiceOverridesProvider({
     })
       .then(() => {
         setCanCreateNewOrEdit(true)
-        refetchServiceOverridesList({
-          queryParams: {
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier,
-            type: serviceOverrideType,
-            page,
-            body: svcOverridesRequestBody
-          }
-        })
+        refetchServiceOverridesList()
         showSuccess('Successfully updated service override')
       })
       .catch(e => {
