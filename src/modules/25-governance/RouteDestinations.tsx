@@ -141,7 +141,8 @@ export default function GovernanceRoutes(): React.ReactElement {
       staticResourceRenderer: props => <PolicyResourceRenderer {...props} />,
       permissionLabels: {
         [PermissionIdentifier.GOV_VIEW_POLICY]: <String stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.GOV_EDIT_POLICY]: <String stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.GOV_EDIT_POLICY]: <String stringID="rbac.permissionLabels.edit" />,
+        [PermissionIdentifier.GOV_CREATE_POLICY]: <String stringID="rbac.permissionLabels.create" />,
         [PermissionIdentifier.GOV_DELETE_POLICY]: <String stringID="rbac.permissionLabels.delete" />
       }
     })
@@ -155,7 +156,8 @@ export default function GovernanceRoutes(): React.ReactElement {
       staticResourceRenderer: props => <PolicySetResourceRenderer {...props} />,
       permissionLabels: {
         [PermissionIdentifier.GOV_VIEW_POLICYSET]: <String stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.GOV_EDIT_POLICYSET]: <String stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.GOV_EDIT_POLICYSET]: <String stringID="rbac.permissionLabels.edit" />,
+        [PermissionIdentifier.GOV_CREATE_POLICYSET]: <String stringID="rbac.permissionLabels.create" />,
         [PermissionIdentifier.GOV_DELETE_POLICYSET]: <String stringID="rbac.permissionLabels.delete" />,
         [PermissionIdentifier.GOV_EVALUATE_POLICYSET]: <String stringID="rbac.permissionLabels.evaluate" />
       }
