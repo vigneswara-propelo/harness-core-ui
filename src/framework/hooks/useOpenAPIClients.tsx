@@ -37,7 +37,7 @@ export const getOpenAPIClientInitiator = (
     return response
   }
   const urlInterceptor = (url: string): string => {
-    return pathPrefix ? `${pathPrefix}${window.getApiBaseUrl(url)}` : window.getApiBaseUrl(url)
+    return window.getApiBaseUrl(pathPrefix ? `${pathPrefix}${url}` : url)
   }
   const requestInterceptor = (request: Request): Request => {
     const oldRequest = request.clone()
