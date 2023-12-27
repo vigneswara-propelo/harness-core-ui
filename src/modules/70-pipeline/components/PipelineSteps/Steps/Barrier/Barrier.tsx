@@ -32,10 +32,10 @@ import {
   ValidateInputSetProps
 } from '@pipeline/components/AbstractSteps/Step'
 import {
-  PipelineInfoConfig,
-  useGetPipeline,
   VariableMergeServiceResponse,
-  StepElementConfig
+  StepElementConfig,
+  PipelineInfoConfig,
+  BarrierInfoConfig
 } from 'services/pipeline-ng'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -51,12 +51,7 @@ import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/Pipe
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 
-import type {
-  GitQueryParams,
-  InputSetPathProps,
-  PipelineType,
-  ProjectPathProps
-} from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { StringsMap } from 'stringTypes'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -82,6 +77,10 @@ export interface BarrierVariableStepProps {
   onUpdate?(data: BarrierData): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: BarrierData
+}
+
+export interface ParsedTemplateYAML {
+  template: { spec: StepElementConfig }
 }
 
 interface BarrierProps {
@@ -249,39 +248,34 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
 }
 
 function BarrierInputStep({ inputSetData, allowableTypes, stepViewType }: BarrierProps): React.ReactElement {
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
-    PipelineType<InputSetPathProps> & { accountId: string }
-  >()
-  const { repoIdentifier, branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
-  const projectQueryParams = useParams<ProjectPathProps>()
-
-  const { expressions } = useVariablesExpression()
-
-  const [pipeline, setPipeline] = React.useState<{ pipeline: PipelineInfoConfig } | undefined>()
-  const pipelineTemplateVersionLabel = defaultTo(pipeline?.pipeline?.template?.versionLabel, '')
   const {
-    state: { storeMetadata }
+    state: { storeMetadata, pipeline }
   } = usePipelineContext()
-  const { data: pipelineResponse, loading } = useGetPipeline({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      branch,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoName
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const projectQueryParams = useParams<ProjectPathProps>()
+  const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
+  const pipelineTemplateVersionLabel = defaultTo(pipeline?.template?.versionLabel, '')
+  const templateScope = getScopeFromValue(defaultTo(pipeline?.template?.templateRef, ''))
+  const [barriers, setBarriers] = useState<SelectOption[]>([])
+
+  React.useEffect(() => {
+    if (pipeline?.flowControl?.barriers) {
+      setBarriers(
+        pipeline.flowControl.barriers.map?.(barrier => ({
+          label: barrier.name,
+          value: barrier.identifier
+        }))
+      )
     }
-  })
-  const templateScope = getScopeFromValue(defaultTo(pipeline?.pipeline?.template?.templateRef, ''))
+  }, [pipeline?.flowControl?.barriers])
 
   const {
     data: pipelineTemplateResponse,
     refetch: refetchPipelineTemplate,
     loading: pipelineTemplateLoading
   } = useGetTemplate({
-    templateIdentifier: getIdentifierFromValue(pipeline?.pipeline?.template?.templateRef || ''),
+    templateIdentifier: getIdentifierFromValue(pipeline?.template?.templateRef || ''),
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     queryParams: {
       ...getScopeBasedProjectPathParams(projectQueryParams, templateScope),
@@ -297,41 +291,31 @@ function BarrierInputStep({ inputSetData, allowableTypes, stepViewType }: Barrie
   })
 
   React.useEffect(() => {
-    if (pipelineResponse?.data?.yamlPipeline) {
-      setPipeline(parse(pipelineResponse?.data?.yamlPipeline))
-    }
-  }, [pipelineResponse?.data?.yamlPipeline])
-
-  React.useEffect(() => {
-    if (pipeline?.pipeline?.template?.templateRef) {
+    if (pipeline?.template?.templateRef) {
       refetchPipelineTemplate()
     }
-  }, [pipeline?.pipeline?.template?.templateRef])
+  }, [pipeline?.template?.templateRef])
 
   const pipelineTemplate = React.useMemo(() => {
     if (pipelineTemplateResponse?.data && !pipelineTemplateLoading) {
-      const templateSpec = parse<{ template: { spec: StepElementConfig } }>(
-        defaultTo(pipelineTemplateResponse?.data?.yaml, '')
-      )
-      return templateSpec as any
+      const templateSpec = parse<ParsedTemplateYAML>(defaultTo(pipelineTemplateResponse?.data?.yaml, ''))
+      return templateSpec
     }
     return undefined
   }, [pipelineTemplateResponse?.data, pipelineTemplateLoading])
 
-  const { getString } = useStrings()
-  let barriers: SelectOption[] = []
-  if (pipeline?.pipeline?.flowControl?.barriers?.length && !pipelineTemplateResponse) {
-    barriers = pipeline.pipeline?.flowControl?.barriers?.map(barrier => ({
-      label: barrier.name,
-      value: barrier.identifier
-    }))
-  } else if ((pipelineTemplate?.template as any)?.spec?.flowControl?.barriers?.length) {
-    barriers =
-      (pipelineTemplate?.template as any)?.spec?.flowControl?.barriers?.map((barrier: any) => ({
-        label: barrier.name,
-        value: barrier.identifier
-      })) || []
-  }
+  React.useEffect(() => {
+    const templatePipelineSpec = pipelineTemplate?.template?.spec as PipelineInfoConfig
+    if (templatePipelineSpec?.flowControl?.barriers?.length) {
+      const templateBarriers =
+        templatePipelineSpec.flowControl.barriers?.map((barrier: BarrierInfoConfig) => ({
+          label: barrier.name,
+          value: barrier.identifier
+        })) || []
+      setBarriers(templateBarriers)
+    }
+  }, [pipelineTemplate])
+
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.spec?.barrierRef) === MultiTypeInputType.RUNTIME && (
@@ -344,13 +328,12 @@ function BarrierInputStep({ inputSetData, allowableTypes, stepViewType }: Barrie
           selectItems={barriers}
           multiTypeInputProps={{
             expressions,
-            disabled: inputSetData?.readonly || pipelineTemplateLoading || loading,
+            disabled: inputSetData?.readonly || pipelineTemplateLoading,
             allowableTypes
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          disabled={loading}
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
       )}
