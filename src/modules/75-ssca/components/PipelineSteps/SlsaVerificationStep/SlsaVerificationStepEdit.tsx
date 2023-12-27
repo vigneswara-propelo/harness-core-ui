@@ -27,6 +27,8 @@ import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { SettingType } from '@modules/10-common/constants/Utils'
+import { SettingValueResponseDTO, useGetSettingValue } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type {
   CosignSlsaVerifyAttestation,
@@ -115,6 +117,13 @@ const SlsaVerificationStepEdit = (
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const gitScope = useGitScope()
+
+  const { data: enableBase64Encoding } = useGetSettingValue({
+    identifier: SettingType.USE_BASE64_ENCODED_SECRETS_FOR_ATTESTATION,
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
+
+  const getBase64EncodingEnabled = (data?: SettingValueResponseDTO): boolean => data?.value === 'true'
 
   return (
     <Formik<SlsaVerificationStepData>
@@ -320,7 +329,7 @@ const SlsaVerificationStepEdit = (
               </Text>
 
               <MultiTypeSecretInput
-                type="SecretFile"
+                type={getBase64EncodingEnabled(enableBase64Encoding?.data) ? undefined : 'SecretFile'}
                 name="spec.verify_attestation.spec.public_key"
                 label={getString('ssca.publicKey')}
                 expressions={expressions}

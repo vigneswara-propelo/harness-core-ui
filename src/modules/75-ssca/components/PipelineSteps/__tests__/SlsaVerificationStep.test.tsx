@@ -22,7 +22,8 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => ({ data: {}, refetch: () => {} })),
   useGetConnectorCatalogue: jest.fn().mockImplementation(() => {
     return { data: catalogueData, loading: false, refetch: () => {} }
-  })
+  }),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { value: 'false' } }))
 }))
 jest.mock('@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook', () => ({
   useGetConnectorsListHook: jest.fn().mockReturnValue({

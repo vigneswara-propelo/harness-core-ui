@@ -18,6 +18,11 @@ import {
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
+jest.mock('services/cd-ng', () => ({
+  ...jest.requireActual('services/cd-ng'),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { value: 'false' } }))
+}))
+
 jest.mock('lodash-es', () => ({
   ...(jest.requireActual('lodash-es') as any),
   debounce: jest.fn(fn => {

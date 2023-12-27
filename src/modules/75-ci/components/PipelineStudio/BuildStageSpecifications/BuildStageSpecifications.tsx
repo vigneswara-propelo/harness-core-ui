@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import * as yup from 'yup'
 import { Accordion, Card, Formik, FormikForm, Switch, Text, MultiTypeInputType, Layout } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
@@ -19,7 +20,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import type { NGVariable, StageElementConfig, StringNGVariable } from 'services/cd-ng'
+import type { NGVariable, SettingValueResponseDTO, StageElementConfig, StringNGVariable } from 'services/cd-ng'
 import { UseFromStageInfraYaml } from 'services/ci'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type {
@@ -43,6 +44,9 @@ import MultiTypeSecretInput from '@platform/secrets/components/MutiTypeSecretInp
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { StageTimeout } from '@modules/75-cd/components/PipelineStudio/StageTimeout/StageTimeout'
+import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { SettingType } from '@modules/10-common/constants/Utils'
+import { useGetSettingValue } from 'services/cd-ng'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import { Modes } from '../BuildInfraSpecifications/BuildInfraSpecifications'
 import css from './BuildStageSpecifications.module.scss'
@@ -301,6 +305,15 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
 
   const { expressions } = useVariablesExpression()
 
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+  const { data: enableBase64Encoding, refetch } = useGetSettingValue({
+    lazy: true,
+    identifier: SettingType.USE_BASE64_ENCODED_SECRETS_FOR_ATTESTATION,
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
+  const getBase64EncodingEnabled = (data?: SettingValueResponseDTO): boolean => data?.value === 'true'
+
   return (
     <div className={css.wrapper}>
       <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
@@ -339,7 +352,9 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                       <Switch
                         checked={formValues.cloneCodebase}
                         label={getString('cloneCodebaseLabel')}
-                        onChange={e => setFieldValue('cloneCodebase', e.currentTarget.checked)}
+                        onChange={e => {
+                          setFieldValue('cloneCodebase', e.currentTarget.checked)
+                        }}
                         disabled={isReadonly}
                         tooltipProps={{ tooltipId: 'cloneCodebase' }}
                       />
@@ -470,7 +485,10 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                             <Switch
                               checked={formValues.slsa_provenance?.enabled}
                               label={getString('ci.slsaProvenance.generate')}
-                              onChange={e => setFieldValue('slsa_provenance.enabled', e.currentTarget.checked)}
+                              onChange={e => {
+                                setFieldValue('slsa_provenance.enabled', e.currentTarget.checked)
+                                refetch()
+                              }}
                               disabled={isReadonly}
                               tooltipProps={{ tooltipId: 'enableSlsaProvenance' }}
                             />
@@ -478,7 +496,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                           {formValues.slsa_provenance?.enabled && (
                             <>
                               <MultiTypeSecretInput
-                                type="SecretFile"
+                                type={getBase64EncodingEnabled(enableBase64Encoding?.data) ? undefined : 'SecretFile'}
                                 name="slsa_provenance.attestation.spec.private_key"
                                 label={getString('platform.connectors.serviceNow.privateKey')}
                                 expressions={expressions}

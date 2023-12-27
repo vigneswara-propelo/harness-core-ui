@@ -139,6 +139,7 @@ jest.mock('services/cd-ng', () => ({
         ]
       }
     }),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { value: 'false' } })),
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(secretMockdata)),
   useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),

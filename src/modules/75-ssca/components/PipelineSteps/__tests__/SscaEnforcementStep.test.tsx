@@ -28,7 +28,8 @@ jest.mock('services/cd-ng', () => ({
       refetch: fetchConnector,
       loading: false
     }
-  })
+  }),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { value: 'false' } }))
 }))
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')

@@ -50,6 +50,8 @@ import { SbomOrchestrationTool, SbomSource, SyftSbomOrchestration } from 'servic
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import { SettingType } from '@modules/10-common/constants/Utils'
+import { SettingValueResponseDTO, useGetSettingValue } from 'services/cd-ng'
 import { editViewValidateFieldsConfig, transformValuesFieldsConfig } from './SscaOrchestrationStepFunctionConfigs'
 import { SscaCdOrchestrationStepData, SscaOrchestrationStepData, SscaStepProps } from './types'
 import { AllMultiTypeInputTypesForStep } from './utils'
@@ -121,6 +123,13 @@ const SscaOrchestrationStepEdit = <T extends SscaOrchestrationStepData | SscaCdO
   if (isNewStep && detectSbomDrift && !get(_initialValues, 'spec.sbom_drift.base')) {
     set(_initialValues, 'spec.sbom_drift.base', 'last_generated_sbom')
   }
+
+  const { data: enableBase64Encoding } = useGetSettingValue({
+    identifier: SettingType.USE_BASE64_ENCODED_SECRETS_FOR_ATTESTATION,
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
+
+  const getBase64EncodingEnabled = (data?: SettingValueResponseDTO): boolean => data?.value === 'true'
 
   return (
     <Formik
@@ -291,7 +300,7 @@ const SscaOrchestrationStepEdit = <T extends SscaOrchestrationStepData | SscaCdO
               </Text>
 
               <MultiTypeSecretInput
-                type="SecretFile"
+                type={getBase64EncodingEnabled(enableBase64Encoding?.data) ? undefined : 'SecretFile'}
                 name="spec.attestation.spec.privateKey"
                 label={getString('platform.connectors.serviceNow.privateKey')}
                 expressions={expressions}

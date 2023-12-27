@@ -15,6 +15,11 @@ import { CdSscaEnforcementStep } from '../CdSscaEnforcementStep/CdSscaEnforcemen
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
+jest.mock('services/cd-ng', () => ({
+  ...jest.requireActual('services/cd-ng'),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { value: 'false' } }))
+}))
+
 const runtimeValues = {
   identifier: 'Ssca_Enforcement_Step',
   name: 'SSCA Enforcement Step',

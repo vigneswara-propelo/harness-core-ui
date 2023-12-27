@@ -41,6 +41,8 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import MultiTypePolicySetSelector from '@modules/70-pipeline/components/PipelineSteps/Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import { SettingType } from '@modules/10-common/constants/Utils'
+import { SettingValueResponseDTO, useGetSettingValue } from 'services/cd-ng'
 import { editViewValidateFieldsConfig, transformValuesFieldsConfig } from './SscaEnforcementStepFunctionConfigs'
 import { SscaCdEnforcementStepData, SscaEnforcementStepData, SscaStepProps } from './types'
 import { AllMultiTypeInputTypesForStep, commonDefaultEnforcementSpecValues } from './utils'
@@ -89,6 +91,13 @@ const SscaEnforcementStepEdit = <T extends SscaEnforcementStepData | SscaCdEnfor
     set(_initialValues, 'spec.policy.opa', true)
     set(_initialValues, 'spec.policy.store', undefined)
   }
+
+  const { data: enableBase64Encoding } = useGetSettingValue({
+    identifier: SettingType.USE_BASE64_ENCODED_SECRETS_FOR_ATTESTATION,
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
+
+  const getBase64EncodingEnabled = (data?: SettingValueResponseDTO): boolean => data?.value === 'true'
 
   return (
     <Formik
@@ -195,7 +204,7 @@ const SscaEnforcementStepEdit = <T extends SscaEnforcementStepData | SscaCdEnfor
               </Text>
 
               <MultiTypeSecretInput
-                type="SecretFile"
+                type={getBase64EncodingEnabled(enableBase64Encoding?.data) ? undefined : 'SecretFile'}
                 name="spec.verifyAttestation.spec.publicKey"
                 label={getString('ssca.publicKey')}
                 expressions={expressions}

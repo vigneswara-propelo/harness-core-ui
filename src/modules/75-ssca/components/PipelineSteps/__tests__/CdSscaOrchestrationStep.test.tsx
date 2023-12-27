@@ -17,6 +17,11 @@ import { CdSscaOrchestrationStep } from '../CdSscaOrchestrationStep/CdSscaOrches
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
+jest.mock('services/cd-ng', () => ({
+  ...jest.requireActual('services/cd-ng'),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { value: 'false' } }))
+}))
+
 const runtimeValues = {
   identifier: 'Ssca_Orchestration_Step',
   name: 'SSCA Orchestration Step',
