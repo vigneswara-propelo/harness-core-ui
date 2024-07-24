@@ -12,4 +12,5 @@ metadata:
   annotations:
     harness.io/cd-serviceId: "blue_green_canary_service"
     harness.io/project-url: "https://app.harness.io/ng/account/wFHXHD0RRQWoO8tIZT5YVw/home/orgs/default/projects/pragyesh_project/details"
+    jira/project-key: IDP
 
